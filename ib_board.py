@@ -50,8 +50,25 @@ def json_answer(requesth):
         else:
             return_object = initiate.board_cache[board][5][received_objects['range']['begin']-1:received_objects['range']['end']-1] #if end and begin are in range, return their range
         return tornado.escape.json_encode(return_object)
-    elif received_objects['action'] == 'get posts by num': #i will do it later
-        pass #TO DO
+    elif received_objects['action'] == 'get posts code by num': #i will do it later
+        return_object = {} #this is what we would return
+        board = received_objects['board']
+        if board not in initiate.board_cache: #all of this should be redone, it is fucking not good code
+            return 'error'
+        in_list = set()
+        for postid in received_objects['ids']:
+            if postid is not int:
+                return 'Incorrect post ids'
+            in_list.add(postid)#probably should check, if adding an already existing in set element does not cause an error
+        in_list2 = list(in_list)#converting to list for _in function
+        database_responce = initiate.sess.Query(initiate.board_cache[board][4].id, initiate.board_cache[board][4].html_code).filter(initiate.board_cache[board][4].id._in(in_list2)).all()
+        for row in database_responce:
+            return_object[row.id] = row.html_code
+            in_list.remove(row.id)
+        for postid in in_list:
+            return_object[row.id] = None
+        #here i should add requesting the db
+        return tornado.escape.json_encode(return_object)
     else:
         return 'incorrect action'
     return 'not implemented yet'
