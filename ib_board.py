@@ -6,6 +6,7 @@ from lxml.builder import ElementMaker as EM
 import tornado.escape
 
 import initiate
+import utilfunctions
 
 def html_page_return(board, page):
     html = E.HTML(
@@ -19,6 +20,7 @@ def html_page_return(board, page):
             E.P(E.CLASS("board"), board, id = 'board'),
             E.P(E.CLASS("thread"), str(page), id = 'page'),
             E.FORM(E.CLASS("postform"), #postform
+                   E.INPUT(type = 'hidden', name = 'op', value = 0),
                    'THEME ', E.INPUT(type = 'text', name = 'theme', value = ''),
                    E.BR(),
                    'TEXT ', E.INPUT(type = 'text', name = 'text', value = ''),
@@ -54,8 +56,8 @@ def json_answer(requesth):
         return 'incorrect action'
     return 'not implemented yet'
 
-def get(requesth): #requesth is tornadoweb requesthandler object
-    split_uri = requesth.request.uri.split(r'/') #need to get the boardname and pagenum
+def get_board_and_page(uri):
+    split_uri = uri.split(r'/') #need to get the boardname and pagenum
     board = split_uri[1]
     if len(split_uri) > 2:
         if split_uri[2] != '': #we check if page exists in uri
@@ -65,19 +67,29 @@ def get(requesth): #requesth is tornadoweb requesthandler object
     else:
         page = 0
     if board in initiate.board_cache: #checking if board exists
+        return True, board, page
+    else:
+        return False, None, None
+
+def get(requesth): #requesth is tornadoweb requesthandler object
+    board_exists, board, page = get_board_and_page(requesth.request.uri)
+    if board_exists:
         return html_page_return(board, page)
     else:
         return 'No such board'
 
-def post(requesth):
+def post(requesth): #working over POST requests
+    board_exists, board, page = get_board_and_page(requesth.request.uri)
+    if board_exists == False:
+        return 'No such board'
     try:
         content_type = requesth.request.headers['Content-Type']
     except KeyError:
         pass
     else:
         if 'application/json' in content_type:
-            return json_answer(requesth)
-    return 'not made yet'
+            return json_answer(requesth)#here we work we json requests
+    return utilfunctions.posting(requesth, board) #and here we suppose it is posting
 
 if __name__ == '__main__':
     pass
