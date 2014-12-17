@@ -1,7 +1,7 @@
 function threadfunc() {
 	var board = document.getElementById("board").innerHTML;
 	var thread = parseInt(document.getElementById("thread").innerHTML);
-	var data = {"action":"get post ids for threads", "board":board, "threads":[thread]};
+	var data = {"action":"get post ids for threads", "board":board, "threads":[{"threadnum":thread, "begin":1, "end":"all"}]};
 
 	// construct an HTTP request
         var xhr = new XMLHttpRequest();

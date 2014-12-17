@@ -40,10 +40,15 @@ def json_answer(requesth):
         if board not in initiate.board_cache: #all of this should be redone, it is fucking not good code
             return 'error'
         for threadnum in received_objects['threads']:
-            if type(threadnum) is int:
-                if threadnum not in return_object:
-                    if threadnum in initiate.board_cache[board][6]:
-                        return_object[threadnum] = initiate.board_cache[board][6][threadnum]
+            if type(threadnum['threadnum']) is int and type(threadnum['begin']) is int and threadnum['begin'] > 0: #here we get the thread number and range
+                if threadnum['threadnum'] not in return_object: #checking if threadnum is not already requested, we support only one request per thread
+                    if threadnum['threadnum'] in initiate.board_cache[board][6]: #checking if thread exists
+                        if type(threadnum['end']) is not int or threadnum['end'] > len(initiate.board_cache[board][6][threadnum['threadnum']]): #should add checking for begin to be less then len(list of posts in thread)
+                            return_object[threadnum['threadnum']] = initiate.board_cache[board][6][threadnum['threadnum']][threadnum['begin']-1:]
+                        elif threadnum['end'] > 0 and threadnum['begin'] < len(initiate.board_cache[board][6][threadnum['threadnum']]):
+                            return_object[threadnum['threadnum']] = initiate.board_cache[board][6][threadnum['threadnum']][threadnum['begin']-1:threadnum['end']-1]
+                        else:
+                            return_object[threadnum['threadnum']] = []
                     else:
                         return_object[threadnum] = None
             else:
