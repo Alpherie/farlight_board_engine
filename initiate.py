@@ -45,7 +45,13 @@ def renew_board_cache(renew_cache_dict = True, renew_thread_cache = True):
         for b in boards:
             board_post_class = type(b.name, (Post,Base), {'__tablename__':b.tablename}) #class post for table
             #here we need to get threads ordered by last post time
-            threads = sess.query(coalesce(board_post_class.op_post, board_post_class.id)).filter().distinct().all() #getting threads list
+            #SELECT DISTINCT threadid FROM (SELECT coalesce(b.op_post, b.id) AS threadid FROM b ORDER BY b.id DESC)
+            subq = sess.query(coalesce(board_post_class.op_post, board_post_class.id).label('threadid')).filter().order_by(board_post_class.id.desc()).subquery()
+            threads_tuples = sess.query(subq.c.threadid).filter().distinct().all() #getting threads list
+            threads = []#we do this because we need a list of integers, no ordered tuples
+            for thread in threads_tuples:
+                threads.append(thread[0])
+            #threads.reverse()
             posts_dict = {}
             for thread in threads:
                 posts_dict[thread] = []

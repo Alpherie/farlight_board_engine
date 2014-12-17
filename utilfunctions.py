@@ -6,15 +6,15 @@ import initiate
 import config as cf
 
 def posting(requesth, board): #working with posted form content
-    actions = requesth.get_query_arguments('action')
-    if actions == ['post']:#here we act when adding a new post
-        theme = requesth.get_query_arguments('theme')
+    action = requesth.get_body_argument('action')
+    if action == 'post':#here we act when adding a new post
+        theme = requesth.get_body_argument('theme')
         if len(theme) > 255:
             return 'Too long theme' #should add html escaping
-        text = requesth.get_query_arguments('text')
+        text = requesth.get_body_argument('text')
         if len(text) > cf.post_len:
             return 'Too long text' #should add html escaping
-        op = requesth.get_query_arguments('op')
+        op = requesth.get_body_argument('op')
         #---
         #temporary for testing
         text = '<p>'+tornado.escape.xhtml_escape(text)+'</p>'

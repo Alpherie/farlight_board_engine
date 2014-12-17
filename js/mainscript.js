@@ -14,9 +14,10 @@ function threadfunc() {
         xhr.onloadend = function () {
         	var mainframe = document.getElementById("mainframe");
 		var threadnum;
-		for (threadnum in JSON.parse(xhr.responseText)[thread]) {
+		var array = JSON.parse(xhr.responseText)[thread];
+		for (threadnum in array) {
 			var post = document.createElement("p");
-			post.innerHTML = threadnum;
+			post.innerHTML = array[threadnum];
 			mainframe.appendChild(post); 
 		};
         // done
@@ -40,9 +41,20 @@ function boardfunc() {
         xhr.onloadend = function () {
         	var mainframe = document.getElementById("mainframe");
 		var threadnum;
-		for (threadnum in JSON.parse(xhr.responseText)) {
+		var array = JSON.parse(xhr.responseText);
+		for (threadnum in array) {
 			var post = document.createElement("p");
-			post.innerHTML = threadnum;
+			var a = document.createElement("a");
+			a.innerHTML = array[threadnum];
+			a.href = "res/"+array[threadnum]+"/"
+			var br = document.createElement("br");
+			var text = document.createElement("font");
+			text.innerHTML = array[threadnum];
+			//adding children
+			post.appendChild(a);
+			post.appendChild(br);
+			post.appendChild(text);
+			//added post
 			mainframe.appendChild(post); 
 		};
         // done

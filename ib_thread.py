@@ -6,6 +6,7 @@ from lxml.builder import ElementMaker as EM
 import tornado.escape
 
 import initiate
+import utilfunctions
 
 def html_page_return(board, thread):
     html = E.HTML(
@@ -19,6 +20,8 @@ def html_page_return(board, thread):
             E.P(E.CLASS("board"), board, id = 'board'),
             E.P(E.CLASS("thread"), str(thread), id = 'thread'),
             E.FORM(E.CLASS("postform"), #postform
+                   E.INPUT(type = 'hidden', name = 'action', value = 'post'),
+                   E.INPUT(type = 'hidden', name = 'op', value = str(thread)),
                    'THEME ', E.INPUT(type = 'text', name = 'theme', value = ''),
                    E.BR(),
                    'TEXT ', E.INPUT(type = 'text', name = 'text', value = ''),
@@ -60,19 +63,34 @@ def json_answer(requesth):
         return 'incorrect action'
     return 'not implemented yet'
 
-def get(requesth): #requesth is tornadoweb requesthandler object
-    split_uri = requesth.request.uri.split(r'/') #need to get the boardname and threadnum
+def get_board_and_thread(uri):
+    split_uri = uri.split(r'/') #need to get the boardname and pagenum
     board = split_uri[1]
-    thread = int(split_uri[3])
-    if board in initiate.board_cache: #checking if board exists
-        if thread in initiate.board_cache[board][6]: #checking if thread exists
-            return html_page_return(board, thread)
+    if len(split_uri) > 3:
+        if split_uri[3] != '': #we check if page exists in uri
+            thread = int(split_uri[3])
         else:
-            return 'No such thread'
+            thread = None
     else:
+        thread = None
+    if board in initiate.board_cache: #checking if board exists
+        return True, board, thread
+    else:
+        return False, None, None
+
+def get(requesth): #requesth is tornadoweb requesthandler object
+    board_exists, board, thread = get_board_and_thread(requesth.request.uri)
+    if board_exists == False:
         return 'No such board'
+    if thread is not None and thread in initiate.board_cache[board][6]: #checking if thread exists
+        return html_page_return(board, thread)
+    else:
+        return 'No such thread'
 
 def post(requesth):
+    board_exists, board, thread = get_board_and_thread(requesth.request.uri)
+    if board_exists == False:
+        return 'no such board'
     try:
         content_type = requesth.request.headers['Content-Type']
     except KeyError:
@@ -80,7 +98,7 @@ def post(requesth):
     else:
         if 'application/json' in content_type:
             return json_answer(requesth)
-    return 'not made yet'
+    return utilfunctions.posting(requesth, board) #and here we suppose it is posting
 
 if __name__ == '__main__':
     pass
