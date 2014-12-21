@@ -47,3 +47,22 @@ def posting(requesth, board): #working with posted form content
         return 'Luckily posted'
     else:
         return 'not implemented yet'
+
+def get_posts_code_by_num(requesth, received_objects): #function for returning the posts code for a list of posts ids
+    return_object = {} #this is what we would return
+    board = received_objects['board']
+    if board not in initiate.board_cache: #all of this should be redone, it is fucking not good code
+        return 'error'
+    in_list = set()
+    for postid in received_objects['ids']:
+        if type(postid) is not int:
+            return 'Incorrect post ids'
+        in_list.add(postid)#probably should check, if adding an already existing in set element does not cause an error
+    in_list2 = list(in_list)#converting to list for _in function
+    database_responce = initiate.sess.query(initiate.board_cache[board][4].id, initiate.board_cache[board][4].html_code).filter(initiate.board_cache[board][4].id.in_(in_list2)).all()
+    for row in database_responce:
+        return_object[row.id] = row.html_code
+        in_list.remove(row.id)
+    for postid in in_list: #here we add all the posts that does not exist
+        return_object[row.id] = None
+    return tornado.escape.json_encode(return_object)

@@ -52,23 +52,46 @@ def json_answer(requesth):
             return_object = initiate.board_cache[board][5][received_objects['range']['begin']-1:received_objects['range']['end']-1] #if end and begin are in range, return their range
         return tornado.escape.json_encode(return_object)
     elif received_objects['action'] == 'get posts code by num': #i will do it later
-        return_object = {} #this is what we would return
+        return utilfunctions.get_posts_code_by_num(requesth, received_objects)
+    #should be moved to utilfunctions
+    elif received_objects['action'] == 'get post ids for threads': #this is when we need to return post ids for given threads
+        return_object = {}
         board = received_objects['board']
         if board not in initiate.board_cache: #all of this should be redone, it is fucking not good code
             return 'error'
-        in_list = set()
-        for postid in received_objects['ids']:
-            if postid is not int:
-                return 'Incorrect post ids'
-            in_list.add(postid)#probably should check, if adding an already existing in set element does not cause an error
-        in_list2 = list(in_list)#converting to list for _in function
-        database_responce = initiate.sess.Query(initiate.board_cache[board][4].id, initiate.board_cache[board][4].html_code).filter(initiate.board_cache[board][4].id._in(in_list2)).all()
-        for row in database_responce:
-            return_object[row.id] = row.html_code
-            in_list.remove(row.id)
-        for postid in in_list:
-            return_object[row.id] = None
-        #here i should add requesting the db
+        for threadnum in received_objects['threads']:
+            if threadnum['threadnum'] not in return_object: #checking if threadnum is not already requested, we support only one request per thread
+                if threadnum['threadnum'] in initiate.board_cache[board][6]: #checking if thread exists
+                    if type(threadnum['threadnum']) is int and type(threadnum['begin']) is int and type(threadnum['end']) is int: #checking types
+                        if threadnum['begin'] <= threadnum['end']:
+                            if threadnum['begin'] < 0 and threadnum['end'] < 0:
+                                if threadnum['end'] < -len(initiate.board_cache[board][6][threadnum['threadnum']]): #should add checking for begin to be less then len(list of posts in thread)
+                                    return_object[threadnum['threadnum']] = []
+                                elif threadnum['begin'] < -len(initiate.board_cache[board][6][threadnum['threadnum']]):
+                                    if threadnum['end'] == -1:
+                                        return_object[threadnum['threadnum']] = initiate.board_cache[board][6][threadnum['threadnum']][:]
+                                    else:
+                                        return_object[threadnum['threadnum']] = initiate.board_cache[board][6][threadnum['threadnum']][:threadnum['end']]
+                                else:
+                                    if threadnum['end'] == -1:
+                                        return_object[threadnum['threadnum']] = initiate.board_cache[board][6][threadnum['threadnum']][threadnum['begin']:]
+                                    else:
+                                        return_object[threadnum['threadnum']] = initiate.board_cache[board][6][threadnum['threadnum']][threadnum['begin']:threadnum['end']]
+                            elif threadnum['begin'] >= 0 and threadnum['end'] >= 0:
+                                if threadnum['begin'] >= len(initiate.board_cache[board][6][threadnum['threadnum']]):
+                                    return_object[threadnum['threadnum']] = []
+                                elif threadnum['end'] >= len(initiate.board_cache[board][6][threadnum['threadnum']]):
+                                    return_object[threadnum['threadnum']] = initiate.board_cache[board][6][threadnum['threadnum']][threadnum['begin']-1:]
+                                else:
+                                    return_object[threadnum['threadnum']] = initiate.board_cache[board][6][threadnum['threadnum']][threadnum['begin']-1:threadnum['end']-1]
+                            else:
+                                return 'incorrect range' #both begin and end should be < 0 or >= 0
+                        else:
+                            return 'incorrect range' #both begin should be <= end
+                    else:
+                        return 'typeerror'
+                else:
+                    return_object[threadnum] = None
         return tornado.escape.json_encode(return_object)
     else:
         return 'incorrect action'

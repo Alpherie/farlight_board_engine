@@ -57,8 +57,8 @@ def json_answer(requesth):
             else:
                 return 'typeerror'
         return tornado.escape.json_encode(return_object)
-    elif received_objects['action'] == 'get posts by num': #i will do it later
-        pass #TO DO
+    elif received_objects['action'] == 'get posts code by num': #i will do it later
+        return utilfunctions.get_posts_code_by_num(requesth, received_objects)
     else:
         return 'incorrect action'
     return 'not implemented yet'
