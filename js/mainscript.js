@@ -83,20 +83,20 @@ function boardfunc() {
 		var array = JSON.parse(xhr.responseText);
 		for (threadnum in array) {
 			var div = document.createElement("div");
-			div.id = array[threadnum];
+			div.id = "op" + array[threadnum];
+			div.className = "oppostcontainer";
+			var div2 = document.createElement("div");
+			div2.id = array[threadnum];
+			div2.className = "oppost";
 			var post = document.createElement("p");
 			var a = document.createElement("a");
 			a.innerHTML = array[threadnum];
 			a.href = "res/"+array[threadnum]+"/";
-			var br = document.createElement("br");
-			var text = document.createElement("font");
-			text.innerHTML = array[threadnum];
 			//adding children
 			post.appendChild(a);
-			post.appendChild(br);
-			post.appendChild(text);
 			//added post
 			div.appendChild(post);
+			div.appendChild(div2);
 			mainframe.appendChild(div); 
 		};
 		var threaddata = [];
@@ -116,12 +116,13 @@ function boardfunc() {
 
 	        xhr2.onloadend = function () {
 			var postdict = JSON.parse(xhr2.responseText);
-			var postlist = [];
+			var postlist = array;
 			for (i in array){//here we add posts to threads
-				var oppostdiv = document.getElementById(array[i]);
+				var oppostdiv = document.getElementById("op" + array[i]);
 				for (j in postdict[array[i]]){
 					var div = document.createElement("div");
 					div.id = postdict[array[i]][j];
+					div.className = "post";
 					oppostdiv.appendChild(div);
 					postlist.push(postdict[array[i]][j]);
 				};
