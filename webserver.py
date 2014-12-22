@@ -36,7 +36,9 @@ application = tornado.web.Application([
     (r"/admin", AdminHandler),
     (r"/[0-9A-Za-z]+\/res\/[0-9]+\/?", ThreadHandler),
     (r"/[0-9A-Za-z]+\/?[0-9]*", BoardHandler),
-    (r"/(mainscript\.js)", tornado.web.StaticFileHandler, {"path": "js/"})
+    (r"/(mainscript\.js)", tornado.web.StaticFileHandler, {"path": "js/"}),
+    (r"/css/(.+\.css)", tornado.web.StaticFileHandler, {"path": "css/"}),
+    (r"/(favicon.ico)", tornado.web.StaticFileHandler, {"path": ""})
 ])
 
 if __name__ == "__main__":
