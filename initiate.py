@@ -28,9 +28,24 @@ class Board (Base):
 class Post(): #(Base):
     #__tablename__ = 
     id = sqla.Column(sqla.Integer, primary_key=True)
-    html_code = sqla.Column(sqla.String(cf.post_len))
+    theme = sqla.Column(sqla.String(255))
+    name = sqla.Column(sqla.String(255))
+    email = sqla.Column(sqla.String(255))
+    text = sqla.Column(sqla.String(cf.post_len)) #this is the text of post. Should be renamed later
     picture = sqla.Column(sqla.String(255))
     op_post = sqla.Column(sqla.Integer)
+    post_time = sqla.Column(sqla.Integer)
+    def to_dict(self): #converting the post to dict for javascript answer
+        to_dict = {'id':self.id,#probably not needed, wonder if __dict__ will be appropriate
+                   'theme':self.theme,
+                   'name':self.name,
+                   'email':self.email,
+                   'text':self.text,#will rename
+                   'pic':self.picture,#will be redone for dynamic generating of Post class with many pictures available
+                   'op_post':self.op_post,
+                   'post_time':self.post_time
+                   }
+        return to_dict
     def __repr__(self):
         return "<Post(id = №%d, html_code='%s', picture='%s', op_post='%d')>" % (self.id, self.html_code, self.picture, self.op_post)
 #---------------------------------------------
@@ -40,8 +55,8 @@ def renew_board_cache(renew_cache_dict = True, renew_thread_cache = True):
     global board_cache_footer
     global board_cache_main_page
     boards = sess.query(Board).filter().all()#add 'order by'
-    board_cache = {}
     if renew_cache_dict:
+        board_cache = {}
         for b in boards:
             board_post_class = type(b.name, (Post,Base), {'__tablename__':b.tablename}) #class post for table
             #here we need to get threads ordered by last post time

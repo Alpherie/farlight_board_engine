@@ -19,15 +19,44 @@ def html_page_return(board, page):
             E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
             E.P(E.CLASS("board"), board, id = 'board'),
             E.P(E.CLASS("thread"), str(page), id = 'page'),
+            E.HR(),
             E.FORM(E.CLASS("postform"), #postform
                    E.INPUT(type = 'hidden', name = 'action', value = 'post'),
                    E.INPUT(type = 'hidden', name = 'op', value = '0'),
-                   'THEME ', E.INPUT(type = 'text', name = 'theme', value = ''),
-                   E.BR(),
-                   'TEXT ', E.INPUT(type = 'text', name = 'text', value = ''),
-                   E.BR(),
-                   E.INPUT(type = 'submit', value = 'POST'),
+                   E.TABLE(
+                       E.TR(
+                           E.TD('THEME'),
+                           E.TD(E.INPUT(type = 'text', name = 'theme', value = '', size = '44'), E.INPUT(type = 'submit', value = 'POST')),
+                           ),
+                       E.TR(
+                           E.TD('EMAIL'),
+                           E.TD(E.INPUT(type = 'text', name = 'email', value = '', size = '50')),
+                           ),
+                       E.TR(
+                           E.TD('NAME'),
+                           E.TD(E.INPUT(type = 'text', name = 'name', value = '', size = '50')),
+                           ),
+                       E.TR(
+                           E.TD('TEXT'),
+                           E.TD(E.TEXTAREA(name = 'text', rows = '10', cols = '50', placeholder = 'POST')),
+                           ),
+                       E.TR(
+                           E.TD('PICTURE'),
+                           E.TD(E.INPUT(type = 'file', name = 'file', accept = 'image/*')),
+                           ),
+                       E.TR(
+                           E.TD(
+                               E.CENTER('CAPTCHA WILL BE HERE'),
+                               colspan = '2'
+                               )
+                           ),
+                       E.TR(
+                           E.TD('CAPTCHA'),
+                           E.TD(E.INPUT(type = 'text', name = 'captcha', value = '')),
+                           )
+                       ),
                    method = 'POST', action = ''),
+            E.HR(),
             lxml.html.fromstring("<p>... and this is a parsed fragment ...</p>"),
             E.DIV('', id = 'mainframe'),
             onload = 'boardfunc()'

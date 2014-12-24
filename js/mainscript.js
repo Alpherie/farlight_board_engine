@@ -14,15 +14,77 @@ function getposts(board, array){
         };
 };
 
-function threadaddcode(postdict, array){
+function threadaddcode(postdict, array){//will be redone for normal adding from dict returned
+	if (array.length != 0) {
 	//need to operate with op-post separately
-	postdiv = document.getElementById(array[0]);
-	postdiv.innerHTML = postdict[array[0]];
+		postdiv = document.getElementById(array[0]);
+
+//should put it into a separate function
+		var post_details = document.createElement("div");
+		post_details.className = "post_details";
+	
+		var p_theme = document.createElement("span");
+		p_theme.className = "theme";
+		p_theme.innerHTML = postdict[array[0]]["theme"];
+		post_details.appendChild(p_theme);
+
+		var p_name = document.createElement("span");
+		p_name.className = "name";
+		p_name.innerHTML = postdict[array[0]]["name"];
+		post_details.appendChild(p_name);
+
+		var p_id = document.createElement("span");
+		p_id.className = "post_link"; //should be redone fo creating a link
+		p_id.innerHTML = postdict[array[0]]["id"];
+		post_details.appendChild(p_id);
+
+		postdiv.appendChild(post_details);
+
+		var post_body = document.createElement("div");
+		var p_text = document.createElement("blockquote");
+		p_text.className = "post_text";
+		p_text.innerHTML = postdict[array[0]]["text"];
+		post_body.appendChild(p_text);
+	 	
+		postdiv.appendChild(post_body);
+
 	//added op-post
+	}
 
 	for (var i = 1; i < array.length; i++) {
 		postdiv = document.getElementById(array[i]);
-		postdiv.innerHTML = postdict[array[i]];
+		
+//should put it into a separate function
+//also should add checking for null objects
+		var post_details = document.createElement("div");
+		post_details.className = "post_details";
+	
+		var p_theme = document.createElement("span");
+		p_theme.className = "theme";
+		p_theme.innerHTML = postdict[array[0]]["text"];
+		post_details.appendChild(p_theme);
+
+		var p_name = document.createElement("span");
+		p_name.className = "name";
+		p_name.innerHTML = postdict[array[0]]["name"];
+		post_details.appendChild(p_name);
+	
+		var p_id = document.createElement("span");
+		p_id.className = "post_link"; //should be redone fo creating a link
+		p_id.innerHTML = postdict[array[0]]["id"];
+		post_details.appendChild(p_id);
+	
+		postdiv.appendChild(post_details);
+	
+		var post_body = document.createElement("div");
+		var p_text = document.createElement("blockquote");
+		p_text.className = "post_text";
+		p_text.innerHTML = postdict[array[0]]["text"];
+		post_body.appendChild(p_text);
+ 	
+		postdiv.appendChild(post_body);
+
+//added post
        	};
 };
 
