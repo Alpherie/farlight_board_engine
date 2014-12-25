@@ -15,6 +15,7 @@ function getposts(board, array){
 };
 
 function formatdate(date){
+	var daylist = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
 	var secs = date.getSeconds();
 	if (secs < 10) {
 		secs = "0" + secs;
@@ -27,57 +28,12 @@ function formatdate(date){
 	} else {
 		mins = "" + mins;
 	}
-	var str = date.getDay() + " " + date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + mins + ":" + secs;
+	var str = daylist[date.getDay()] + " " + date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + mins + ":" + secs;
 	return str;
 };
 
 function threadaddcode(postdict, array, board){//will be redone for normal adding from dict returned
-	if (array.length != 0) {
-	//need to operate with op-post separately
-		postdiv = document.getElementById(array[0]);
-
-//should put it into a separate function
-		var post_details = document.createElement("div");
-		post_details.className = "post_details";
-	
-		var p_theme = document.createElement("span");
-		p_theme.className = "theme";
-		p_theme.innerHTML = postdict[array[0]]["theme"];
-		post_details.appendChild(p_theme);
-
-		var p_name = document.createElement("span");
-		p_name.className = "name";
-		p_name.innerHTML = postdict[array[0]]["name"];
-		post_details.appendChild(p_name);
-
-		var p_date = document.createElement("span");
-		p_date.className = "post_time";
-		var post_time = new Date(postdict[array[0]]["post_time"]*1000);
-		p_date.innerHTML = formatdate(post_time);
-		post_details.appendChild(p_date);
-
-		var p_id = document.createElement("span");
-		p_id.className = "post_link"; //should be redone fo creating a link
-		var a = document.createElement("a");
-		a.href = "/" + board + "/res/" + array[0];
-		a.innerHTML = "№" + postdict[array[0]]["id"];
-		p_id.appendChild(a);
-		post_details.appendChild(p_id);
-
-		postdiv.appendChild(post_details);
-
-		var post_body = document.createElement("div");
-		var p_text = document.createElement("blockquote");
-		p_text.className = "post_text";
-		p_text.innerHTML = postdict[array[0]]["text"];
-		post_body.appendChild(p_text);
-	 	
-		postdiv.appendChild(post_body);
-
-	//added op-post
-	}
-
-	for (var i = 1; i < array.length; i++) {
+	for (var i = 0; i < array.length; i++) {
 		postdiv = document.getElementById(array[i]);
 		
 //should put it into a separate function
@@ -85,10 +41,12 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 		var post_details = document.createElement("div");
 		post_details.className = "post_details";
 	
-		var p_theme = document.createElement("span");
-		p_theme.className = "theme";
-		p_theme.innerHTML = postdict[array[i]]["text"];
-		post_details.appendChild(p_theme);
+		if (postdict[array[i]]["theme"] !== null) {
+			var p_theme = document.createElement("span");
+			p_theme.className = "theme";
+			p_theme.innerHTML = postdict[array[i]]["theme"];
+			post_details.appendChild(p_theme);
+		}
 
 		var p_name = document.createElement("span");
 		p_name.className = "name";
@@ -104,7 +62,11 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 		var p_id = document.createElement("span");
 		p_id.className = "post_link"; //should be redone fo creating a link
 		var a = document.createElement("a");
-		a.href = "/" + board + "/res/" + postdict[array[i]]["op_post"] + "#" + postdict[array[i]]["id"];
+		if (postdict[array[i]]["op_post"] === null) {
+			a.href = "/" + board + "/res/" + postdict[array[i]]["id"] + "#" + postdict[array[i]]["id"];
+		} else {
+			a.href = "/" + board + "/res/" + postdict[array[i]]["op_post"] + "#" + postdict[array[i]]["id"];
+		}
 		a.innerHTML = "№" + postdict[array[i]]["id"];
 		p_id.appendChild(a);
 		post_details.appendChild(p_id);
