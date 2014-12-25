@@ -1,5 +1,7 @@
 #this is the file for the functions, shared beatween many modules
 
+import time
+
 import tornado.escape
 
 import lxml
@@ -32,8 +34,10 @@ def posting(requesth, board): #working with posted form content
         name = tornado.escape.xhtml_escape(requesth.get_body_argument('name'))
         if len(name) > 255:
             return 'Too long name'
-        if email != '':
+        if name != '':
             post_content['name'] = name
+        else:
+            post_content['name'] = 'Аноним'
         
         #text of post
         text = tornado.escape.xhtml_escape(requesth.get_body_argument('text'))
@@ -56,6 +60,9 @@ def posting(requesth, board): #working with posted form content
 
         #need to add file management
         
+
+        #adding timestamp
+        post_content['post_time'] = int(time.time())
         
         #preparing the post for database
             #posting should be done as a subfunction of the BOARD class

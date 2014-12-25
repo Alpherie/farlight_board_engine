@@ -28,7 +28,6 @@ def html_page_return(board, thread):
                    E.BR(),
                    E.INPUT(type = 'submit', value = 'POST'),
                    method = 'POST', action = ''),
-            lxml.html.fromstring("<p>... and this is a parsed fragment ...</p>"),
             E.DIV('', id = 'mainframe'),
             onload = 'threadfunc()'
             )

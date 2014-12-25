@@ -1,0 +1,44 @@
+body {
+	background-color: #eeeeee;
+	font-size: 100%;
+}
+
+h1 {
+	text-align: center;
+}
+
+.postform{
+	width: auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.oppostcontainer {
+	
+}
+
+.oppost{
+
+}
+
+.theme {
+	display: inline-block;
+	color: #000033;
+	font-size: 1.25em;
+	margin: 4px;
+}
+
+.name {
+	display: inline-block;
+	margin: 4px;
+}
+
+.post_time {
+	display: inline-block;
+	margin: 4px;
+}
+
+.post_link {
+	display: inline-block;
+	margin: 4px;
+}

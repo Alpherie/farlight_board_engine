@@ -55,9 +55,8 @@ def html_page_return(board, page):
                            E.TD(E.INPUT(type = 'text', name = 'captcha', value = '')),
                            )
                        ),
-                   method = 'POST', action = ''),
+                   method = 'POST', action = '/'+board),
             E.HR(),
-            lxml.html.fromstring("<p>... and this is a parsed fragment ...</p>"),
             E.DIV('', id = 'mainframe'),
             onload = 'boardfunc()'
             )
