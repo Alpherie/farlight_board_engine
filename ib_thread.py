@@ -44,11 +44,11 @@ def json_answer(requesth):
         for threadnum in received_objects['threads']:
             if type(threadnum['threadnum']) is int and type(threadnum['begin']) is int and threadnum['begin'] > 0: #here we get the thread number and range
                 if threadnum['threadnum'] not in return_object: #checking if threadnum is not already requested, we support only one request per thread
-                    if threadnum['threadnum'] in initiate.board_cache[board][6]: #checking if thread exists
-                        if type(threadnum['end']) is not int or threadnum['end'] > len(initiate.board_cache[board][6][threadnum['threadnum']]): #should add checking for begin to be less then len(list of posts in thread)
-                            return_object[threadnum['threadnum']] = initiate.board_cache[board][6][threadnum['threadnum']][threadnum['begin']-1:]
-                        elif threadnum['end'] > 0 and threadnum['begin'] < len(initiate.board_cache[board][6][threadnum['threadnum']]):
-                            return_object[threadnum['threadnum']] = initiate.board_cache[board][6][threadnum['threadnum']][threadnum['begin']-1:threadnum['end']-1]
+                    if threadnum['threadnum'] in initiate.board_cache[board].posts_dict: #checking if thread exists
+                        if type(threadnum['end']) is not int or threadnum['end'] > len(initiate.board_cache[board].posts_dict[threadnum['threadnum']]): #should add checking for begin to be less then len(list of posts in thread)
+                            return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']-1:]
+                        elif threadnum['end'] > 0 and threadnum['begin'] < len(initiate.board_cache[board].posts_dict[threadnum['threadnum']]):
+                            return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']-1:threadnum['end']-1]
                         else:
                             return_object[threadnum['threadnum']] = []
                     else:
@@ -81,7 +81,7 @@ def get(requesth): #requesth is tornadoweb requesthandler object
     board_exists, board, thread = get_board_and_thread(requesth.request.uri)
     if board_exists == False:
         return 'No such board'
-    if thread is not None and thread in initiate.board_cache[board][6]: #checking if thread exists
+    if thread is not None and thread in initiate.board_cache[board].posts_dict: #checking if thread exists
         return html_page_return(board, thread)
     else:
         return 'No such thread'

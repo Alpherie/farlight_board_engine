@@ -69,22 +69,22 @@ def posting(requesth, board): #working with posted form content
         
         #preparing the post for database
             #posting should be done as a subfunction of the BOARD class
-        new_post = initiate.board_cache[board][4](**post_content)
+        new_post = initiate.board_cache[board].post_class(**post_content)
             #posting to the database
         initiate.sess.add(new_post)
         initiate.sess.commit()
             #adding the post to the cache
         if op == 0:
-            initiate.board_cache[board][5].reverse() #reversing list for faster appending
-            initiate.board_cache[board][5].append(new_post.id) 
-            initiate.board_cache[board][5].reverse()
-            initiate.board_cache[board][6][new_post.id] = []
+            initiate.board_cache[board].threads.reverse() #reversing list for faster appending
+            initiate.board_cache[board].threads.append(new_post.id) 
+            initiate.board_cache[board].threads.reverse()
+            initiate.board_cache[board].posts_dict[new_post.id] = []
         else:
-            initiate.board_cache[board][5].remove(op) #not sure, if we should remove it from reversed list or not reversed
-            initiate.board_cache[board][5].reverse() #reversing list for faster appending
-            initiate.board_cache[board][5].append(op)
-            initiate.board_cache[board][5].reverse()
-            initiate.board_cache[board][6][op].append(new_post.id)
+            initiate.board_cache[board].threads.remove(op) #not sure, if we should remove it from reversed list or not reversed
+            initiate.board_cache[board].threads.reverse() #reversing list for faster appending
+            initiate.board_cache[board].threads.append(op)
+            initiate.board_cache[board].threads.reverse()
+            initiate.board_cache[board].posts_dict[op].append(new_post.id)
         return 'Luckily posted'
     else:
         return 'not implemented yet'
@@ -102,7 +102,7 @@ def get_posts_code_by_num(requesth, received_objects): #function for returning t
         in_list.add(postid)#probably should check, if adding an already existing in set element does not cause an error
     in_list2 = list(in_list)#converting to list for _in function
     if len(in_list2) != 0:
-        database_responce = initiate.sess.query(initiate.board_cache[board][4]).filter(initiate.board_cache[board][4].id.in_(in_list2)).all()
+        database_responce = initiate.sess.query(initiate.board_cache[board].post_class).filter(initiate.board_cache[board].post_class.id.in_(in_list2)).all()
         for row in database_responce:
             return_object[row.id] = row.to_dict()
             in_list.remove(row.id)

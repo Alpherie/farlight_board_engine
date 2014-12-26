@@ -175,9 +175,11 @@ def admin_post(requesth):
                 if board_list != [] or requesth.get_body_argument('tablename') in initiate.engine.table_names():
                     return 'table with such name exists!'
                 #we checked, now we should add this to board cache, create table and write down it to database
-                initiate.sess.add(initiate.Board(address = requesth.get_body_argument('address'), tablename = requesth.get_body_argument('tablename'), name = requesth.get_body_argument('name'), fullname = requesth.get_body_argument('fullname'), description = requesth.get_body_argument('description'))) #creating new board in Boards table
-                initiate.board_cache[requesth.get_body_argument('address')] = (requesth.get_body_argument('tablename'), requesth.get_body_argument('name'), requesth.get_body_argument('fullname'), requesth.get_body_argument('description'), type(requesth.get_body_argument('description'), (initiate.Post,initiate.Base), {'__tablename__':requesth.get_body_argument('tablename')}))#add to boardcache and creating the table class
-                initiate.board_cache[requesth.get_body_argument('address')][4].__table__.create(bind = initiate.engine)#creating table
+                new_board = initiate.Board(address = requesth.get_body_argument('address'), tablename = requesth.get_body_argument('tablename'), name = requesth.get_body_argument('name'), fullname = requesth.get_body_argument('fullname'), description = requesth.get_body_argument('description')) #creating new board in Boards table
+                initiate.sess.add(new_board)
+                initiate.board_cache[requesth.get_body_argument('address')] = initiate.board_cache_class(new_board, table_exists = False)
+                #initiate.board_cache[requesth.get_body_argument('address')] = (requesth.get_body_argument('tablename'), requesth.get_body_argument('name'), requesth.get_body_argument('fullname'), requesth.get_body_argument('description'), type(requesth.get_body_argument('description'), (initiate.Post,initiate.Base), {'__tablename__':requesth.get_body_argument('tablename')}))#add to boardcache and creating the table class
+                initiate.board_cache[requesth.get_body_argument('address')].post_class.__table__.create(bind = initiate.engine)#creating table
                 initiate.sess.commit()#committing changes to boards table
                 initiate.renew_board_cache(renew_cache_dict=False) #here we fuck with the board cache again
                 return 'created board successfully' #add redirection

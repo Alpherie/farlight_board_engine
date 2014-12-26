@@ -52,6 +52,36 @@ class Post(): #(Base):
     def __repr__(self):
         return "<Post(id = №%d, html_code='%s', picture='%s', op_post='%d')>" % (self.id, self.html_code, self.picture, self.op_post)
 #---------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------------------
+class board_cache_class(): 
+    def __init__(self, b, table_exists = True):
+        """table_exists flag is used when we do not need to ask table as it is not created yet"""
+        self.address = b.address #will be needed for form generating
+        self.tablename = b.tablename
+        self.name = b.name
+        self.fullname = b.fullname
+        self.description = b.description
+        self.post_form_type = 'lxml' #or html
+        self.post_form = '' #will be added the form generating, or reading from file
+        self.post_class = type(b.name, (Post,Base), {'__tablename__':b.tablename}) #class post for table #probably better to make a separate function for its generating
+        
+        self.threads = []#need to redo using array.array #we do this because we need a list of integers, not ordered tuples
+        if table_exists:
+            #here we need to get threads ordered by last post time
+            #SELECT DISTINCT threadid FROM (SELECT coalesce(b.op_post, b.id) AS threadid FROM b ORDER BY b.id DESC)
+            subq = sess.query(coalesce(self.post_class.op_post, self.post_class.id).label('threadid')).filter().order_by(self.post_class.id.desc()).subquery()
+            threads_tuples = sess.query(subq.c.threadid).filter().distinct().all() #getting threads list
+            for thread in threads_tuples:
+                self.threads.append(thread[0])
+            #threads.reverse()
+        self.posts_dict = {}
+        for thread in self.threads:
+            self.posts_dict[thread] = []#need to redo using array.array
+        if table_exists:
+            posts = sess.query(self.post_class.id, self.post_class.op_post).filter(self.post_class.op_post != None).all()
+            for each_post in posts:
+                self.posts_dict[each_post.op_post].append(each_post.id)
+#-----------------------------------------------------------------------------------------------------------------------------------
 
 def renew_board_cache(renew_cache_dict = True, renew_thread_cache = True):
     global board_cache#should be done by the request
@@ -61,23 +91,7 @@ def renew_board_cache(renew_cache_dict = True, renew_thread_cache = True):
     if renew_cache_dict:
         board_cache = {}
         for b in boards:
-            board_post_class = type(b.name, (Post,Base), {'__tablename__':b.tablename}) #class post for table
-            #here we need to get threads ordered by last post time
-            #SELECT DISTINCT threadid FROM (SELECT coalesce(b.op_post, b.id) AS threadid FROM b ORDER BY b.id DESC)
-            subq = sess.query(coalesce(board_post_class.op_post, board_post_class.id).label('threadid')).filter().order_by(board_post_class.id.desc()).subquery()
-            threads_tuples = sess.query(subq.c.threadid).filter().distinct().all() #getting threads list
-            threads = []#we do this because we need a list of integers, no ordered tuples
-            for thread in threads_tuples:
-                threads.append(thread[0])
-            #threads.reverse()
-            posts_dict = {}
-            for thread in threads:
-                posts_dict[thread] = []
-            posts = sess.query(board_post_class.id, board_post_class.op_post).filter(board_post_class.op_post != None).all()
-            for each_post in posts:
-                posts_dict[each_post.op_post].append(each_post.id)
-            board_cache[b.address] = (b.tablename, b.name, b.fullname, b.description, board_post_class, threads, posts_dict)#tablename, name, fullname, desc
-            
+            board_cache[b.address] = board_cache_class(b)
     if cf.static_board_footer == True:
         board_cache_footer = cf.board_cache_footer
     else:
