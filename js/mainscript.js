@@ -103,6 +103,7 @@ function threadfunc() {
 		//adding op-post
 		var post = document.createElement("div");
 		post.id = thread;
+		post.className = "oppost";
 		mainframe.appendChild(post);
 
 		var threadnum;
@@ -110,6 +111,7 @@ function threadfunc() {
 		for (i in array) {
 			var post = document.createElement("div");
 			post.id = array[i];
+			post.className = "post";
 			//post.innerHTML = array[i];
 			mainframe.appendChild(post);
 			array[i] = parseInt(array[i]);
