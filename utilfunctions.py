@@ -60,7 +60,10 @@ def posting(requesth, board): #working with posted form content
 
         #need to add file management
         
-
+        #adding ip
+        post_content['ip'] = requesth.request.remote_ip
+        print(requesth.request.remote_ip) #for testing
+        
         #adding timestamp
         post_content['post_time'] = int(time.time())
         

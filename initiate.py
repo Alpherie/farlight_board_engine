@@ -35,7 +35,8 @@ class Post(): #(Base):
     picture = sqla.Column(sqla.String(255))
     op_post = sqla.Column(sqla.Integer)
     post_time = sqla.Column(sqla.Integer)
-    def to_dict(self): #converting the post to dict for javascript answer
+    ip = sqla.Column(sqla.String(15))
+    def to_dict(self, ip=False): #converting the post to dict for javascript answer
         to_dict = {'id':self.id,#probably not needed, wonder if __dict__ will be appropriate
                    'theme':self.theme,
                    'name':self.name,
@@ -45,6 +46,8 @@ class Post(): #(Base):
                    'op_post':self.op_post,
                    'post_time':self.post_time
                    }
+        if ip:
+            to_dict['ip'] = self.ip
         return to_dict
     def __repr__(self):
         return "<Post(id = №%d, html_code='%s', picture='%s', op_post='%d')>" % (self.id, self.html_code, self.picture, self.op_post)
