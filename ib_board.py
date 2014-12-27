@@ -3,6 +3,8 @@ import lxml
 from lxml.html import builder as E
 from lxml.builder import ElementMaker as EM
 
+import array
+
 import tornado.escape
 
 import initiate
@@ -32,7 +34,6 @@ def html_page_return(board, page):
 def json_answer(requesth):
     received_objects = tornado.escape.json_decode(requesth.request.body)
     if received_objects['action'] == 'get threads ids for page': #this is when we need to return post ids for given threads
-        return_object = []
         board = received_objects['board']
         if board not in initiate.board_cache: #all of this should be redone, it is fucking not good code
             return 'error'
@@ -41,9 +42,9 @@ def json_answer(requesth):
         if received_objects['range']['begin'] > len(initiate.board_cache[board].threads):
             return_object = [] #if begin goes out of range, return none
         elif received_objects['range']['end'] > len(initiate.board_cache[board].threads):
-            return_object = initiate.board_cache[board].threads[received_objects['range']['begin']-1:] #if end goes out of range, return everything from begin
+            return_object = initiate.board_cache[board].threads[received_objects['range']['begin']-1:].tolist() #if end goes out of range, return everything from begin
         else:
-            return_object = initiate.board_cache[board].threads[received_objects['range']['begin']-1:received_objects['range']['end']-1] #if end and begin are in range, return their range
+            return_object = initiate.board_cache[board].threads[received_objects['range']['begin']-1:received_objects['range']['end']-1].tolist() #if end and begin are in range, return their range
         return tornado.escape.json_encode(return_object)
     elif received_objects['action'] == 'get posts code by num': #i will do it later
         return utilfunctions.get_posts_code_by_num(requesth, received_objects)
@@ -63,21 +64,21 @@ def json_answer(requesth):
                                     return_object[threadnum['threadnum']] = []
                                 elif threadnum['begin'] < -len(initiate.board_cache[board].posts_dict[threadnum['threadnum']]):
                                     if threadnum['end'] == -1:
-                                        return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][:]
+                                        return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][:].tolist()
                                     else:
-                                        return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][:threadnum['end']]
+                                        return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][:threadnum['end']].tolist()
                                 else:
                                     if threadnum['end'] == -1:
-                                        return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']:]
+                                        return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']:].tolist()
                                     else:
-                                        return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']:threadnum['end']]
+                                        return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']:threadnum['end']].tolist()
                             elif threadnum['begin'] >= 0 and threadnum['end'] >= 0:
                                 if threadnum['begin'] >= len(initiate.board_cache[board].posts_dict[threadnum['threadnum']]):
                                     return_object[threadnum['threadnum']] = []
                                 elif threadnum['end'] >= len(initiate.board_cache[board].posts_dict[threadnum['threadnum']]):
-                                    return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']-1:]
+                                    return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']-1:].tolist()
                                 else:
-                                    return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']-1:threadnum['end']-1]
+                                    return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']-1:threadnum['end']-1].tolist()
                             else:
                                 return 'incorrect range' #both begin and end should be < 0 or >= 0
                         else:

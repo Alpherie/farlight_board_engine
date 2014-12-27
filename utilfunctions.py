@@ -74,17 +74,14 @@ def posting(requesth, board): #working with posted form content
         initiate.sess.add(new_post)
         initiate.sess.commit()
             #adding the post to the cache
+        initiate.board_cache[board].add_post(op, new_post.id)
+        #returning redirect on success
         if op == 0:
-            initiate.board_cache[board].threads.reverse() #reversing list for faster appending
-            initiate.board_cache[board].threads.append(new_post.id) 
-            initiate.board_cache[board].threads.reverse()
-            initiate.board_cache[board].posts_dict[new_post.id] = []
+            location = '/'+board+'/'
         else:
-            initiate.board_cache[board].threads.remove(op) #not sure, if we should remove it from reversed list or not reversed
-            initiate.board_cache[board].threads.reverse() #reversing list for faster appending
-            initiate.board_cache[board].threads.append(op)
-            initiate.board_cache[board].threads.reverse()
-            initiate.board_cache[board].posts_dict[op].append(new_post.id)
+            location = '/'+board+'/res/'+str(op)+'#'+str(new_post.id)
+        requesth.set_header('Location', location)
+        requesth.set_status(302)
         return 'Luckily posted'
     else:
         return 'not implemented yet'

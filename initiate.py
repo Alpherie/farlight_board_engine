@@ -6,8 +6,12 @@ import sqlalchemy.types as sqlatypes
 #
 from lxml.html import builder as E
 #
+import array
+#
+#
 import config as cf
-
+#
+#
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.functions import coalesce
 from sqlalchemy.orm import sessionmaker
@@ -67,7 +71,7 @@ class board_cache_class():
         self.post_form = self._lxml_form_generator() #will be added the form generating, or reading from file
         self.post_class = type(b.name, (Post,Base), {'__tablename__':b.tablename}) #class post for table #probably better to make a separate function for its generating
         
-        self.threads = []#need to redo using array.array #we do this because we need a list of integers, not ordered tuples
+        self.threads = array.array('L') #we do this because we need a list of integers, not ordered tuples
         if table_exists:
             #here we need to get threads ordered by last post time
             #SELECT DISTINCT threadid FROM (SELECT coalesce(b.op_post, b.id) AS threadid FROM b ORDER BY b.id DESC)
@@ -78,11 +82,27 @@ class board_cache_class():
             #threads.reverse()
         self.posts_dict = {}
         for thread in self.threads:
-            self.posts_dict[thread] = []#need to redo using array.array
+            self.posts_dict[thread] = array.array('L') #array.array is faster
         if table_exists:
             posts = sess.query(self.post_class.id, self.post_class.op_post).filter(self.post_class.op_post != None).all()
             for each_post in posts:
                 self.posts_dict[each_post.op_post].append(each_post.id)
+
+    def add_post(self, op, new_id): #will be redone, after limit of threads will be introduced
+        """This function is adding new threads or bumping old ones"""
+        if op == 0:
+            self.threads.reverse() #reversing list for faster appending
+            self.threads.append(new_id) 
+            self.threads.reverse()
+            self.posts_dict[new_id] = array.array('L')
+        else:
+            self.threads.remove(op) #not sure, if we should remove it from reversed list or not reversed
+            self.threads.reverse() #reversing list for faster appending
+            self.threads.append(op)
+            self.threads.reverse()
+            self.posts_dict[op].append(new_id)
+        return
+    
     def _lxml_form_generator(self):
         """Is used for generating lxml post form"""
         form = E.FORM(E.CLASS("postform"), #postform

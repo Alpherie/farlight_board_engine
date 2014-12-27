@@ -40,9 +40,9 @@ def json_answer(requesth):
                 if threadnum['threadnum'] not in return_object: #checking if threadnum is not already requested, we support only one request per thread
                     if threadnum['threadnum'] in initiate.board_cache[board].posts_dict: #checking if thread exists
                         if type(threadnum['end']) is not int or threadnum['end'] > len(initiate.board_cache[board].posts_dict[threadnum['threadnum']]): #should add checking for begin to be less then len(list of posts in thread)
-                            return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']-1:]
+                            return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']-1:].tolist()
                         elif threadnum['end'] > 0 and threadnum['begin'] < len(initiate.board_cache[board].posts_dict[threadnum['threadnum']]):
-                            return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']-1:threadnum['end']-1]
+                            return_object[threadnum['threadnum']] = initiate.board_cache[board].posts_dict[threadnum['threadnum']][threadnum['begin']-1:threadnum['end']-1].tolist()
                         else:
                             return_object[threadnum['threadnum']] = []
                     else:
