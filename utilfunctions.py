@@ -54,7 +54,7 @@ def posting(requesth, board): #working with posted form content
         except ValueError:
             return 'Incorrect op referer'
         if op != 0:
-            if op not in initiate.board_cache[board][6]:
+            if op not in initiate.board_cache[board].posts_dict:
                 return 'Thread does not exist'
             post_content['op_post'] = op
 

@@ -19,15 +19,9 @@ def html_page_return(board, thread):
             E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
             E.P(E.CLASS("board"), board, id = 'board'),
             E.P(E.CLASS("thread"), str(thread), id = 'thread'),
-            E.FORM(E.CLASS("postform"), #postform
-                   E.INPUT(type = 'hidden', name = 'action', value = 'post'),
-                   E.INPUT(type = 'hidden', name = 'op', value = str(thread)),
-                   'THEME ', E.INPUT(type = 'text', name = 'theme', value = ''),
-                   E.BR(),
-                   'TEXT ', E.INPUT(type = 'text', name = 'text', value = ''),
-                   E.BR(),
-                   E.INPUT(type = 'submit', value = 'POST'),
-                   method = 'POST', action = ''),
+            E.HR(),
+            initiate.board_cache[board].post_form, #need to make it depending on post_form_type
+            E.HR(),
             E.DIV('', id = 'mainframe'),
             onload = 'threadfunc()'
             )

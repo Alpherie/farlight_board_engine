@@ -87,7 +87,8 @@ class board_cache_class():
         """Is used for generating lxml post form"""
         form = E.FORM(E.CLASS("postform"), #postform
                       E.INPUT(type = 'hidden', name = 'action', value = 'post'),
-                      E.INPUT(type = 'hidden', name = 'op', value = '0'),
+                      E.INPUT(type = 'hidden', name = 'op', value = '0', id = 'op_referer'),
+                      E.SCRIPT('document.getElementById("op_referer").value = document.getElementById("thread").innerHTML;'),
                       E.TABLE(
                           E.TR(
                               E.TD('THEME'),

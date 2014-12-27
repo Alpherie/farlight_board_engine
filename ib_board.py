@@ -19,6 +19,7 @@ def html_page_return(board, page):
             E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
             E.P(E.CLASS("board"), board, id = 'board'),
             E.P(E.CLASS("thread"), str(page), id = 'page'),
+            E.P(E.CLASS("thread"), '0', id = 'thread'),
             E.HR(),
             initiate.board_cache[board].post_form,
             E.HR(),
