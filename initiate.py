@@ -4,6 +4,8 @@ import sqlalchemy.sql as sqlasql
 import sqlalchemy.schema as sqlaschema
 import sqlalchemy.types as sqlatypes
 #
+from lxml.html import builder as E
+#
 import config as cf
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -62,7 +64,7 @@ class board_cache_class():
         self.fullname = b.fullname
         self.description = b.description
         self.post_form_type = 'lxml' #or html
-        self.post_form = '' #will be added the form generating, or reading from file
+        self.post_form = self._lxml_form_generator() #will be added the form generating, or reading from file
         self.post_class = type(b.name, (Post,Base), {'__tablename__':b.tablename}) #class post for table #probably better to make a separate function for its generating
         
         self.threads = []#need to redo using array.array #we do this because we need a list of integers, not ordered tuples
@@ -81,6 +83,45 @@ class board_cache_class():
             posts = sess.query(self.post_class.id, self.post_class.op_post).filter(self.post_class.op_post != None).all()
             for each_post in posts:
                 self.posts_dict[each_post.op_post].append(each_post.id)
+    def _lxml_form_generator(self):
+        """Is used for generating lxml post form"""
+        form = E.FORM(E.CLASS("postform"), #postform
+                      E.INPUT(type = 'hidden', name = 'action', value = 'post'),
+                      E.INPUT(type = 'hidden', name = 'op', value = '0'),
+                      E.TABLE(
+                          E.TR(
+                              E.TD('THEME'),
+                              E.TD(E.INPUT(type = 'text', name = 'theme', value = '', size = '44'), E.INPUT(type = 'submit', value = 'POST')),
+                              ),
+                          E.TR(
+                              E.TD('EMAIL'),
+                              E.TD(E.INPUT(type = 'text', name = 'email', value = '', size = '50')),
+                              ),
+                          E.TR(
+                              E.TD('NAME'),
+                              E.TD(E.INPUT(type = 'text', name = 'name', value = '', size = '50')),
+                              ),
+                          E.TR(
+                              E.TD('TEXT'),
+                              E.TD(E.TEXTAREA(name = 'text', rows = '10', cols = '50', placeholder = 'POST')),
+                              ),
+                          E.TR(
+                              E.TD('PICTURE'),
+                              E.TD(E.INPUT(type = 'file', name = 'file', accept = 'image/*')),
+                              ),
+                          E.TR(
+                              E.TD(
+                                  E.CENTER('CAPTCHA WILL BE HERE'),
+                                  colspan = '2'
+                                  )
+                              ),
+                          E.TR(
+                              E.TD('CAPTCHA'),
+                              E.TD(E.INPUT(type = 'text', name = 'captcha', value = '')),
+                              )
+                          ),
+                      method = 'POST', action = '/'+self.address)
+        return form
 #-----------------------------------------------------------------------------------------------------------------------------------
 
 def renew_board_cache(renew_cache_dict = True, renew_thread_cache = True):
