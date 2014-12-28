@@ -22,11 +22,11 @@ def html_page_return(board, page):
             E.P(E.CLASS("board"), board, id = 'board'),
             E.P(E.CLASS("thread"), str(page), id = 'page'),
             E.P(E.CLASS("thread"), '0', id = 'thread'),
-            E.HR(),
+            E.HR(E.CLASS("delimeter")),
             initiate.board_cache[board].post_form,
-            E.HR(),
+            E.HR(E.CLASS("delimeter")),
             E.DIV('', id = 'mainframe'),
-            E.HR(id = 'end'),
+            E.HR(E.CLASS("delimeter"), id = 'end'),
             onload = 'boardfunc()'
             )
         )

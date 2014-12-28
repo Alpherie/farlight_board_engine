@@ -19,11 +19,11 @@ def html_page_return(board, thread):
             E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
             E.P(E.CLASS("board"), board, id = 'board'),
             E.P(E.CLASS("thread"), str(thread), id = 'thread'),
-            E.HR(),
+            E.HR(E.CLASS("delimeter")),
             initiate.board_cache[board].post_form, #need to make it depending on post_form_type
-            E.HR(),
+            E.HR(E.CLASS("delimeter")),
             E.DIV('', id = 'mainframe'),
-            E.HR(id = 'end'),
+            E.HR(E.CLASS("delimeter"), id = 'end'),
             onload = 'threadfunc()'
             )
         )

@@ -1,6 +1,7 @@
 body {
-	background-color: #eeeeee;
+	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 	font-size: 100%;
+	background-color: #111122;
 }
 
 h1 {
@@ -12,35 +13,56 @@ h1 {
 	margin-left: auto;
 	margin-right: auto;
 	padding-right: 75px;
-	background-color: #eeeeee;
+	color: #bbbbff;
+}
+.postform td{
+	color: #bbbbff;
+}
+.postform input, textarea{
+	background-color: #eeeeff;
 }
 
+
 .oppostcontainer {
-	background-color: #eeeeee;
+	width: 100%;
 	margin-bottom: 15px;
 	margin-left: 7px;
+	display: block;
+	float:left;
+	clear: both;
 }
 
 .oppost{
+	display: block;
+	float:left;
+	color: #bbbbff;
 	margin-bottom: 7px;
 	padding-top: 3px;
 	padding-bottom: 5px;
 }
 
 .post{
-	background-color: #dddddd;
-	margin-left: 15px;
+	display: inline-block;
+	clear: both;
+	float:left;
+	width: auto;
+	background-color: #222233;
+	color: #bbbbff;
+	margin-left: 20px;
+	margin-top: 4px;
+	margin-bottom: 4px;
 	padding-left: 5px;
+	padding-right: 10px;
 	padding-top: 3px;
-	padding-bottom: 10px;
+	padding-bottom: 6px;
 	border-color: #bbbbbb;
 	border-width: 2px;
-	border-style: solid;
+	border-style: none;
 }
 
 .theme {
 	display: inline-block;
-	color: #000033;
+	color: #2222aa;
 	font-size: 1.25em;
 	margin: 4px;
 }
@@ -67,7 +89,7 @@ h1 {
 	color: #008800;
 }
 .post_link a:hover{
-	color: #00cc00;
+	color: #00bb00;
 }
 .post_link a:active{
 	color: #00cc00;
@@ -79,14 +101,21 @@ h1 {
 	margin: 4px;
 }
 .answer_link a:link{
-	color: #0000bb;
+	color: #1111dd;
 }
 .answer_link a:visited{
-	color: #111166;
+	color: #1111aa;
 }
 .answer_link a:hover{
 	color: #2222ff;
 }
 .answer_link a:active{
 	color: #2222ff;
+}
+
+
+.delimeter {
+	background-color: #661111;
+	border-color: #661111;
+	border-width: 2px;
 }
