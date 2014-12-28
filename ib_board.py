@@ -26,6 +26,7 @@ def html_page_return(board, page):
             initiate.board_cache[board].post_form,
             E.HR(),
             E.DIV('', id = 'mainframe'),
+            E.HR(id = 'end'),
             onload = 'boardfunc()'
             )
         )

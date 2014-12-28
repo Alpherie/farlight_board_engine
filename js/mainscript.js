@@ -60,16 +60,26 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 		post_details.appendChild(p_date);
 	
 		var p_id = document.createElement("span");
-		p_id.className = "post_link"; //should be redone fo creating a link
+		p_id.className = "post_link";
 		var a = document.createElement("a");
 		if (postdict[array[i]]["op_post"] === null) {
 			a.href = "/" + board + "/res/" + postdict[array[i]]["id"] + "#" + postdict[array[i]]["id"];
 		} else {
 			a.href = "/" + board + "/res/" + postdict[array[i]]["op_post"] + "#" + postdict[array[i]]["id"];
-		}
+		};
 		a.innerHTML = "№" + postdict[array[i]]["id"];
 		p_id.appendChild(a);
 		post_details.appendChild(p_id);
+
+		if (postdict[array[i]]["op_post"] === null) {
+			var p_answer = document.createElement("span");
+			p_answer.className = "answer_link";
+			var a = document.createElement("a");
+			a.href = "/" + board + "/res/" + postdict[array[i]]["id"] + "#end";
+			a.innerHTML = "[Ответ]";
+			p_answer.appendChild(a);
+			post_details.appendChild(p_answer);
+		};
 	
 		postdiv.appendChild(post_details);
 	

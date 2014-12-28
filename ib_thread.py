@@ -23,6 +23,7 @@ def html_page_return(board, thread):
             initiate.board_cache[board].post_form, #need to make it depending on post_form_type
             E.HR(),
             E.DIV('', id = 'mainframe'),
+            E.HR(id = 'end'),
             onload = 'threadfunc()'
             )
         )
