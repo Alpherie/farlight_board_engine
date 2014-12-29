@@ -1,6 +1,7 @@
 #this is the file for the functions, shared beatween many modules
 
 import time
+import re
 
 import tornado.escape
 
@@ -10,6 +11,21 @@ from lxml.builder import E as EE
 
 import initiate
 import config as cf
+
+def add_markup(text):
+    text = text.replace('\r\n', '\n')
+    text = text.replace('\n\r', '\n')
+    nl2br = re.compile('\n+[^$]')
+    print('==========================')
+    result = ''
+    pos = 0
+    for n in nl2br.finditer(text):
+        result = result + text[pos:n.start()] + (n.end()-n.start()-1)*'<br>'
+        pos = n.end()-1
+        print(result)
+    print('==========================')
+    result = result + text[pos:]
+    return result
 
 def posting(requesth, board): #working with posted form content
     action = requesth.get_body_argument('action')
@@ -41,6 +57,7 @@ def posting(requesth, board): #working with posted form content
         
         #text of post
         text = tornado.escape.xhtml_escape(requesth.get_body_argument('text'))
+        text = add_markup(text)
         if len(text) > cf.post_len:
             return 'Too long text' #should add html escaping
         elif text == '':
