@@ -109,12 +109,14 @@ function threadfunc() {
         xhr.send(JSON.stringify(data));
 
         xhr.onloadend = function () {
-        	var mainframe = document.getElementById("mainframe");
+        	var oppostcontainer = document.createElement("div");
+		oppostcontainer.className = "oppostcontainer";
+		document.getElementById("mainframe").appendChild(oppostcontainer);
 		//adding op-post
 		var post = document.createElement("div");
 		post.id = thread;
 		post.className = "oppost";
-		mainframe.appendChild(post);
+		oppostcontainer.appendChild(post);
 
 		var threadnum;
 		var array = JSON.parse(xhr.responseText)[thread];
@@ -123,7 +125,7 @@ function threadfunc() {
 			post.id = array[i];
 			post.className = "post";
 			//post.innerHTML = array[i];
-			mainframe.appendChild(post);
+			oppostcontainer.appendChild(post);
 			array[i] = parseInt(array[i]);
 		};
         // done

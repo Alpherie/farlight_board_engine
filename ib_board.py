@@ -18,10 +18,13 @@ def html_page_return(board, page):
             E.SCRIPT(type = 'text/javascript', src = '/mainscript.js') #js
             ),
         E.BODY(
-            E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
             E.P(E.CLASS("board"), board, id = 'board'),
-            E.P(E.CLASS("thread"), str(page), id = 'page'),
+            E.P(E.CLASS("page"), str(page), id = 'page'),
             E.P(E.CLASS("thread"), '0', id = 'thread'),
+            E.HR(E.CLASS("delimeter")),
+            E.H2(E.CLASS("boardname"),
+                 E.A('/' + board + '/ - '+ initiate.board_cache[board].name, href = '/' + board),
+                 ),
             E.HR(E.CLASS("delimeter")),
             initiate.board_cache[board].post_form,
             E.HR(E.CLASS("delimeter")),

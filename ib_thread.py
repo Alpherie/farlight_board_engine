@@ -16,10 +16,12 @@ def html_page_return(board, thread):
             E.SCRIPT(type = 'text/javascript', src = '/mainscript.js') #js
             ),
         E.BODY(
-            E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
             E.P(E.CLASS("board"), board, id = 'board'),
             E.P(E.CLASS("thread"), str(thread), id = 'thread'),
             E.HR(E.CLASS("delimeter")),
+            E.H2(E.CLASS("boardname"),
+                 E.A('/' + board + '/ - '+ initiate.board_cache[board].name, href = '/' + board),
+                 ),
             initiate.board_cache[board].post_form, #need to make it depending on post_form_type
             E.HR(E.CLASS("delimeter")),
             E.DIV('', id = 'mainframe'),

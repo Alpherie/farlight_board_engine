@@ -111,12 +111,12 @@ class board_cache_class():
                       E.SCRIPT('document.getElementById("op_referer").value = document.getElementById("thread").innerHTML;'),
                       E.TABLE(
                           E.TR(
-                              E.TD('THEME'),
-                              E.TD(E.INPUT(type = 'text', name = 'theme', value = '', size = '44'), E.INPUT(type = 'submit', value = 'POST')),
+                              E.TD('EMAIL'),
+                              E.TD(E.INPUT(type = 'text', name = 'email', value = '', id = 'emailfield'), E.INPUT(type = 'submit', value = 'POST', id = 'postbutton')),
                               ),
                           E.TR(
-                              E.TD('EMAIL'),
-                              E.TD(E.INPUT(type = 'text', name = 'email', value = '', size = '50')),
+                              E.TD('THEME'),
+                              E.TD(E.INPUT(type = 'text', name = 'theme', value = '', size = '50')),
                               ),
                           E.TR(
                               E.TD('NAME'),
@@ -124,7 +124,7 @@ class board_cache_class():
                               ),
                           E.TR(
                               E.TD('TEXT'),
-                              E.TD(E.TEXTAREA(name = 'text', rows = '10', cols = '50', placeholder = 'POST')),
+                              E.TD(E.TEXTAREA(name = 'text', rows = '8', cols = '50', placeholder = 'POST')),
                               ),
                           E.TR(
                               E.TD('PICTURE'),

@@ -4,9 +4,39 @@ body {
 	background-color: #111122;
 }
 
+#board {
+	display: none;
+}
+#page {
+	display: none;
+}
+#thread {
+	display: none;
+}
+
+
 h1 {
 	text-align: center;
 }
+
+
+.boardname {
+	text-align: center;
+	padding: 10px;
+}
+.boardname a:link{
+	color: #5555ff;
+}
+.boardname a:visited{
+	color: #5555ff;
+}
+.boardname a:hover{
+	color: #aaaaff;
+}
+.boardname a:active{
+	color: #aaaaff;
+}
+
 
 .postform{
 	width: 500px;
@@ -17,9 +47,20 @@ h1 {
 }
 .postform td{
 	color: #bbbbff;
+	align: left;
 }
 .postform input, textarea{
+	display: inline-block;
 	background-color: #eeeeff;
+	width: 100%;
+}
+#emailfield {
+	width: 80%;
+}
+#postbutton {
+	width: 20%;
+	font-weight: bold;
+	padding: 3px;
 }
 
 
