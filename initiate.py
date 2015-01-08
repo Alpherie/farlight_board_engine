@@ -39,6 +39,9 @@ class Post(): #(Base):
     email = sqla.Column(sqla.String(255))
     text = sqla.Column(sqla.String(cf.post_len)) #this is the text of post. Should be renamed later
     picture = sqla.Column(sqla.String(255))
+    hash1 = sqla.Column(sqla.String(255))#need to make it lenght as long as hash
+    __table_args__ = (sqla.UniqueConstraint('hash1', name='_picture_hash'),
+                     )#should be generated when support of multiple pictures would be added
     op_post = sqla.Column(sqla.Integer)
     post_time = sqla.Column(sqla.Integer)
     ip = sqla.Column(sqla.String(15))
@@ -128,7 +131,7 @@ class board_cache_class():
                               ),
                           E.TR(
                               E.TD('PICTURE'),
-                              E.TD(E.INPUT(type = 'file', name = 'file', accept = 'image/*')),
+                              E.TD(E.INPUT(type = 'file', name = 'file1', accept = 'image/*')),
                               ),
                           E.TR(
                               E.TD(
@@ -141,7 +144,7 @@ class board_cache_class():
                               E.TD(E.INPUT(type = 'text', name = 'captcha', value = '')),
                               )
                           ),
-                      method = 'POST', action = '/'+self.address)
+                      method = 'POST', action = '/'+self.address, enctype = 'multipart/form-data')
         return form
 #-----------------------------------------------------------------------------------------------------------------------------------
 

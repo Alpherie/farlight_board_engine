@@ -2,6 +2,10 @@
 
 import time
 import re
+import hashlib
+import os.path
+import string
+import random
 
 import tornado.escape
 
@@ -12,18 +16,22 @@ from lxml.builder import E as EE
 import initiate
 import config as cf
 
+def generate_new_path(board, extension):
+    newname = str(int(time.mktime(time.localtime()))) + ''.join(random.choice(string.digits) for _ in range(3))  + extension 
+    return os.path.join('content', board, 'img', newname), newname
+
 def add_markup(text):
     text = text.replace('\r\n', '\n')
     text = text.replace('\n\r', '\n')
     nl2br = re.compile('\n+[^$]')
-    print('==========================')
+    #print('==========================')
     result = ''
     pos = 0
     for n in nl2br.finditer(text):
         result = result + text[pos:n.start()] + (n.end()-n.start()-1)*'<br>'
         pos = n.end()-1
-        print(result)
-    print('==========================')
+        #print(result)
+    #print('==========================')
     result = result + text[pos:]
     return result
 
@@ -75,11 +83,26 @@ def posting(requesth, board): #working with posted form content
                 return 'Thread does not exist'
             post_content['op_post'] = op
 
-        #need to add file management
+        #file management
+        there_are_files = False
+        #print(requesth.request.files)
+        print(requesth.request.files['file1'][0]['filename'])
+        #print(requesth.request.files['file1'][0]['filename'])
+        if len(requesth.request.files) != 0: #would be redone for multiple file management
+            there_are_files = True
+            file = requesth.request.files['file1'][0]
+            m = hashlib.md5()
+            m.update(file['body'])
+            post_content['hash1'] = m.hexdigest()
+            extension = os.path.splitext(file['filename'])[1]
+            path, fname = generate_new_path(board, extension)
+            while os.path.exists(path):
+                path = generate_new_path(board, extension)
+            post_content['picture'] = fname
+        #that's not all, file is written after post is committed to db
         
         #adding ip
         post_content['ip'] = requesth.request.remote_ip
-        print(requesth.request.remote_ip) #for testing
         
         #adding timestamp
         post_content['post_time'] = int(time.time())
@@ -92,6 +115,13 @@ def posting(requesth, board): #working with posted form content
         initiate.sess.commit()
             #adding the post to the cache
         initiate.board_cache[board].add_post(op, new_post.id)
+
+        #adding the file
+        if there_are_files:
+            f = open(path, 'wb')
+            f.write(file['body'])
+            f.close()
+        
         #returning redirect on success
         if op == 0:
             location = '/'+board+'/'

@@ -154,6 +154,14 @@ h1 {
 	color: #2222ff;
 }
 
+.imageblock{
+	display: inline-block;
+	float:left;
+}
+
+.post_text{
+	display: inline-block;
+}
 
 .delimeter {
 	background-color: #661111;

@@ -84,6 +84,26 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 		postdiv.appendChild(post_details);
 	
 		var post_body = document.createElement("div");
+
+		//adding picture
+		if (postdict[array[i]]["pic"] !== null) { 
+			var pic_block = document.createElement("div");
+			pic_block.className = "imageblock";
+			var figure = document.createElement("figure");
+			figure.className = "image";
+			var figcaption = document.createElement("figcaption");
+			figcaption.className = "fileattrs";
+			var filelink = document.createElement("a");
+			filelink.innerHTML = postdict[array[i]]["pic"];
+			filelink.href = "/" + board + "/img/" + postdict[array[i]]["pic"];
+			filelink.target = "_blank";
+			//also there will be preview
+			figcaption.appendChild(filelink);
+			figure.appendChild(figcaption);
+			pic_block.appendChild(figure);
+			post_body.appendChild(pic_block);
+		};
+
 		var p_text = document.createElement("blockquote");
 		p_text.className = "post_text";
 		p_text.innerHTML = postdict[array[i]]["text"];
