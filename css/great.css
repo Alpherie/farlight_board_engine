@@ -154,10 +154,25 @@ h1 {
 	color: #2222ff;
 }
 
+
 .imageblock{
 	display: inline-block;
 	float:left;
+	font-size: 0.75em;
 }
+.imageblock a:link{
+	color: #ffffff;
+}
+.imageblock a:visited{
+	color: #cccccc;
+}
+.imageblock a:hover{
+	color: #ffffff;
+}
+.imageblock a:active{
+	color: #ffffff;
+}
+
 
 .post_text{
 	display: inline-block;
