@@ -1,3 +1,4 @@
 config.py
 __pycache__/
-content/**/**/**
+content/**/img/**
+content/**/thumbs/**
