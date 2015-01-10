@@ -98,8 +98,14 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 			filelink.href = "/" + board + "/img/" + postdict[array[i]]["pic"];
 			filelink.target = "_blank";
 			//also there will be preview
+			var img = document.createElement("img");
+			img.src = "/" + board + "/thumbs/s" + postdict[array[i]]["pic"];
+			img.alt = postdict[array[i]]["pic"];
+			img.className = "previewimg";
+			//adding all the shit
 			figcaption.appendChild(filelink);
 			figure.appendChild(figcaption);
+			figure.appendChild(img);
 			pic_block.appendChild(figure);
 			post_body.appendChild(pic_block);
 		};
