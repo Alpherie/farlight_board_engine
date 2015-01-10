@@ -13,12 +13,15 @@ import lxml
 from lxml.html import builder as E
 from lxml.builder import E as EE
 
+import wand.image
+
 import initiate
 import config as cf
 
 def generate_new_path(board, extension):
+    """Here we generate pathes for saving the files ad thumbs"""
     newname = str(int(time.mktime(time.localtime()))) + ''.join(random.choice(string.digits) for _ in range(3))  + extension 
-    return os.path.join('content', board, 'img', newname), newname
+    return os.path.join('content', board, 'img', newname), newname, os.path.join('content', board, 'thumbs', 's'+newname)
 
 def add_markup(text):
     text = text.replace('\r\n', '\n')
@@ -95,9 +98,9 @@ def posting(requesth, board): #working with posted form content
             m.update(file['body'])
             post_content['hash1'] = m.hexdigest()
             extension = os.path.splitext(file['filename'])[1]
-            path, fname = generate_new_path(board, extension)
+            path, fname, thumbpath = generate_new_path(board, extension)
             while os.path.exists(path):
-                path = generate_new_path(board, extension)
+                path, fname, thumbpath = generate_new_path(board, extension)
             post_content['picture'] = fname
         #that's not all, file is written after post is committed to db
         
@@ -116,11 +119,16 @@ def posting(requesth, board): #working with posted form content
             #adding the post to the cache
         initiate.board_cache[board].add_post(op, new_post.id)
 
-        #adding the file
+        #adding the file and generating preview
         if there_are_files:
-            f = open(path, 'wb')
-            f.write(file['body'])
-            f.close()
+            with wand.image.Image(blob=file['body']) as img: #probably should add hint file format
+                img.save(filename=path)
+                resize_coeff = 300/max(img.width, img.height)
+                if resize_coeff >= 1.0:
+                    resize_coeff = 1
+                img.sample(int(img.width*resize_coeff), int(img.height*resize_coeff))
+                img.save(filename=thumbpath)
+            
         
         #returning redirect on success
         if op == 0:

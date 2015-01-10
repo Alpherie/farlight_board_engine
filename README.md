@@ -9,3 +9,5 @@ required:
 lxml 
 tornado 
 sqlalchemy
+imagemagick
+python3-wand
