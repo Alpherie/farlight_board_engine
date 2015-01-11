@@ -2,6 +2,9 @@ body {
 	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 	font-size: 100%;
 	background-color: #111122;
+	min-height: 100%;
+	margin: 0px;
+	border: 0px;
 }
 
 #board {
@@ -14,27 +17,60 @@ body {
 	display: none;
 }
 
+.container{
+	min-height: 100%;
+	width: auto;
+	padding: 0px;
+	border: 0px;
+	margin: 0px;
+}
+
+.maintable{
+	width: 100%;
+	min-height: 100%;;
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+	border-spacing: 0px;
+	overflow-x: hidden;
+}
+
+#header{
+	height: auto;
+}
 
 h1 {
 	text-align: center;
+	display: block;
+	clear: both;
 }
 
+#mainpart{
+	vertical-align: top;
+}
 
 .boardname {
 	text-align: center;
-	padding: 10px;
+	padding-bottom: 9px;
+	padding-top: 15px; 
+	width: auto;
+	clear: both;
 }
 .boardname a:link{
 	color: #5555ff;
+	text-decoration: none;
 }
 .boardname a:visited{
 	color: #5555ff;
+	text-decoration: none;
 }
 .boardname a:hover{
 	color: #aaaaff;
+	text-decoration: none;
 }
 .boardname a:active{
 	color: #aaaaff;
+	text-decoration: none;
 }
 
 
@@ -44,6 +80,8 @@ h1 {
 	margin-right: auto;
 	padding-right: 75px;
 	color: #bbbbff;
+	display: block;
+	clear: both;
 }
 .postform td{
 	color: #bbbbff;
@@ -63,10 +101,16 @@ h1 {
 	padding: 3px;
 }
 
+#mainframe{
+	display: block;
+	clear: both;
+	width: 100%;
+}
 
 .oppostcontainer {
 	width: 100%;
-	margin-bottom: 15px;
+	margin-top: 7px;
+	margin-bottom: 10px;
 	margin-left: 7px;
 	display: block;
 	float:left;
@@ -78,7 +122,6 @@ h1 {
 	float:left;
 	color: #bbbbff;
 	margin-bottom: 7px;
-	padding-top: 3px;
 	padding-bottom: 5px;
 }
 
@@ -94,8 +137,6 @@ h1 {
 	margin-bottom: 4px;
 	padding-left: 5px;
 	padding-right: 10px;
-	padding-top: 3px;
-	padding-bottom: 6px;
 	border-color: #bbbbbb;
 	border-width: 2px;
 	border-style: none;
@@ -173,13 +214,36 @@ h1 {
 	color: #ffffff;
 }
 
+.image{
+	margin-left: 10px;
+	margin-top: 2px;
+	margin-bottom: 5px;
+	margin-right: 0px;
+}
+
+.previewimg{
+	max-height: 200px;
+	max-width: 200px;
+}
 
 .post_text{
 	display: inline-block;
+	padding-top: 3px;
+	padding-bottom: 6px;
 }
 
 .delimeter {
 	background-color: #661111;
 	border-color: #661111;
 	border-width: 2px;
+	width: auto;
+}
+
+#footer{
+	height: auto;
+	border-spacing: 0px;
+}
+
+#end{
+	width: auto;
 }

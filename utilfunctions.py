@@ -88,9 +88,6 @@ def posting(requesth, board): #working with posted form content
 
         #file management
         there_are_files = False
-        #print(requesth.request.files)
-        print(requesth.request.files['file1'][0]['filename'])
-        #print(requesth.request.files['file1'][0]['filename'])
         if len(requesth.request.files) != 0: #would be redone for multiple file management
             there_are_files = True
             file = requesth.request.files['file1'][0]

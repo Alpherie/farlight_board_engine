@@ -21,16 +21,25 @@ def html_page_return(board, page):
             E.P(E.CLASS("board"), board, id = 'board'),
             E.P(E.CLASS("page"), str(page), id = 'page'),
             E.P(E.CLASS("thread"), '0', id = 'thread'),
-            E.HR(E.CLASS("delimeter")),
-            E.H2(E.CLASS("boardname"),
-                 E.A('/' + board + '/ - '+ initiate.board_cache[board].name, href = '/' + board),
-                 ),
-            E.HR(E.CLASS("delimeter")),
-            initiate.board_cache[board].post_form,
-            E.HR(E.CLASS("delimeter")),
-            E.DIV('', id = 'mainframe'),
-            E.HR(E.CLASS("delimeter"), id = 'end'),
-            onload = 'boardfunc()'
+            E.TABLE(
+                E.CLASS("maintable"),
+                E.THEAD(E.TR(E.TD(
+                    E.HR(E.CLASS("delimeter")),
+                    )), id = 'header'),
+                E.TBODY(E.TR(E.TD(
+                    E.H2(E.CLASS("boardname"),
+                         E.A('/' + board + '/ - '+ initiate.board_cache[board].name, href = '/' + board),
+                         ),
+                    E.HR(E.CLASS("delimeter")),
+                    initiate.board_cache[board].post_form,
+                    E.HR(E.CLASS("delimeter")),
+                    E.DIV('', id = 'mainframe'),
+                    )), id = 'mainpart'),
+                E.TFOOT(E.TR(E.TD(
+                    E.DIV(E.HR(E.CLASS("delimeter"), id = 'end')),#we make it a footer
+                    )), id = 'footer'),
+                ),
+                onload = 'boardfunc()'
             )
         )
     return lxml.html.tostring(html)

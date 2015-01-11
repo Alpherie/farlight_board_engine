@@ -18,14 +18,24 @@ def html_page_return(board, thread):
         E.BODY(
             E.P(E.CLASS("board"), board, id = 'board'),
             E.P(E.CLASS("thread"), str(thread), id = 'thread'),
-            E.HR(E.CLASS("delimeter")),
-            E.H2(E.CLASS("boardname"),
-                 E.A('/' + board + '/ - '+ initiate.board_cache[board].name, href = '/' + board),
-                 ),
-            initiate.board_cache[board].post_form, #need to make it depending on post_form_type
-            E.HR(E.CLASS("delimeter")),
-            E.DIV('', id = 'mainframe'),
-            E.HR(E.CLASS("delimeter"), id = 'end'),
+            E.TABLE(
+                E.CLASS("maintable"),
+                E.THEAD(E.TR(E.TD(
+                    E.HR(E.CLASS("delimeter")),
+                    )), id = 'header'),
+                E.TBODY(E.TR(E.TD(
+                    E.H2(E.CLASS("boardname"),
+                         E.A('/' + board + '/ - '+ initiate.board_cache[board].name, href = '/' + board),
+                         ),
+                    E.HR(E.CLASS("delimeter")),
+                    initiate.board_cache[board].post_form, #need to make it depending on post_form_type
+                    E.HR(E.CLASS("delimeter")),
+                    E.DIV('', id = 'mainframe'),
+                    )), id = 'mainpart'),
+                E.TFOOT(E.TR(E.TD(
+                    E.DIV(E.HR(E.CLASS("delimeter"), id = 'end')),
+                    )), id = 'footer'),#we make it a footer
+                ),
             onload = 'threadfunc()'
             )
         )
