@@ -26,6 +26,7 @@ class Board (Base):
     name = sqla.Column(sqla.String(255))
     fullname = sqla.Column(sqla.String(255))
     description = sqla.Column(sqla.String(255))
+    category = sqla.Column(sqla.String(255))
     def __repr__(self):
         return "<User(address = /%s/, name='%s', fullname='%s', description='%s')>" % (self.address, self.name, self.fullname, self.description)
 #---------------------------------------------
@@ -148,6 +149,41 @@ class board_cache_class():
         return form
 #-----------------------------------------------------------------------------------------------------------------------------------
 
+def generate_header_footer_board_list(boards): #would be redone
+    categories = {}
+    for b in boards:
+        #if b.hidden = none
+        #should add for hidden boards
+        if b.category in categories:
+            categories[b.category].append((b.address, b.name))
+        else:
+            categories[b.category] = [((b.address, b.name))]
+    spans = []
+    iter_list = list(categories.keys())
+    iter_list.sort()
+    for category in iter_list: #probably another order would be better
+        urls = []
+        for params in categories[category]:
+            urls.append(
+                E.A(
+                    params[0], #the name
+                    title = params[1],#bydlocode, better to find another way
+                    href = '/' + params[0] + '/',
+                    )
+                )
+            urls.append('/')
+        urls.pop()
+        if category == None:
+            category = ''
+        urls = [E.CLASS('boardcategory'), category+' ['] + urls + [']']
+        spans.append(E.SPAN(*urls))
+    code = E.DIV(
+        E.CLASS('boardlist'),
+        *spans
+        )
+    return code
+
+#-----------------------------------------------------------------------------------------------------------------------------------
 def renew_board_cache(renew_cache_dict = True, renew_thread_cache = True):
     global board_cache#should be done by the request
     global board_cache_footer
@@ -160,7 +196,7 @@ def renew_board_cache(renew_cache_dict = True, renew_thread_cache = True):
     if cf.static_board_footer == True:
         board_cache_footer = cf.board_cache_footer
     else:
-        board_cache_footer = ''#there must be html code generated
+        board_cache_footer = generate_header_footer_board_list(boards) #there must be html code generated
     if cf.static_board_main_page == True:
         board_cache_main_page = cf.board_cache_main_page
     else:

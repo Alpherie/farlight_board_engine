@@ -1,4 +1,7 @@
 #this file is used for generating thread content
+
+import copy
+
 import lxml
 from lxml.html import builder as E
 from lxml.builder import ElementMaker as EM
@@ -21,6 +24,7 @@ def html_page_return(board, thread):
             E.TABLE(
                 E.CLASS("maintable"),
                 E.THEAD(E.TR(E.TD(
+                    copy.copy(initiate.board_cache_footer),
                     E.HR(E.CLASS("delimeter")),
                     )), id = 'header'),
                 E.TBODY(E.TR(E.TD(
@@ -33,7 +37,10 @@ def html_page_return(board, thread):
                     E.DIV('', id = 'mainframe'),
                     )), id = 'mainpart'),
                 E.TFOOT(E.TR(E.TD(
-                    E.DIV(E.HR(E.CLASS("delimeter"), id = 'end')),
+                    E.DIV(
+                        E.HR(E.CLASS("delimeter"), id = 'end')
+                        ),
+                    initiate.board_cache_footer,
                     )), id = 'footer'),#we make it a footer
                 ),
             onload = 'threadfunc()'

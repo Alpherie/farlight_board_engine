@@ -7,6 +7,35 @@ body {
 	border: 0px;
 }
 
+.boardlist{
+	padding: 10px;
+}
+.boardcategory {
+	display: inline-block;
+	color: #aaaaee;
+}
+.boardcategory a{
+	padding-left: 3px;
+	padding-right: 3px;
+}
+.boardcategory a:link{
+	color: #2222ee;
+	text-decoration: none;
+}
+.boardcategory a:visited{
+	color: #2222cc;
+	text-decoration: none;
+}
+.boardcategory a:hover{
+	color: #4444ff;
+	text-decoration: none;
+}
+.boardcategory a:active{
+	color: #4444ff;
+	text-decoration: none;
+}
+
+
 #board {
 	display: none;
 }

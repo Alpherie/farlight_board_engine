@@ -4,6 +4,7 @@ from lxml.html import builder as E
 from lxml.builder import ElementMaker as EM
 
 import array
+import copy
 
 import tornado.escape
 
@@ -24,6 +25,7 @@ def html_page_return(board, page):
             E.TABLE(
                 E.CLASS("maintable"),
                 E.THEAD(E.TR(E.TD(
+                    copy.copy(initiate.board_cache_footer),
                     E.HR(E.CLASS("delimeter")),
                     )), id = 'header'),
                 E.TBODY(E.TR(E.TD(
@@ -36,7 +38,10 @@ def html_page_return(board, page):
                     E.DIV('', id = 'mainframe'),
                     )), id = 'mainpart'),
                 E.TFOOT(E.TR(E.TD(
-                    E.DIV(E.HR(E.CLASS("delimeter"), id = 'end')),#we make it a footer
+                    E.DIV(
+                        E.HR(E.CLASS("delimeter"), id = 'end')
+                        ),#we make it a footer
+                    initiate.board_cache_footer,
                     )), id = 'footer'),
                 ),
                 onload = 'boardfunc()'
