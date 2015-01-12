@@ -145,7 +145,7 @@ class board_cache_class():
                               E.TD(E.INPUT(type = 'text', name = 'captcha', value = '')),
                               )
                           ),
-                      method = 'POST', action = '/'+self.address, enctype = 'multipart/form-data')
+                      method = 'POST', action = '/'+self.address, enctype = 'multipart/form-data', id = 'postform')
         return form
 #-----------------------------------------------------------------------------------------------------------------------------------
 
