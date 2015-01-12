@@ -1,5 +1,8 @@
 import string
 import random
+#tornadoweb
+import tornado.escape
+#lxml
 import lxml
 from lxml.html import builder as E
 from lxml.builder import ElementMaker as EM
@@ -26,7 +29,7 @@ class Adminc(Base):
 def login_page_gen():
     html = E.HTML(
         E.HEAD(
-            E.LINK(rel="stylesheet", href="css/great.css", type="text/css"),
+            E.LINK(rel="stylesheet", href="/css/great.css", type="text/css"),
             E.TITLE("Administration and moderation")
             ),
         E.BODY(
@@ -47,7 +50,7 @@ def login_page_gen():
 def main_page_gen():
     html = E.HTML(
         E.HEAD(
-            E.LINK(rel="stylesheet", href="css/great.css", type="text/css"),
+            E.LINK(rel="stylesheet", href="/css/great.css", type="text/css"),
             E.TITLE("Administration and moderation")
             ),
         E.BODY(
@@ -69,7 +72,7 @@ def main_page_gen():
 def board_creation_menu(): #here is the html board creation menu
     html = E.HTML(
         E.HEAD(
-            E.LINK(rel="stylesheet", href="css/great.css", type="text/css"),
+            E.LINK(rel="stylesheet", href="/css/great.css", type="text/css"),
             E.TITLE("Creating board")
             ),
         E.BODY(
@@ -96,12 +99,10 @@ def board_creation_menu(): #here is the html board creation menu
     return lxml.html.tostring(html)
 
 def admin(requesth):
-    if 'admin' not in requesth.request.cookies:
-        return login_page_gen()
-    if requesth.request.cookies['admin'].value not in initiate.admin_cookie_list: #возможно лучше многопоточность
-        #return str(initiate.admin_cookie_list)
-        #return request.cookies['admin'].value
-        return login_page_gen()
+    if requesth.current_user == None:
+        requesth.set_header('Location', '/admin/login')
+        requesth.set_status(302)
+        return 'Redirecting to login'
     actions = requesth.get_query_arguments('action')
     if actions == []:
         return main_page_gen()
@@ -130,35 +131,26 @@ def admin(requesth):
     else:
         requesth.write_error(400)
 
-def admin_post(requesth):
-    if requesth.request.path == '/admin/login' or requesth.request.path == '/admin/login/':
-        Session = sessionmaker(bind=initiate.engine)
-        session = Session()
-        result = session.query(Adminc).filter(Adminc.login==requesth.get_body_argument('login')).first()
-        if result == None:
-            return 'Incorrect Login\Password'
-        if requesth.get_body_argument('password') != result.password:
-            return 'Incorrect Login\Password'
-        #запилить проверку результата 
-        s=string.ascii_letters+string.digits
-        new_cookie = ''.join(random.sample(s,40))
-        while new_cookie in initiate.admin_cookie_list:
-            new_cookie = ''.join(random.sample(s,40))
-        initiate.admin_cookie_list.append(new_cookie)
-        requesth.set_cookie('admin', new_cookie) #redo to make safe
-        #return str(result)
-        requesth.set_header('Location', '/admin/')
+def admin_login(requesth):
+    Session = sessionmaker(bind=initiate.engine)
+    session = Session()
+    result = session.query(Adminc).filter(Adminc.login==requesth.get_body_argument('login')).first()
+    if result == None:
+        return 'Incorrect Login\Password'
+    if requesth.get_body_argument('password') != result.password:
+        return 'Incorrect Login\Password'
+    #запилить проверку результата
+    
+    requesth.set_secure_cookie("user", tornado.escape.xhtml_escape(requesth.get_body_argument('login')))
+    requesth.set_header('Location', '/admin/')
+    requesth.set_status(302)
+    return 'Logged successfully' #checking should be added
+
+def admin_post(requesth):        
+    if requesth.current_user == None:
+        requesth.set_header('Location', '/admin/login')
         requesth.set_status(302)
-        return 'Logged successfully' #checking should be added
-    #----------------need to be fixed------------------------
-    #check for the cookies to be added
-    elif 'admin' not in requesth.request.cookies:
-        return login_page_gen()
-    elif requesth.request.cookies['admin'].value not in initiate.admin_cookie_list: #возможно лучше многопоточность
-        #return str(initiate.admin_cookie_list)
-        #return request.cookies['admin'].value
-        return login_page_gen()
-    #----------------need to be fixed------------------------
+        return 'Redirecting to login'
     else:
         action = requesth.get_body_argument('action')
         if action == 'login':#what we do to login

@@ -232,10 +232,7 @@ def init():
     #creating board cache
     renew_board_cache() #the renewal function
     #-----------------------------------------------------------------------------------
-    
     #init the variables
-    global admin_cookie_list
-    admin_cookie_list = []
     return
 
 if __name__ == '__main__':
