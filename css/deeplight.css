@@ -222,6 +222,11 @@ body {
 	padding-bottom: 6px;
 }
 
+#updatebuttondiv{
+	margin-top: 15px;
+	margin-left: 15px;
+}
+
 .delimeter {
 	background-color: #661111;
 	border-color: #661111;

@@ -157,6 +157,13 @@ function threadfunc() {
         // done
 		array.unshift(thread);
 		getposts(board, array);
+		var updlink = document.createElement("a");
+		updlink.innerHTML = "Обновить";
+		updlink.href = "javascript:updatethread()";
+		var updbtndiv = document.getElementById("updatebuttondiv");
+		updbtndiv.insertAdjacentHTML("beforeend", "[");
+		updbtndiv.appendChild(updlink);
+		updbtndiv.insertAdjacentHTML("beforeend", "]");
 	};
 };
 
@@ -224,5 +231,9 @@ function boardfunc() {
 		};
         // done
         };
+};
+
+function updatethread() {
+	alert("NOT IMPLEMENTED YET");
 };
 	
