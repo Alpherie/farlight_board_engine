@@ -29,7 +29,7 @@ class Adminc(Base):
 def login_page_gen():
     html = E.HTML(
         E.HEAD(
-            E.LINK(rel="stylesheet", href="/css/great.css", type="text/css"),
+            E.LINK(rel="stylesheet", href="/css/deeplight.css", type="text/css"),
             E.TITLE("Administration and moderation")
             ),
         E.BODY(
@@ -50,7 +50,7 @@ def login_page_gen():
 def main_page_gen():
     html = E.HTML(
         E.HEAD(
-            E.LINK(rel="stylesheet", href="/css/great.css", type="text/css"),
+            E.LINK(rel="stylesheet", href="/css/deeplight.css", type="text/css"),
             E.TITLE("Administration and moderation")
             ),
         E.BODY(
@@ -72,7 +72,7 @@ def main_page_gen():
 def board_creation_menu(): #here is the html board creation menu
     html = E.HTML(
         E.HEAD(
-            E.LINK(rel="stylesheet", href="/css/great.css", type="text/css"),
+            E.LINK(rel="stylesheet", href="/css/deeplight.css", type="text/css"),
             E.TITLE("Creating board")
             ),
         E.BODY(

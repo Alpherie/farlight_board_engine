@@ -6,7 +6,7 @@ import config
 def main_page_gen():
     html = E.HTML(
         E.HEAD(
-            E.LINK(rel="stylesheet", href="css/great.css", type="text/css"),
+            E.LINK(rel="stylesheet", href="css/deeplight.css", type="text/css"),
             E.TITLE("Farlight - Main Page")
             ),
         E.BODY(

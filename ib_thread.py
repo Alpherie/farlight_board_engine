@@ -14,7 +14,7 @@ import utilfunctions
 def html_page_return(board, thread):
     html = E.HTML(
         E.HEAD(
-            E.LINK(rel="stylesheet", href="/css/great.css", type="text/css"), #css
+            E.LINK(rel="stylesheet", href="/css/deeplight.css", type="text/css"), #css
             E.TITLE("/"+board+"/ - №"+str(thread)), #title
             E.SCRIPT(type = 'text/javascript', src = '/mainscript.js') #js
             ),

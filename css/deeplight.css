@@ -5,6 +5,11 @@ body {
 	min-height: 100%;
 	margin: 0px;
 	border: 0px;
+	color: #bbbbff;
+}
+
+#board,  #page, #thread{
+	display: none;
 }
 
 .boardlist{
@@ -26,24 +31,9 @@ body {
 	color: #2222cc;
 	text-decoration: none;
 }
-.boardcategory a:hover{
+.boardcategory a:hover, .boardcategory a:active{
 	color: #4444ff;
 	text-decoration: none;
-}
-.boardcategory a:active{
-	color: #4444ff;
-	text-decoration: none;
-}
-
-
-#board {
-	display: none;
-}
-#page {
-	display: none;
-}
-#thread {
-	display: none;
 }
 
 .container{
@@ -68,12 +58,6 @@ body {
 	height: auto;
 }
 
-h1 {
-	text-align: center;
-	display: block;
-	clear: both;
-}
-
 #mainpart{
 	vertical-align: top;
 }
@@ -85,35 +69,24 @@ h1 {
 	width: auto;
 	clear: both;
 }
-.boardname a:link{
+.boardname a:link, .boardname a:visited{
 	color: #5555ff;
 	text-decoration: none;
 }
-.boardname a:visited{
-	color: #5555ff;
-	text-decoration: none;
-}
-.boardname a:hover{
+.boardname a:hover, .boardname a:active{
 	color: #aaaaff;
 	text-decoration: none;
 }
-.boardname a:active{
-	color: #aaaaff;
-	text-decoration: none;
-}
-
 
 .postform{
 	width: 500px;
 	margin-left: auto;
 	margin-right: auto;
 	padding-right: 75px;
-	color: #bbbbff;
 	display: none;
 	clear: both;
 }
 .postform td{
-	color: #bbbbff;
 	align: left;
 }
 .postform input, textarea{
@@ -129,6 +102,7 @@ h1 {
 	font-weight: bold;
 	padding: 3px;
 }
+
 #threadcreate {
 	display: block;
 	clear: both;
@@ -164,7 +138,6 @@ h1 {
 .oppost{
 	display: block;
 	float:left;
-	color: #bbbbff;
 	margin-bottom: 7px;
 	padding-bottom: 5px;
 }
@@ -175,7 +148,6 @@ h1 {
 	float:left;
 	width: auto;
 	background-color: #222233;
-	color: #bbbbff;
 	margin-left: 20px;
 	margin-top: 4px;
 	margin-bottom: 4px;
@@ -186,32 +158,17 @@ h1 {
 	border-style: none;
 }
 
-.theme {
+.theme, .name,  .post_time, .post_link, .answer_link{
 	display: inline-block;
+	margin: 4px;
+}
+
+.theme{
 	color: #2222aa;
 	font-size: 1.25em;
-	margin: 4px;
 }
 
-.name {
-	display: inline-block;
-	margin: 4px;
-}
-
-.post_time {
-	display: inline-block;
-	margin: 4px;
-}
-
-
-.post_link {
-	display: inline-block;
-	margin: 4px;
-}
-.post_link a:link{
-	color: #008800;
-}
-.post_link a:visited{
+.post_link a:link, .post_link a:visited{
 	color: #008800;
 }
 .post_link a:hover{
@@ -221,21 +178,13 @@ h1 {
 	color: #00cc00;
 }
 
-
-.answer_link {
-	display: inline-block;
-	margin: 4px;
-}
 .answer_link a:link{
 	color: #1111dd;
 }
 .answer_link a:visited{
 	color: #1111aa;
 }
-.answer_link a:hover{
-	color: #2222ff;
-}
-.answer_link a:active{
+.answer_link a:hover, .answer_link a:active{
 	color: #2222ff;
 }
 
@@ -251,10 +200,7 @@ h1 {
 .imageblock a:visited{
 	color: #cccccc;
 }
-.imageblock a:hover{
-	color: #ffffff;
-}
-.imageblock a:active{
+.imageblock a:hover, .imageblock a:active{
 	color: #ffffff;
 }
 
@@ -286,8 +232,4 @@ h1 {
 #footer{
 	height: auto;
 	border-spacing: 0px;
-}
-
-#end{
-	width: auto;
 }
