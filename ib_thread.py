@@ -33,6 +33,7 @@ def html_page_return(board, thread):
                          ),
                     E.HR(E.CLASS("delimeter")),
                     initiate.board_cache[board].post_form, #need to make it depending on post_form_type
+                    E.SCRIPT('document.getElementById("postform").style.display = "block";'),
                     E.HR(E.CLASS("delimeter")),
                     E.DIV('', id = 'mainframe'),
                     )), id = 'mainpart'),
