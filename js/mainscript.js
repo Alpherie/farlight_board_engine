@@ -137,6 +137,7 @@ function threadfunc() {
         xhr.onloadend = function () {
         	var oppostcontainer = document.createElement("div");
 		oppostcontainer.className = "oppostcontainer";
+		oppostcontainer.id = "op" + thread;
 		document.getElementById("mainframe").appendChild(oppostcontainer);
 		//adding op-post
 		var post = document.createElement("div");
@@ -146,6 +147,7 @@ function threadfunc() {
 
 		var threadnum;
 		var array = JSON.parse(xhr.responseText)[thread];
+		postsarray = array.slice();
 		for (i in array) {
 			var post = document.createElement("div");
 			post.id = array[i];
@@ -160,13 +162,13 @@ function threadfunc() {
 		var updlink = document.createElement("a");
 		updlink.innerHTML = "Обновить";
 		updlink.href = "javascript:updatethread()";
+		updlink.id = "updlink";
 		var updbtndiv = document.getElementById("updatebuttondiv");
 		updbtndiv.insertAdjacentHTML("beforeend", "[");
 		updbtndiv.appendChild(updlink);
 		updbtndiv.insertAdjacentHTML("beforeend", "]");
 	};
 };
-
 
 
 function boardfunc() {
@@ -233,7 +235,62 @@ function boardfunc() {
         };
 };
 
+function arraydiff (a, b) {
+	var diff = [];
+
+	a.forEach(function(key) {
+		if (-1 === b.indexOf(key)) {
+			diff.push(key);
+		}
+	}, this);
+	return diff;
+};
+
 function updatethread() {
-	alert("NOT IMPLEMENTED YET");
+	document.getElementById("updlink").href = "";
+	document.getElementById("updlink").innerHTML = "Обновляется...";
+	var board = document.getElementById("board").innerHTML;
+	var thread = parseInt(document.getElementById("thread").innerHTML);
+	var data = {"action":"get post ids for threads", "board":board, "threads":[{"threadnum":thread, "begin":1, "end":"all"}]};
+
+	// construct an HTTP request
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '', true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+        // send the collected data as JSON
+        xhr.send(JSON.stringify(data));
+
+	//need to add exceptioning if failed
+        xhr.onloadend = function () {
+		var newarray = JSON.parse(xhr.responseText)[thread];
+		var arrdiff = arraydiff(postsarray, newarray);
+		
+		var deletedposts = arraydiff(postsarray, newarray);
+		var array = arraydiff(newarray, postsarray); //new posts
+		postsarray = newarray.slice();
+		
+		var oppostcontainer = document.getElementById("op"+thread);
+		for (i in array) {
+			var post = document.createElement("div");
+			post.id = array[i];
+			post.className = "post";
+			//post.innerHTML = array[i];
+			oppostcontainer.appendChild(post);
+			array[i] = parseInt(array[i]);
+		};
+		
+		if (array != []) {
+			getposts(board, array);
+		}
+
+		document.getElementById("updlink").innerHTML = "Обновить";
+		document.getElementById("updlink").href = "javascript:updatethread()";
+	}
+	xhr.onerror = function () {
+		alert("Failed to update thread!");
+		document.getElementById("updlink").innerHTML = "Обновить";
+		document.getElementById("updlink").href = "javascript:updatethread()";
+	}
 };
 	
