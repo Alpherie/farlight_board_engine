@@ -69,7 +69,7 @@ def json_answer(requesth):
             return_object = initiate.board_cache[board].threads[received_objects['range']['begin']-1:received_objects['range']['end']-1].tolist() #if end and begin are in range, return their range
         return tornado.escape.json_encode(return_object)
     elif received_objects['action'] == 'get posts code by num': #i will do it later
-        return utilfunctions.get_posts_code_by_num(requesth, received_objects)
+        return utilfunctions.get_posts_code_by_num(requesth, received_objects, permissions)
     #should be moved to utilfunctions
     elif received_objects['action'] == 'get post ids for threads': #this is when we need to return post ids for given threads
         return_object = {}
@@ -137,6 +137,7 @@ def get(requesth): #requesth is tornadoweb requesthandler object
         return 'No such board'
 
 def post(requesth): #working over POST requests
+    permissions = utilfunctions.get_user_permissions(requesth.current_user)
     board_exists, board, page = get_board_and_page(requesth.request.uri)
     if board_exists == False:
         return 'No such board'
@@ -146,7 +147,7 @@ def post(requesth): #working over POST requests
         pass
     else:
         if 'application/json' in content_type:
-            return json_answer(requesth)#here we work we json requests
+            return json_answer(requesth, permissions)#here we work we json requests
     return utilfunctions.posting(requesth, board) #and here we suppose it is posting
 
 if __name__ == '__main__':

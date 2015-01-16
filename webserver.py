@@ -7,27 +7,28 @@ import ib_board
 import tornado.ioloop
 import tornado.web
 
+class BaseHandler(tornado.web.RequestHandler):
+    def get_current_user(self):#probably should be redone for security
+        return self.get_secure_cookie("user")
+#-----------------------------------------------
+
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.write(main_page.main_page_gen())
 
-class BoardHandler(tornado.web.RequestHandler):
+class BoardHandler(BaseHandler):
     def get(self):
         self.write(ib_board.get(self))
     def post(self):
         self.write(ib_board.post(self))
 
-class ThreadHandler(tornado.web.RequestHandler):
+class ThreadHandler(BaseHandler):
     def get(self):
         self.write(ib_thread.get(self))
     def post(self):
         self.write(ib_thread.post(self))
 
 #-----------------------------------------------
-class AdminBaseHandler(tornado.web.RequestHandler):
-    def get_current_user(self):#probably should be redone for security
-        return self.get_secure_cookie("user")
-
 class AdminLogoutHandler(tornado.web.RequestHandler):
     def get(self):
         self.clear_cookie("user")
@@ -39,7 +40,7 @@ class AdminLoginHandler(tornado.web.RequestHandler):
     def post(self):
         self.write(admin.admin_login(self))
 
-class AdminHandler(AdminBaseHandler):
+class AdminHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         self.write(admin.admin(self))

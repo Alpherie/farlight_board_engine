@@ -18,6 +18,12 @@ import wand.image
 import initiate
 import config as cf
 
+def get_user_permissions(user):
+    if user == None:
+        return 0
+    else: #wil be redone to get permissions from database
+        return 1
+
 def generate_new_path(board, extension):
     """Here we generate pathes for saving the files ad thumbs"""
     newname = str(int(time.mktime(time.localtime()))) + ''.join(random.choice(string.digits) for _ in range(3))  + extension 
@@ -139,7 +145,10 @@ def posting(requesth, board): #working with posted form content
         return 'not implemented yet'
     #
 
-def get_posts_code_by_num(requesth, received_objects): #function for returning the posts code for a list of posts ids
+def get_posts_code_by_num(requesth, received_objects, permissions): #function for returning the posts code for a list of posts ids
+    post_kwargs = {} #probably should be redone to make db return what we need
+    if permissions == 1 or permissions == 2:
+        post_kwargs = {'ip':True}
     return_object = {} #this is what we would return
     board = received_objects['board']
     if board not in initiate.board_cache: #all of this should be redone, it is fucking not good code
@@ -153,7 +162,7 @@ def get_posts_code_by_num(requesth, received_objects): #function for returning t
     if len(in_list2) != 0:
         database_responce = initiate.sess.query(initiate.board_cache[board].post_class).filter(initiate.board_cache[board].post_class.id.in_(in_list2)).all()
         for row in database_responce:
-            return_object[row.id] = row.to_dict()
+            return_object[row.id] = row.to_dict(**post_kwargs)#probably need to be redone
             in_list.remove(row.id)
         for postid in in_list: #here we add all the posts that does not exist
             return_object[row.id] = None

@@ -73,7 +73,7 @@ def json_answer(requesth):
                 return 'typeerror'
         return tornado.escape.json_encode(return_object)
     elif received_objects['action'] == 'get posts code by num': #i will do it later
-        return utilfunctions.get_posts_code_by_num(requesth, received_objects)
+        return utilfunctions.get_posts_code_by_num(requesth, received_objects, permissions)
     else:
         return 'incorrect action'
     return 'not implemented yet'
@@ -103,6 +103,7 @@ def get(requesth): #requesth is tornadoweb requesthandler object
         return 'No such thread'
 
 def post(requesth):
+    permissions = utilfunctions.get_user_permissions(requesth.current_user)
     board_exists, board, thread = get_board_and_thread(requesth.request.uri)
     if board_exists == False:
         return 'no such board'
@@ -112,7 +113,7 @@ def post(requesth):
         pass
     else:
         if 'application/json' in content_type:
-            return json_answer(requesth)
+            return json_answer(requesth, permissions)
     return utilfunctions.posting(requesth, board) #and here we suppose it is posting
 
 if __name__ == '__main__':
