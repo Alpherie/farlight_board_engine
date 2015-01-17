@@ -168,13 +168,13 @@ body {
 	font-size: 1.25em;
 }
 
-.post_link a:link, .post_link a:visited{
+.post_link a:link, .post_link a:visited, .post_ip a:link, .post_ip a:visited{
 	color: #008800;
 }
-.post_link a:hover{
+.post_link a:hover, .post_ip a:hover{
 	color: #00bb00;
 }
-.post_link a:active{
+.post_link a:active, .post_ip a:active{
 	color: #00cc00;
 }
 
