@@ -81,7 +81,7 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 			post_details.appendChild(p_answer);
 		};
 		
-		if ("op_post" in postdict[array[i]]){
+		if ("ip" in postdict[array[i]]){
 			var p_ip = document.createElement("span");
 			p_ip.className = "post_ip";
 			var a = document.createElement("a");
