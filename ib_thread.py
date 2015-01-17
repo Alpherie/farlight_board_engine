@@ -50,7 +50,7 @@ def html_page_return(board, thread):
         )
     return lxml.html.tostring(html)
 
-def json_answer(requesth):
+def json_answer(requesth, permissions):
     received_objects = tornado.escape.json_decode(requesth.request.body)
     if received_objects['action'] == 'get post ids for threads': #this is when we need to return post ids for given threads
         return_object = {}

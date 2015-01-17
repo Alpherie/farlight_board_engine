@@ -168,6 +168,11 @@ def admin_post(requesth):
                     return 'table with such name exists!'
                 #we checked, now we should add this to board cache, create table and write down it to database
                 new_board = initiate.Board(address = requesth.get_body_argument('address'), tablename = requesth.get_body_argument('tablename'), name = requesth.get_body_argument('name'), fullname = requesth.get_body_argument('fullname'), description = requesth.get_body_argument('description')) #creating new board in Boards table
+                try:
+                    os.makedirs(os.path.join('content', new_board.address, 'img'))
+                    os.makedirs(os.path.join('content', new_board.address, 'thumbs'))
+                except OSError:
+                    return 'Failed to create folders'
                 initiate.sess.add(new_board)
                 initiate.board_cache[requesth.get_body_argument('address')] = initiate.board_cache_class(new_board, table_exists = False)
                 #initiate.board_cache[requesth.get_body_argument('address')] = (requesth.get_body_argument('tablename'), requesth.get_body_argument('name'), requesth.get_body_argument('fullname'), requesth.get_body_argument('description'), type(requesth.get_body_argument('description'), (initiate.Post,initiate.Base), {'__tablename__':requesth.get_body_argument('tablename')}))#add to boardcache and creating the table class
