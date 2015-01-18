@@ -163,6 +163,26 @@ body {
 	margin: 4px;
 }
 
+.post_ip {
+	position: relative;
+}
+.post_ip ul{
+	padding: 7px;
+	padding-left: 35px;
+	background: #111122;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #333366;
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 250px;
+	z-index: 2;
+}
+.post_ip ul li{
+	padding: 3px;
+}
+
 .theme{
 	color: #2222aa;
 	font-size: 1.25em;

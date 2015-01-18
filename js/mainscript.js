@@ -85,7 +85,8 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 			var p_ip = document.createElement("span");
 			p_ip.className = "post_ip";
 			var a = document.createElement("a");
-			a.href = "";
+			a.onclick = function() {click_on_ip(this)};
+			a.href = "javascript:void(0);"
 			a.innerHTML = postdict[array[i]]["ip"];
 			p_ip.appendChild(a);
 			post_details.appendChild(p_ip);
@@ -304,3 +305,19 @@ function updatethread() {
 	}
 };
 	
+options = [["Забанить IP", "modbanip"], ["Удалить пост", "moddelpost"], ["Удалить пост и забанить", "moddelpostbanip"], ["Удалить все посты", "moddelall"], ["Удалить все посты и забанить", "moddelallbanip"]];
+
+function click_on_ip (elem){
+	elem.onclick = function () {void(0)};
+	var ul = document.createElement("ul");
+	ul.className = "banmenu";
+	for (i in options) {
+		var li = document.createElement("li");
+		var a = document.createElement("a");
+		a.innerHTML = options[i][0];
+		a.href = "javascript:" + options[i][1] + "()";
+		li.appendChild(a);
+		ul.appendChild(li);
+	};
+	elem.parentNode.appendChild(ul);
+};
