@@ -8,24 +8,10 @@ import lxml
 from lxml.html import builder as E
 from lxml.builder import ElementMaker as EM
 #sqlalchemy
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import sessionmaker
 #my modules
 import config
 import initiate
-
-#initing the classes
-Base = declarative_base()
-class Adminc(Base):
-    __tablename__ = 'admins'
-    adminid = Column(Integer, primary_key=True)
-    login = Column(String(255))
-    password = Column(String(255))
-    permissions = Column(Integer)
-    
-    def __repr__(self):
-        return "<User(login='%s', password='%s')>" % (self.login, self.password)
 
 def login_page_gen():
     html = E.HTML(
@@ -135,7 +121,7 @@ def admin(requesth):
 def admin_login(requesth):
     Session = sessionmaker(bind=initiate.engine)
     session = Session()
-    result = session.query(Adminc).filter(Adminc.login==requesth.get_body_argument('login')).first()
+    result = session.query(initiate.Admin).filter(initiate.Admin.login==requesth.get_body_argument('login')).first()
     if result == None:
         return 'Incorrect Login\Password'
     if requesth.get_body_argument('password') != result.password:

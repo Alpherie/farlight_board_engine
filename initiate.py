@@ -18,6 +18,17 @@ from sqlalchemy.orm import sessionmaker
 Base = declarative_base()
 
 #---------------------------------------------
+class Admin(Base):
+    __tablename__ = 'admins'
+    adminid = sqla.Column(sqla.Integer, primary_key=True)
+    login = sqla.Column(sqla.String(255))
+    password = sqla.Column(sqla.String(255))
+    permissions = sqla.Column(sqla.Integer)
+    def __repr__(self):
+        return "<Admin(login='%s', password='%s')>" % (self.login, self.password)
+#---------------------------------------------
+
+#---------------------------------------------
 class Board (Base):
     __tablename__ = 'boards'
     id = sqla.Column(sqla.Integer, primary_key=True)
@@ -210,21 +221,13 @@ def init():
     global sess
     sess = Session()
     #---------------------------------------------------------------------------------------------
-    #checking for admintable
-    admint = sqlaschema.Table('admins',
-                              sqlaschema.MetaData(bind = engine),
-                              sqlaschema.Column('adminid', sqlatypes.Integer, primary_key = True),
-                              sqlaschema.Column('login', sqlatypes.String(length = 255)),
-                              sqlaschema.Column('password', sqlatypes.String(length = 255)),
-                              sqlaschema.Column('permissions', sqlatypes.Integer)
-                              )
-    if admint.exists(bind = engine):
-        #print('table exists')
+    #checking for tables
+    if Admin.__table__.exists(bind = engine):
         pass
     else:
-        admint.create(bind = engine)
-        admint.insert(bind = engine).values(login = 'admin', password = 'admin', permissions = 0).execute()
-    #checking for boards table
+        Admin.__table__.create(bind = engine)
+        Admin.__table__.insert(bind = engine).values(login = 'admin', password = 'admin', permissions = 0).execute()
+    
     if Board.__table__.exists(bind = engine):
         pass
     else:
