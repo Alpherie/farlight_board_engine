@@ -307,8 +307,14 @@ function updatethread() {
 	
 options = [["Забанить IP", "modbanip"], ["Удалить пост", "moddelpost"], ["Удалить пост и забанить", "moddelpostbanip"], ["Удалить все посты", "moddelall"], ["Удалить все посты и забанить", "moddelallbanip"]];
 
+function click_on_ip_again (elem) {
+	rem = elem.parentNode.getElementsByClassName("banmenu")[0];
+	elem.parentNode.removeChild(rem);
+	elem.onclick = function() {click_on_ip(this)};
+}
+
 function click_on_ip (elem){
-	elem.onclick = function () {void(0)};
+	elem.onclick = function () {click_on_ip_again(this)};
 	var ul = document.createElement("ul");
 	ul.className = "banmenu";
 	for (i in options) {
