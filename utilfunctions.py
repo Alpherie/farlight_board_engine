@@ -9,6 +9,8 @@ import random
 
 import tornado.escape
 
+import sqlalchemy.exc
+
 import lxml
 from lxml.html import builder as E
 from lxml.builder import E as EE
@@ -118,7 +120,11 @@ def posting(requesth, board): #working with posted form content
         new_post = initiate.board_cache[board].post_class(**post_content)
             #posting to the database
         initiate.sess.add(new_post)
-        initiate.sess.commit()
+        try:
+            initiate.sess.commit()
+        except sqlalchemy.exc.IntegrityError:
+            initiate.sess.rollback()
+            return 'This picture has already been posted'
             #adding the post to the cache
         initiate.board_cache[board].add_post(op, new_post.id)
 

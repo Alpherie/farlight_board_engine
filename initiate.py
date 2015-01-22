@@ -52,8 +52,7 @@ class Post(): #(Base):
     text = sqla.Column(sqla.String(cf.post_len)) #this is the text of post. Should be renamed later
     picture = sqla.Column(sqla.String(255))
     hash1 = sqla.Column(sqla.String(255))#need to make it lenght as long as hash
-    __table_args__ = (sqla.UniqueConstraint('hash1', name='_picture_hash'),
-                     )#should be generated when support of multiple pictures would be added
+    #__table_args__ = (sqla.UniqueConstraint('hash1', name='_picture_hash'),)#should be generated when support of multiple pictures would be added
     op_post = sqla.Column(sqla.Integer)
     post_time = sqla.Column(sqla.Integer)
     ip = sqla.Column(sqla.String(15))
@@ -84,7 +83,7 @@ class board_cache_class():
         self.description = b.description
         self.post_form_type = 'lxml' #or html
         self.post_form = self._lxml_form_generator() #will be added the form generating, or reading from file
-        self.post_class = type(b.name, (Post,Base), {'__tablename__':b.tablename}) #class post for table #probably better to make a separate function for its generating
+        self.post_class = type(b.name, (Post,Base), {'__tablename__':b.tablename, '__table_args__':(sqla.UniqueConstraint('hash1', name = b.tablename + '_picture_hash'),)}) #class post for table #probably better to make a separate function for its generating
         
         self.threads = array.array('L') #we do this because we need a list of integers, not ordered tuples
         if table_exists:
