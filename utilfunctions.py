@@ -35,30 +35,20 @@ def generate_new_path(board, extension):
     return os.path.join('content', board, 'img', newname), newname, os.path.join('content', board, 'thumbs', 's'+newname)
 
 def find_replacement(match):
-    print(match)
     if match.lastgroup == 'newline':
-        print(match.group('newline'))
         return (match.end()-match.start())*'<br>'
     elif match.lastgroup == 'newlineatend':
         return ''
     elif match.lastgroup == 'postlink': #make a separate handler for it
-        print(match.group('postlink'))
         return '<a class = "rl" href=javascript:highlight(' + match.group('postlink')[8:] + ');>'+match.group('postlink')+'</a>'
 
 def add_markup(text):
     text = text.replace('\r\n', '\n')
     text = text.replace('\n\r', '\n')
     nl2br = re.compile('(?P<newline>\n+)(?<!$)|(?P<newlineatend>\n+)(?=$)|(?P<postlink>&gt;&gt;[0-9]+)')
-    print('==========================')
-    #result = ''
-    #pos = 0
+    #print('==========================')
     text = nl2br.sub(find_replacement, text)
-    #for n in nl2br.finditer(text):
-    #    result = result + text[pos:n.start()] + (n.end()-n.start()-1)*'<br>'
-    #    pos = n.end()-1
-        #print(result)
-    print('==========================')
-    #result = result + text[pos:]
+    #print('==========================')
     return text
 
 def posting(requesth, board): #working with posted form content
