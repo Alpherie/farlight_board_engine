@@ -53,7 +53,7 @@ def html_page_return(board, page):
         )
     return lxml.html.tostring(html)
 
-def json_answer(requesth, permissions):
+def json_answer(requesth):
     received_objects = tornado.escape.json_decode(requesth.request.body)
     if received_objects['action'] == 'get threads ids for page': #this is when we need to return post ids for given threads
         board = received_objects['board']
@@ -69,7 +69,7 @@ def json_answer(requesth, permissions):
             return_object = initiate.board_cache[board].threads[received_objects['range']['begin']-1:received_objects['range']['end']-1].tolist() #if end and begin are in range, return their range
         return tornado.escape.json_encode(return_object)
     elif received_objects['action'] == 'get posts code by num': #i will do it later
-        return utilfunctions.get_posts_code_by_num(requesth, received_objects, permissions)
+        return utilfunctions.get_posts_code_by_num(requesth, received_objects)
     #should be moved to utilfunctions
     elif received_objects['action'] == 'get post ids for threads': #this is when we need to return post ids for given threads
         return_object = {}
@@ -110,6 +110,12 @@ def json_answer(requesth, permissions):
                 else:
                     return_object[threadnum] = None
         return tornado.escape.json_encode(return_object)
+    #delete post actions
+    elif received_objects['action'] == 'delete posts by ids':
+        return utilfunctions.delete_posts_by_ids(requesth, received_objects)
+    #mod functions
+    elif received_objects['action'] == 'ban by ip':
+        return 'not implemented yet'
     else:
         return 'incorrect action'
     return 'not implemented yet'
@@ -137,7 +143,6 @@ def get(requesth): #requesth is tornadoweb requesthandler object
         return 'No such board'
 
 def post(requesth): #working over POST requests
-    permissions = utilfunctions.get_user_permissions(requesth.current_user)
     board_exists, board, page = get_board_and_page(requesth.request.uri)
     if board_exists == False:
         return 'No such board'
@@ -147,7 +152,7 @@ def post(requesth): #working over POST requests
         pass
     else:
         if 'application/json' in content_type:
-            return json_answer(requesth, permissions)#here we work we json requests
+            return json_answer(requesth)#here we work we json requests
     return utilfunctions.posting(requesth, board) #and here we suppose it is posting
 
 if __name__ == '__main__':

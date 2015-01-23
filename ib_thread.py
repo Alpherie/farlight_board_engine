@@ -50,7 +50,7 @@ def html_page_return(board, thread):
         )
     return lxml.html.tostring(html)
 
-def json_answer(requesth, permissions):
+def json_answer(requesth):
     received_objects = tornado.escape.json_decode(requesth.request.body)
     if received_objects['action'] == 'get post ids for threads': #this is when we need to return post ids for given threads
         return_object = {}
@@ -73,7 +73,13 @@ def json_answer(requesth, permissions):
                 return 'typeerror'
         return tornado.escape.json_encode(return_object)
     elif received_objects['action'] == 'get posts code by num': #i will do it later
-        return utilfunctions.get_posts_code_by_num(requesth, received_objects, permissions)
+        return utilfunctions.get_posts_code_by_num(requesth, received_objects)
+    #delete post actions
+    elif received_objects['action'] == 'delete posts by ids':
+        return utilfunctions.delete_posts_by_ids(requesth, received_objects)
+    #mod functions
+    elif received_objects['action'] == 'ban by ip':
+        return 'not implemented yet'
     else:
         return 'incorrect action'
     return 'not implemented yet'
@@ -103,7 +109,6 @@ def get(requesth): #requesth is tornadoweb requesthandler object
         return 'No such thread'
 
 def post(requesth):
-    permissions = utilfunctions.get_user_permissions(requesth.current_user)
     board_exists, board, thread = get_board_and_thread(requesth.request.uri)
     if board_exists == False:
         return 'no such board'
@@ -113,7 +118,7 @@ def post(requesth):
         pass
     else:
         if 'application/json' in content_type:
-            return json_answer(requesth, permissions)
+            return json_answer(requesth)
     return utilfunctions.posting(requesth, board) #and here we suppose it is posting
 
 if __name__ == '__main__':

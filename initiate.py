@@ -55,6 +55,7 @@ class Post(): #(Base):
     #__table_args__ = (sqla.UniqueConstraint('hash1', name='_picture_hash'),)#should be generated when support of multiple pictures would be added
     op_post = sqla.Column(sqla.Integer)
     post_time = sqla.Column(sqla.Integer)
+    passwd_for_del = sqla.Column(sqla.String(63))
     ip = sqla.Column(sqla.String(15))
     def to_dict(self, ip=False): #converting the post to dict for javascript answer
         to_dict = {'id':self.id,#probably not needed, wonder if __dict__ will be appropriate

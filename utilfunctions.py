@@ -20,31 +20,46 @@ import wand.image
 import initiate
 import config as cf
 
-def get_user_permissions(user):
+def get_user_permissions(user, board, action):
     if user == None:
-        return 0
-    else: #wil be redone to get permissions from database
-        return 1
+        return False
+    else:
+        #if action == 'some action':
+        #    get permissions from db
+        #    return True/False
+        return True
 
 def generate_new_path(board, extension):
     """Here we generate pathes for saving the files ad thumbs"""
     newname = str(int(time.mktime(time.localtime()))) + ''.join(random.choice(string.digits) for _ in range(3))  + extension 
     return os.path.join('content', board, 'img', newname), newname, os.path.join('content', board, 'thumbs', 's'+newname)
 
+def find_replacement(match):
+    print(match)
+    if match.lastgroup == 'newline':
+        print(match.group('newline'))
+        return (match.end()-match.start())*'<br>'
+    elif match.lastgroup == 'newlineatend':
+        return ''
+    elif match.lastgroup == 'postlink': #make a separate handler for it
+        print(match.group('postlink'))
+        return '<a class = "rl" href=javascript:highlight(' + match.group('postlink')[8:] + ');>'+match.group('postlink')+'</a>'
+
 def add_markup(text):
     text = text.replace('\r\n', '\n')
     text = text.replace('\n\r', '\n')
-    nl2br = re.compile('\n+[^$]')
-    #print('==========================')
-    result = ''
-    pos = 0
-    for n in nl2br.finditer(text):
-        result = result + text[pos:n.start()] + (n.end()-n.start()-1)*'<br>'
-        pos = n.end()-1
+    nl2br = re.compile('(?P<newline>\n+)(?<!$)|(?P<newlineatend>\n+)(?=$)|(?P<postlink>&gt;&gt;[0-9]+)')
+    print('==========================')
+    #result = ''
+    #pos = 0
+    text = nl2br.sub(find_replacement, text)
+    #for n in nl2br.finditer(text):
+    #    result = result + text[pos:n.start()] + (n.end()-n.start()-1)*'<br>'
+    #    pos = n.end()-1
         #print(result)
-    #print('==========================')
-    result = result + text[pos:]
-    return result
+    print('==========================')
+    #result = result + text[pos:]
+    return text
 
 def posting(requesth, board): #working with posted form content
     action = requesth.get_body_argument('action')
@@ -151,14 +166,30 @@ def posting(requesth, board): #working with posted form content
         return 'not implemented yet'
     #
 
-def get_posts_code_by_num(requesth, received_objects, permissions): #function for returning the posts code for a list of posts ids
-    post_kwargs = {} #probably should be redone to make db return what we need
-    if permissions == 1 or permissions == 2:
-        post_kwargs = {'ip':True}
-    return_object = {} #this is what we would return
+def delete_posts_by_ids(requesth, received_objects):
+    board = received_objects['board']
+    if board not in initiate.board_cache:
+        return 'Incorrect board name'
+    posts = received_objects['posts_to_del']
+    #should add checking if board supports deleting
+    board_post_class = initiate.board_cache[board].post_class
+    if get_user_permissions(requesth.current_user, board, 'delete posts by ids'):
+        posts_deleted = initiate.sess.query(board_post_class).filter(board_post_class.id.in_(posts)).delete()
+    else:
+        passwd = received_objects['passwd']
+        posts_deleted = initiate.sess.query(board_post_class).filter(board_post_class.passwd_for_del == passwd).filter(board_post_class.id.in_(posts)).delete()
+    return str(posts_deleted) + ' posts deleted!'
+
+def get_posts_code_by_num(requesth, received_objects): #function for returning the posts code for a list of posts ids
     board = received_objects['board']
     if board not in initiate.board_cache: #all of this should be redone, it is fucking not good code
         return 'error'
+    
+    post_kwargs = {} #probably should be redone to make db return what we need
+    if get_user_permissions(requesth.current_user, board, 'get posts code by num'):
+        post_kwargs = {'ip':True}
+    return_object = {} #this is what we would return
+    
     in_list = set()
     for postid in received_objects['ids']:
         if type(postid) is not int:
