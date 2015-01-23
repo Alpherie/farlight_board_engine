@@ -33,7 +33,10 @@ def html_page_return(board, thread):
                          ),
                     E.HR(E.CLASS("delimeter")),
                     initiate.board_cache[board].post_form, #need to make it depending on post_form_type
-                    E.SCRIPT('document.getElementById("postform").style.display = "block";'),
+                    E.SCRIPT('function open_form() {document.getElementById("postform").style.display = "block"; document.getElementById("closeform").style.display = "block"; document.getElementById("threadcreate").style.display = "none";}'),
+                    E.SCRIPT('function close_form() {document.getElementById("postform").style.display = "none"; document.getElementById("closeform").style.display = "none"; document.getElementById("threadcreate").style.display = "block";}'),
+                    E.H3(E.A('Ответить в тред', href = "javascript:open_form();"), id = 'threadcreate'),
+                    E.H4(E.A('Скрыть форму', href = "javascript:close_form();"), id = 'closeform'),
                     E.HR(E.CLASS("delimeter")),
                     E.DIV('', id = 'mainframe'),
                     E.DIV('', id = 'optionsdiv'),
