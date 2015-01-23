@@ -158,6 +158,10 @@ body {
 	border-style: none;
 }
 
+.checkbox {
+	display: inline-block;
+	margin: 4px 0px;
+}
 .theme, .name,  .post_time, .post_link, .answer_link, .post_ip{
 	display: inline-block;
 	margin: 4px;
@@ -242,9 +246,16 @@ body {
 	padding-bottom: 6px;
 }
 
-#updatebuttondiv{
+#updbtnspan{
 	margin-top: 15px;
 	margin-left: 15px;
+}
+#delbtnspan{
+	float: right;
+	margin-right: 15px;
+}
+#delbtnspan input {
+	background-color: #dddde2;
 }
 
 .delimeter {

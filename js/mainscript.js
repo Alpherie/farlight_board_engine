@@ -41,6 +41,15 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 		var post_details = document.createElement("div");
 		post_details.className = "post_details";
 	
+		var p_checkbox = document.createElement("span");
+		p_checkbox.className = "checkbox";
+		var checkbox = document.createElement("input");
+		checkbox.type = "checkbox";
+		checkbox.name = "delete";
+		checkbox.value = array[i];
+		p_checkbox.appendChild(checkbox);
+		post_details.appendChild(p_checkbox);
+
 		if (postdict[array[i]]["theme"] !== null) {
 			var p_theme = document.createElement("span");
 			p_theme.className = "theme";
@@ -170,14 +179,34 @@ function threadfunc() {
         // done
 		array.unshift(thread);
 		getposts(board, array);
+
 		var updlink = document.createElement("a");
 		updlink.innerHTML = "Обновить";
 		updlink.href = "javascript:updatethread()";
 		updlink.id = "updlink";
-		var updbtndiv = document.getElementById("updatebuttondiv");
-		updbtndiv.insertAdjacentHTML("beforeend", "[");
-		updbtndiv.appendChild(updlink);
-		updbtndiv.insertAdjacentHTML("beforeend", "]");
+		var updbtnspan = document.createElement("span");
+		updbtnspan.id = "updbtnspan";
+		updbtnspan.insertAdjacentHTML("beforeend", "[");
+		updbtnspan.appendChild(updlink);
+		updbtnspan.insertAdjacentHTML("beforeend", "]");
+		
+		var passwdfield = document.createElement("input");
+		passwdfield.type = "password";
+		passwdfield.name = "delpasswd";
+		passwdfield.id = "delpasswd";
+		passwdfield.size = 10;
+		var delbtn = document.createElement("input");
+		delbtn.type = "submit";
+		delbtn.name = "delbtn";
+		delbtn.value = "Удалить";
+		var delbtnspan = document.createElement("span");
+		delbtnspan.id = "delbtnspan";
+		delbtnspan.appendChild(passwdfield);
+		delbtnspan.appendChild(delbtn);
+
+		var optionsdiv = document.getElementById("optionsdiv");
+		optionsdiv.appendChild(updbtnspan);
+		optionsdiv.appendChild(delbtnspan);
 	};
 };
 

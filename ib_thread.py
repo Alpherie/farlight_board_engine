@@ -36,7 +36,7 @@ def html_page_return(board, thread):
                     E.SCRIPT('document.getElementById("postform").style.display = "block";'),
                     E.HR(E.CLASS("delimeter")),
                     E.DIV('', id = 'mainframe'),
-                    E.DIV('', id = 'updatebuttondiv'),
+                    E.DIV('', id = 'optionsdiv'),
                     )), id = 'mainpart'),
                 E.TFOOT(E.TR(E.TD(
                     E.DIV(
