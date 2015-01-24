@@ -23,14 +23,15 @@ def login_page_gen():
         E.BODY(
             E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
             E.P(E.CLASS("loginmessage"), "You need to login"),
-            E.FORM(E.CLASS("loginform"), 
-                   'LOGIN ', E.INPUT(type = 'text', name = 'login', value = ''),
-                   E.BR(),
-                   'PASSWORD ', E.INPUT(type = 'text', name = 'password', value = ''),
-                   E.BR(),
+            E.FORM(E.CLASS("loginform"),
+                   E.TABLE(
+                       E.TR(E.TD('LOGIN'), E.TD(E.INPUT(type = 'text', name = 'login', value = ''))),
+                       E.TR(E.TD('PASSWORD'), E.TD(E.INPUT(type = 'text', name = 'password', value = ''))),
+                       ),
                    E.INPUT(type = 'submit', value = 'LOGIN'),
-                   method = 'POST', action = '/admin/login'),
-            lxml.html.fromstring("<p>... and this is a parsed fragment ...</p>")
+                   method = 'POST',
+                   action = '/admin/login'
+                   )
             )
         )
     return lxml.html.tostring(html)
