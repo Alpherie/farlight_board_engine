@@ -1,6 +1,7 @@
 import string
 import random
 import os
+import re
 #tornadoweb
 import tornado.escape
 #lxml
@@ -63,7 +64,6 @@ def board_creation_menu(): #here is the html board creation menu
             ),
         E.BODY(
             E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
-            E.P(E.CLASS("loginmessage"), "You need to login"),
             E.FORM(E.CLASS("loginform"),
                    E.INPUT(type = 'hidden', name = 'action', value = 'create'),
                    E.INPUT(type = 'hidden', name = 'instance', value = 'board'),
@@ -161,7 +161,12 @@ def admin_post(requesth):
             instance = requesth.get_body_argument('instance')
             if instance == 'board': #we create the board here
                 #to do the board creation
-                #should add checking for incorrect boardnames or tablenames
+                match = re.match('[a-z0-9]+', requesth.get_body_argument('address'))
+                if match == None or match.group() != requesth.get_body_argument('address'):
+                    return 'Incorrect address'
+                match = re.match('[a-z0-9]+', requesth.get_body_argument('tablename'))
+                if match == None or match.group() != requesth.get_body_argument('tablename'):
+                    return 'Incorrect tablename'
                 board_list = initiate.sess.query(initiate.Board).filter(initiate.Board.address==requesth.get_body_argument('address')).all()
                 if board_list != []: #need to add the checking of 'forbidden pages'
                     return 'board with such address exists!'
