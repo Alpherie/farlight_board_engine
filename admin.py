@@ -50,8 +50,7 @@ def main_page_gen():
             E.A("moderate boards", href = '?action=list&list=boards&purpose=moderator'),
             E.BR(),
             E.A("manage users", href = '?action=list&list=users&purpose=admin'),
-            E.BR(),
-            lxml.html.fromstring("<p>... and this is a parsed fragment ...</p>")
+            E.BR()
             )
         )
     return lxml.html.tostring(html)
@@ -79,8 +78,29 @@ def board_creation_menu(): #here is the html board creation menu
                    'Description ', E.INPUT(type = 'text', name = 'description', value = ''),
                    E.BR(),
                    E.INPUT(type = 'submit', value = 'Create'),
-                   method = 'POST', action = '/admin/'),
-            lxml.html.fromstring("<p>... and this is a parsed fragment ...</p>")
+                   method = 'POST',
+                   action = '/admin/'
+                   )
+            )
+        )
+    return lxml.html.tostring(html)
+
+def list_boards_menu(board_list, purpose):
+    """need to put boards table creating to a separate function in future"""
+    tablerows = [E.TR(E.TD(E.A(b.address, href = '/'+b.address)),E.TD(b.tablename),E.TD(str(b.name)),E.TD(str(b.fullname)),E.TD(str(b.description)),E.TD(str(b.category))) for b in board_list]
+    #purpose will be applyed later
+    html = E.HTML(
+        E.HEAD(
+            E.LINK(rel="stylesheet", href="/css/deeplight.css", type="text/css"), 
+            E.TITLE("Creating board")
+            ),
+        E.BODY(
+            E.H1(E.CLASS("heading"), "Listing boards"),
+            E.TABLE(
+                E.CLASS("boardstable"),
+                E.TR(E.TH('Адрес'),E.TH('Таблица'),E.TH('Название'),E.TH('Полное название'),E.TH('Описание'),E.TH('Категория')),
+                *tablerows
+                )
             )
         )
     return lxml.html.tostring(html)
@@ -99,12 +119,7 @@ def admin(requesth):
         #add purpose checking
         if what_to_list == 'boards': #here we list boards for management
             board_list = initiate.sess.query(initiate.Board).all()
-            if purpose == 'admin':
-                return str(board_list)
-            if purpose == 'moderator':
-                return str(board_list)
-            else:
-                requesth.write_error(400)
+            return list_boards_menu(board_list, purpose)
         elif what_to_list == 'users':#here we list users for management
             return 'users list'
         else:
