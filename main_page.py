@@ -10,7 +10,7 @@ def main_page_gen():
             E.TITLE("Farlight - Main Page")
             ),
         E.BODY(
-            E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
+            E.H1(E.CLASS("heading"), "u2ch"),
             E.P(E.CLASS("nextstr"), "Welcome to Farlight Engine main page", style="font-size: 200%"),
             "Ah, and here's some more text, by the way.",
             lxml.html.fromstring("<p>... and this is a parsed fragment ...</p>")

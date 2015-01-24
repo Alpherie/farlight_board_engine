@@ -34,6 +34,32 @@ def generate_new_path(board, extension):
     newname = str(int(time.mktime(time.localtime()))) + ''.join(random.choice(string.digits) for _ in range(3))  + extension 
     return os.path.join('content', board, 'img', newname), newname, os.path.join('content', board, 'thumbs', 's'+newname)
 
+#--------------------------------------
+class PicFile():
+    def __init__(self, file, board):
+        self.board = board
+        self.blob = file['body']
+        m = hashlib.md5()
+        m.update(self.blob)
+        self.hash = m.hexdigest()
+        self.extension = os.path.splitext(file['filename'])[1]
+        self.path, self.fname, self.thumbpath = generate_new_path(self.board, self.extension)
+        while os.path.exists(self.path):
+            self.path, self.fname, self.thumbpath = generate_new_path(self.board, self.extension)
+
+    def save_file_and_preview(self):
+        """File saving and preview generation"""
+        with wand.image.Image(blob=self.blob) as img: #probably should add hint file format
+            img.save(filename=self.path)
+            resize_coeff = 300/max(img.width, img.height)
+            if resize_coeff >= 1.0:
+                resize_coeff = 1
+            img.sample(int(img.width*resize_coeff), int(img.height*resize_coeff))
+            img.save(filename=self.thumbpath)
+        return
+#--------------------------------------
+    
+
 def find_replacement(match):
     if match.lastgroup == 'newline':
         return (match.end()-match.start())*'<br>'
@@ -101,17 +127,24 @@ def posting(requesth, board): #working with posted form content
 
         #file management
         there_are_files = False
-        if len(requesth.request.files) != 0: #would be redone for multiple file management
+        filesnum = len(requesth.request.files)
+        if filesnum != 0: #would be redone for multiple file management
+            if filesnum > initiate.board_cache[board].pictures:
+                return 'Too much files!'
             there_are_files = True
-            file = requesth.request.files['file1'][0]
-            m = hashlib.md5()
-            m.update(file['body'])
-            post_content['hash1'] = m.hexdigest()
-            extension = os.path.splitext(file['filename'])[1]
-            path, fname, thumbpath = generate_new_path(board, extension)
-            while os.path.exists(path):
-                path, fname, thumbpath = generate_new_path(board, extension)
-            post_content['picture'] = fname
+            i = 0
+            j = 0
+            files = []
+            while j < filesnum and i < initiate.board_cache[board].pictures: #second case is not needed, probably, but to be sure i add it
+                try:
+                    files.append(PicFile(requesth.request.files['file'+str(i)][0], board))
+                except KeyError:
+                    pass
+                else:
+                    post_content['pic'+str(j)] = files[j].fname
+                    post_content['hash'+str(j)] = files[j].hash
+                    j += 1
+                i+=1
         #that's not all, file is written after post is committed to db
         
         #adding ip
@@ -135,14 +168,8 @@ def posting(requesth, board): #working with posted form content
 
         #adding the file and generating preview
         if there_are_files:
-            with wand.image.Image(blob=file['body']) as img: #probably should add hint file format
-                img.save(filename=path)
-                resize_coeff = 300/max(img.width, img.height)
-                if resize_coeff >= 1.0:
-                    resize_coeff = 1
-                img.sample(int(img.width*resize_coeff), int(img.height*resize_coeff))
-                img.save(filename=thumbpath)
-            
+            for each_file in files:
+                each_file.save_file_and_preview()            
         
         #returning redirect on success
         if op == 0:

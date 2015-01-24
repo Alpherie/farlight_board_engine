@@ -105,28 +105,37 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 	
 		var post_body = document.createElement("div");
 
-		//adding picture
-		if (postdict[array[i]]["pic"] !== null) { 
+		//adding pictures
+		if (postdict[array[i]]["pics"].length !== 0) {
 			var pic_block = document.createElement("div");
-			pic_block.className = "imageblock";
-			var figure = document.createElement("figure");
-			figure.className = "image";
-			var figcaption = document.createElement("figcaption");
-			figcaption.className = "fileattrs";
-			var filelink = document.createElement("a");
-			filelink.innerHTML = postdict[array[i]]["pic"];
-			filelink.href = "/" + board + "/img/" + postdict[array[i]]["pic"];
-			filelink.target = "_blank";
-			//also there will be preview
-			var img = document.createElement("img");
-			img.src = "/" + board + "/thumbs/s" + postdict[array[i]]["pic"];
-			img.alt = postdict[array[i]]["pic"];
-			img.className = "previewimg";
-			//adding all the shit
-			figcaption.appendChild(filelink);
-			figure.appendChild(figcaption);
-			figure.appendChild(img);
-			pic_block.appendChild(figure);
+			if (postdict[array[i]]["pics"].length === 1){
+				pic_block.className = "imageblock";
+			} else {
+				pic_block.className = "manyimageblock";
+			}
+			//classname may depend on number of pics
+
+			for (j in postdict[array[i]]["pics"]){
+				var figure = document.createElement("figure");
+				figure.className = "image imagenum"+j;
+				var figcaption = document.createElement("figcaption");
+				figcaption.className = "fileattrs";
+				var filelink = document.createElement("a");
+				filelink.innerHTML = postdict[array[i]]["pics"][j];
+				filelink.href = "/" + board + "/img/" + postdict[array[i]]["pics"][j];
+				filelink.target = "_blank";
+				//also there will be preview
+				var img = document.createElement("img");
+				img.src = "/" + board + "/thumbs/s" + postdict[array[i]]["pics"][j];
+				img.alt = postdict[array[i]]["pics"][j];
+				img.className = "previewimg";
+				//adding all the shit
+				figcaption.appendChild(filelink);
+				figure.appendChild(figcaption);
+				figure.appendChild(img);
+				pic_block.appendChild(figure);
+			}
+
 			post_body.appendChild(pic_block);
 		};
 
@@ -355,4 +364,32 @@ function click_on_ip (elem){
 		ul.appendChild(li);
 	};
 	elem.parentNode.appendChild(ul);
+};
+
+function add_file_input (btn) {
+	btn.disabled="disabled";
+
+	var br = document.createElement("br");
+	document.getElementById("filecell").appendChild(br);
+
+	var cur_num = parseInt(btn.id);
+	var maxfiles = parseInt(document.getElementById("maxfiles").innerHTML);
+	if (maxfiles > (cur_num + 1)) {
+		var finput = document.createElement("input");
+		finput.type = "file";
+		finput.name = "file" + (cur_num + 1);
+		finput.accept = "image/*";
+		document.getElementById("filecell").appendChild(finput);
+
+		var new_btn = document.createElement("button");
+		new_btn.type = "button";
+		new_btn.id = (cur_num+1) + "filebutton";
+		new_btn.innerHTML = "+";
+		new_btn.onclick = function(){add_file_input(this)};	
+		document.getElementById("filecell").appendChild(new_btn);
+	} else {
+		var fspan = document.createElement("span");
+		fspan.innerHTML = "Only "+maxfiles+" file(s) can be added";
+		document.getElementById("filecell").appendChild(fspan);
+	}
 };

@@ -79,11 +79,13 @@ body {
 }
 
 .postform{
-	width: 500px;
+	display: none;
+}
+.postform table{
+	width: 600px;
 	margin-left: auto;
 	margin-right: auto;
 	padding-right: 75px;
-	display: none;
 	clear: both;
 }
 .postform td{
@@ -101,6 +103,17 @@ body {
 	width: 20%;
 	font-weight: bold;
 	padding: 3px;
+}
+.postform #filecell input {
+	width: 90%;
+}
+.postform #filecell button {
+	width: 9%;
+	float: right;
+}
+.postform #filecell span {
+	display: block;
+	padding: 5px;
 }
 
 #threadcreate {
@@ -213,26 +226,38 @@ body {
 }
 
 
-.imageblock{
+.imageblock, .manyimageblock{
 	display: inline-block;
 	float:left;
 	font-size: 0.75em;
 }
-.imageblock a:link{
+.imageblock a:link, .manyimageblock a:link{
 	color: #ffffff;
 }
-.imageblock a:visited{
+.imageblock a:visited, .manyimageblock a:visited{
 	color: #cccccc;
 }
-.imageblock a:hover, .imageblock a:active{
+.imageblock a:hover, .imageblock a:active, .manyimageblock a:hover, .manyimageblock a:active{
 	color: #ffffff;
 }
-
-.image{
+.imageblock .image{
+	display: inline-block;
+	float: left;
 	margin-left: 10px;
 	margin-top: 2px;
 	margin-bottom: 5px;
 	margin-right: 0px;
+}
+.manyimageblock .image{
+	display: inline-block;
+	float: left;
+	margin-left: 60px;
+	margin-top: 2px;
+	margin-bottom: 10px;
+	margin-right: 0px;
+}
+.manyimageblock .image.imagenum0{
+	margin-left: 20px;
 }
 
 .previewimg{

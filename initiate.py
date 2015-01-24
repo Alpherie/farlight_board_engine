@@ -38,32 +38,36 @@ class Board (Base):
     fullname = sqla.Column(sqla.String(255))
     description = sqla.Column(sqla.String(255))
     category = sqla.Column(sqla.String(255))
+    pictures = sqla.Column(sqla.Integer)
     def __repr__(self):
         return "<User(address = /%s/, name='%s', fullname='%s', description='%s')>" % (self.address, self.name, self.fullname, self.description)
 #---------------------------------------------
 
 #---------------------------------------------
 class Post(): #(Base):
-    #__tablename__ = 
+    #__tablename__ =
+    #pic_num =
     id = sqla.Column(sqla.Integer, primary_key=True)
     theme = sqla.Column(sqla.String(255))
     name = sqla.Column(sqla.String(255))
     email = sqla.Column(sqla.String(255))
     text = sqla.Column(sqla.String(cf.post_len)) #this is the text of post. Should be renamed later
-    picture = sqla.Column(sqla.String(255))
-    hash1 = sqla.Column(sqla.String(255))#need to make it lenght as long as hash
-    #__table_args__ = (sqla.UniqueConstraint('hash1', name='_picture_hash'),)#should be generated when support of multiple pictures would be added
     op_post = sqla.Column(sqla.Integer)
     post_time = sqla.Column(sqla.Integer)
     passwd_for_del = sqla.Column(sqla.String(63))
     ip = sqla.Column(sqla.String(15))
     def to_dict(self, ip=False): #converting the post to dict for javascript answer
+        pics = []
+        for i in range(self.pic_num):
+            pic = getattr(self, 'pic'+str(i))
+            if pic != None:
+                pics.append(pic)
         to_dict = {'id':self.id,#probably not needed, wonder if __dict__ will be appropriate
                    'theme':self.theme,
                    'name':self.name,
                    'email':self.email,
                    'text':self.text,#will rename
-                   'pic':self.picture,#will be redone for dynamic generating of Post class with many pictures available
+                   'pics':pics,#will be redone for dynamic generating of Post class with many pictures available
                    'op_post':self.op_post,
                    'post_time':self.post_time
                    }
@@ -73,6 +77,7 @@ class Post(): #(Base):
     def __repr__(self):
         return "<Post(id = №%d, html_code='%s', picture='%s', op_post='%d')>" % (self.id, self.html_code, self.picture, self.op_post)
 #---------------------------------------------
+    
 #-----------------------------------------------------------------------------------------------------------------------------------
 class board_cache_class(): 
     def __init__(self, b, table_exists = True):
@@ -82,9 +87,11 @@ class board_cache_class():
         self.name = b.name
         self.fullname = b.fullname
         self.description = b.description
+        self.pictures = b.pictures
         self.post_form_type = 'lxml' #or html
         self.post_form = self._lxml_form_generator() #will be added the form generating, or reading from file
-        self.post_class = type(b.name, (Post,Base), {'__tablename__':b.tablename, '__table_args__':(sqla.UniqueConstraint('hash1', name = b.tablename + '_picture_hash'),)}) #class post for table #probably better to make a separate function for its generating
+
+        self.generate_sql_class()
         
         self.threads = array.array('L') #we do this because we need a list of integers, not ordered tuples
         if table_exists:
@@ -102,6 +109,20 @@ class board_cache_class():
             posts = sess.query(self.post_class.id, self.post_class.op_post).filter(self.post_class.op_post != None).all()
             for each_post in posts:
                 self.posts_dict[each_post.op_post].append(each_post.id)
+
+    def generate_sql_class(self):
+        """creating class for sql"""
+        params_dict = {'__tablename__':self.tablename,
+                       'pic_num':self.pictures}
+        if self.pictures > 0:
+            hashes_list = []
+            for i in range(self.pictures):
+                params_dict['pic'+str(i)] = sqla.Column(sqla.String(255))
+                params_dict['hash'+str(i)] = sqla.Column(sqla.String(255))#need to make it lenght as long as hash
+                hashes_list.append('hash'+str(i))
+            params_dict['__table_args__'] = (sqla.UniqueConstraint(*hashes_list, name = '_'+self.tablename + '_picture_hash'),)
+        self.post_class = type(self.tablename, (Post,Base), params_dict) #class post for table
+        return
 
     def add_post(self, op, new_id): #will be redone, after limit of threads will be introduced
         """This function is adding new threads or bumping old ones"""
@@ -141,9 +162,9 @@ class board_cache_class():
                               E.TD('TEXT'),
                               E.TD(E.TEXTAREA(name = 'text', rows = '8', cols = '50', placeholder = 'POST')),
                               ),
-                          E.TR(
+                          E.TR(#should add checking if pics are available
                               E.TD('PICTURE'),
-                              E.TD(E.INPUT(type = 'file', name = 'file1', accept = 'image/*')),
+                              E.TD(E.INPUT(type = 'file', name = 'file0', accept = 'image/*'), E.BUTTON('+', type = 'button', onclick = 'add_file_input(this);', id = '0filebutton'), E.SPAN(str(self.pictures), style = 'display:none;', id = 'maxfiles'), id = 'filecell'),
                               ),
                           E.TR(
                               E.TD(

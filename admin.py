@@ -74,6 +74,7 @@ def board_creation_menu(): #here is the html board creation menu
                        E.TR(E.TD('Name'), E.TD(E.INPUT(type = 'text', name = 'name', value = ''))),
                        E.TR(E.TD('Fullname'), E.TD(E.INPUT(type = 'text', name = 'fullname', value = ''))),
                        E.TR(E.TD('Description'), E.TD(E.INPUT(type = 'text', name = 'description', value = ''))),
+                       E.TR(E.TD('Pics number'), E.TD(E.INPUT(type = 'number', name = 'picsnum', value = '', min = '0'))),
                        ),
                    E.INPUT(type = 'submit', value = 'Create'),
                    method = 'POST',
@@ -165,6 +166,12 @@ def admin_post(requesth):
                 match = re.match('[a-z0-9]+', requesth.get_body_argument('tablename'))
                 if match == None or match.group() != requesth.get_body_argument('tablename'):
                     return 'Incorrect tablename'
+                try:
+                    picsnum = int(requesth.get_body_argument('picsnum'))
+                    if picsnum < 0 or picsnum > 10: #should add limit from config
+                        return 'Incorrect pictures number!'
+                except ValueError:
+                    return 'Incorrect pictures number!'
                 board_list = initiate.sess.query(initiate.Board).filter(initiate.Board.address==requesth.get_body_argument('address')).all()
                 if board_list != []: #need to add the checking of 'forbidden pages'
                     return 'board with such address exists!'
@@ -172,7 +179,7 @@ def admin_post(requesth):
                 if board_list != [] or requesth.get_body_argument('tablename') in initiate.engine.table_names():
                     return 'table with such name exists!'
                 #we checked, now we should add this to board cache, create table and write down it to database
-                new_board = initiate.Board(address = requesth.get_body_argument('address'), tablename = requesth.get_body_argument('tablename'), name = requesth.get_body_argument('name'), fullname = requesth.get_body_argument('fullname'), description = requesth.get_body_argument('description')) #creating new board in Boards table
+                new_board = initiate.Board(address = requesth.get_body_argument('address'), tablename = requesth.get_body_argument('tablename'), name = requesth.get_body_argument('name'), fullname = requesth.get_body_argument('fullname'), description = requesth.get_body_argument('description'), pictures = picsnum) #creating new board in Boards table
                 try:
                     os.makedirs(os.path.join('content', new_board.address, 'img'))
                     os.makedirs(os.path.join('content', new_board.address, 'thumbs'))
@@ -184,7 +191,7 @@ def admin_post(requesth):
                 initiate.board_cache[requesth.get_body_argument('address')].post_class.__table__.create(bind = initiate.engine)#creating table
                 initiate.sess.commit()#committing changes to boards table
                 initiate.renew_board_cache(renew_cache_dict=False) #here we fuck with the board cache again
-                return 'created board successfully' #add redirection
+                return 'created board successfully<br><a href = "/'+new_board.address+'">'+new_board.address+'</a>' #add redirection
             else:
                 requesth.write_error(400)#probably should describe the error
                 #it goes when instance creation is not supported
