@@ -1,7 +1,7 @@
 #this is the file for the functions, shared beatween many modules
 
 import time
-import re
+import regex
 import hashlib
 import os.path
 import string
@@ -67,12 +67,27 @@ def find_replacement(match):
         return ''
     elif match.lastgroup == 'postlink': #make a separate handler for it
         return '<a class = "rl" href=javascript:highlight(' + match.group('postlink')[8:] + ');>'+match.group('postlink')+'</a>'
+    elif match.lastgroup == 'wakabab':
+        return '<strong>' + match.group('wakabab')[2:-2] + '</strong>'
+    elif match.lastgroup == 'wakabaspoiler':
+        return '<span class="s">' + match.group('wakabaspoiler')[2:-2] + '</span>'
+    elif match.lastgroup == 'wakabai':
+        return '<i>' + match.group('wakabai')[1:-1] + '</i>'
+    elif match.lastgroup == 'wakabaquote':
+        return '<span class = "q">' + match.group('wakabaquote') + '</span>'
+
+nl2br = regex.compile('(?P<newline>\n+)(?<!$)|(?P<newlineatend>\n+)(?=$)|(?P<postlink>&gt;&gt;[0-9]+)|(?P<wakabab>(?<=^|[^\*])\*\*[^\*\n]+?\*\*(?=[^\*]|$))|(?P<wakabai>(?<=^|[^\*])\*[^\*\n]+\*(?=[^\*]|$))|(?P<wakabaspoiler>(?<=^|[^%])%%[^%\n]+?%%(?=[^%]|$))|(?P<wakabaquote>(?<!&gt;)&gt;.+?(?=$|\n))')
 
 def add_markup(text):
     text = text.replace('\r\n', '\n')
     text = text.replace('\n\r', '\n')
-    nl2br = re.compile('(?P<newline>\n+)(?<!$)|(?P<newlineatend>\n+)(?=$)|(?P<postlink>&gt;&gt;[0-9]+)')
     #print('==========================')
+    #heads = []
+    #tails = []
+    #for m in nl2br.finditer(text, overlapped = True):
+        #print(m.group())
+        #heads.append((m.start(), m))
+        #tails.append((m.end(), m))
     text = nl2br.sub(find_replacement, text)
     #print('==========================')
     return text
