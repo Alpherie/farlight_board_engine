@@ -1,22 +1,23 @@
+import array
+#
 import sqlalchemy as sqla
 import sqlalchemy.orm as sqlaorm
 import sqlalchemy.sql as sqlasql
 import sqlalchemy.schema as sqlaschema
 import sqlalchemy.types as sqlatypes
 #
-from lxml.html import builder as E
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql.functions import coalesce
+from sqlalchemy.orm import sessionmaker
 #
-import array
+#
+from lxml.html import builder as E
 #
 #
 import config as cf
 #
-#
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.sql.functions import coalesce
-from sqlalchemy.orm import sessionmaker
-Base = declarative_base()
 
+Base = declarative_base()
 #---------------------------------------------
 class Admin(Base):
     __tablename__ = 'admins'
@@ -44,9 +45,7 @@ class Board (Base):
 #---------------------------------------------
 
 #---------------------------------------------
-class Post(): #(Base):
-    #__tablename__ =
-    #pic_num =
+class Post():
     id = sqla.Column(sqla.Integer, primary_key=True)
     theme = sqla.Column(sqla.String(255))
     name = sqla.Column(sqla.String(255))
@@ -60,9 +59,9 @@ class Post(): #(Base):
         pics = []
         for i in range(self.pic_num):
             pic = getattr(self, 'pic'+str(i))
-            if pic != None:
+            if pic is not None:
                 pics.append(pic)
-        to_dict = {'id':self.id,#probably not needed, wonder if __dict__ will be appropriate
+        to_dict = {'id':self.id,
                    'theme':self.theme,
                    'name':self.name,
                    'email':self.email,
@@ -80,7 +79,7 @@ class Post(): #(Base):
     
 #-----------------------------------------------------------------------------------------------------------------------------------
 class board_cache_class(): 
-    def __init__(self, b, table_exists = True):
+    def __init__(self, b, table_exists=True):
         """table_exists flag is used when we do not need to ask table as it is not created yet"""
         self.address = b.address #will be needed for form generating
         self.tablename = b.tablename
@@ -148,7 +147,9 @@ class board_cache_class():
                       E.TABLE(
                           E.TR(
                               E.TD('EMAIL'),
-                              E.TD(E.INPUT(type = 'text', name = 'email', value = '', id = 'emailfield'), E.INPUT(type = 'submit', value = 'POST', id = 'postbutton')),
+                              E.TD(E.INPUT(type = 'text', name = 'email', value = '', id = 'emailfield'),
+                                   E.INPUT(type = 'submit', value = 'POST', id = 'postbutton')
+                                   ),
                               ),
                           E.TR(
                               E.TD('THEME'),
@@ -164,7 +165,9 @@ class board_cache_class():
                               ),
                           E.TR(#should add checking if pics are available
                               E.TD('PICTURE'),
-                              E.TD(E.INPUT(type = 'file', name = 'file0', accept = 'image/*'), E.BUTTON('+', type = 'button', onclick = 'add_file_input(this);', id = '0filebutton'), E.SPAN(str(self.pictures), style = 'display:none;', id = 'maxfiles'), id = 'filecell'),
+                              E.TD(E.INPUT(type = 'file', name = 'file0', accept = 'image/*'),
+                                   E.BUTTON('+', type = 'button', onclick = 'add_file_input(this);', id = '0filebutton'),
+                                   E.SPAN(str(self.pictures), style = 'display:none;', id = 'maxfiles'), id = 'filecell'),
                               ),
                           E.TR(
                               E.TD(
@@ -205,7 +208,7 @@ def generate_header_footer_board_list(boards): #would be redone
                 )
             urls.append('/')
         urls.pop()
-        if category == None:
+        if category is None:
             category = ''
         urls = [E.CLASS('boardcategory'), category+' ['] + urls + [']']
         spans.append(E.SPAN(*urls))
@@ -216,7 +219,7 @@ def generate_header_footer_board_list(boards): #would be redone
     return code
 
 #-----------------------------------------------------------------------------------------------------------------------------------
-def renew_board_cache(renew_cache_dict = True, renew_thread_cache = True):
+def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True):
     global board_cache#should be done by the request
     global board_cache_footer
     global board_cache_main_page
@@ -225,11 +228,11 @@ def renew_board_cache(renew_cache_dict = True, renew_thread_cache = True):
         board_cache = {}
         for b in boards:
             board_cache[b.address] = board_cache_class(b)
-    if cf.static_board_footer == True:
+    if cf.static_board_footer:
         board_cache_footer = cf.board_cache_footer
     else:
         board_cache_footer = generate_header_footer_board_list(boards) #there must be html code generated
-    if cf.static_board_main_page == True:
+    if cf.static_board_main_page:
         board_cache_main_page = cf.board_cache_main_page
     else:
         board_cache_main_page = ''#there must be html code generated

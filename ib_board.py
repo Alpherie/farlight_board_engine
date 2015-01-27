@@ -1,10 +1,9 @@
 #this file is used for generating thread content
+import copy
+
 import lxml
 from lxml.html import builder as E
 from lxml.builder import ElementMaker as EM
-
-import array
-import copy
 
 import tornado.escape
 
@@ -54,6 +53,7 @@ def html_page_return(board, page):
     return lxml.html.tostring(html)
 
 def json_answer(requesth):
+    """Giving back the requested by JSON content"""
     received_objects = tornado.escape.json_decode(requesth.request.body)
     if received_objects['action'] == 'get threads ids for page': #this is when we need to return post ids for given threads
         board = received_objects['board']
@@ -79,7 +79,7 @@ def json_answer(requesth):
         for threadnum in received_objects['threads']:
             if threadnum['threadnum'] not in return_object: #checking if threadnum is not already requested, we support only one request per thread
                 if threadnum['threadnum'] in initiate.board_cache[board].posts_dict: #checking if thread exists
-                    if type(threadnum['threadnum']) is int and type(threadnum['begin']) is int and type(threadnum['end']) is int: #checking types
+                    if isinstance(threadnum['threadnum'], int) and isinstance(threadnum['begin'], int) and isinstance(threadnum['end'], int): #checking types
                         if threadnum['begin'] <= threadnum['end']:
                             if threadnum['begin'] < 0 and threadnum['end'] < 0:
                                 if threadnum['end'] < -len(initiate.board_cache[board].posts_dict[threadnum['threadnum']]): #should add checking for begin to be less then len(list of posts in thread)
@@ -144,7 +144,7 @@ def get(requesth): #requesth is tornadoweb requesthandler object
 
 def post(requesth): #working over POST requests
     board_exists, board, page = get_board_and_page(requesth.request.uri)
-    if board_exists == False:
+    if not board_exists:
         return 'No such board'
     try:
         content_type = requesth.request.headers['Content-Type']

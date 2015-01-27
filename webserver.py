@@ -1,11 +1,12 @@
+import tornado.ioloop
+import tornado.web
+#
 import main_page
 import initiate
 import admin
 import ib_thread
 import ib_board
-#
-import tornado.ioloop
-import tornado.web
+
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):#probably should be redone for security

@@ -21,7 +21,7 @@ import initiate
 import config as cf
 
 def get_user_permissions(user, board, action):
-    if user == None:
+    if user is None:
         return False
     else:
         #if action == 'some action':
@@ -152,10 +152,11 @@ def posting(requesth, board): #working with posted form content
             files = []
             while j < filesnum and i < initiate.board_cache[board].pictures: #second case is not needed, probably, but to be sure i add it
                 try:
-                    files.append(PicFile(requesth.request.files['file'+str(i)][0], board))
+                    the_file = requesth.request.files['file'+str(i)][0]
                 except KeyError:
                     pass
                 else:
+                    files.append(PicFile(the_file, board))
                     post_content['pic'+str(j)] = files[j].fname
                     post_content['hash'+str(j)] = files[j].hash
                     j += 1
@@ -224,11 +225,11 @@ def get_posts_code_by_num(requesth, received_objects): #function for returning t
     
     in_list = set()
     for postid in received_objects['ids']:
-        if type(postid) is not int:
+        if not isinstance(postid, int):
             return 'Incorrect post ids'
         in_list.add(postid)#probably should check, if adding an already existing in set element does not cause an error
     in_list2 = list(in_list)#converting to list for _in function
-    if len(in_list2) != 0:
+    if in_list2:
         database_responce = initiate.sess.query(initiate.board_cache[board].post_class).filter(initiate.board_cache[board].post_class.id.in_(in_list2)).all()
         for row in database_responce:
             return_object[row.id] = row.to_dict(**post_kwargs)#probably need to be redone
