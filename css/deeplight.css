@@ -1,3 +1,14 @@
+/* Admin features */
+.boardstable {
+	margin-left: 5px;
+	border-collapse: collapse;
+}
+.boardstable th, .boardstable td {
+	padding: 5px 6px;
+	border-left: 1px solid;
+}
+
+/* Common */
 body {
 	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 	font-size: 100%;

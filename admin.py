@@ -2,6 +2,8 @@ import string
 import random
 import os
 import re
+import time
+import copy
 #tornadoweb
 import tornado.escape
 #lxml
@@ -102,17 +104,28 @@ def board_creation_menu(): #here is the html board creation menu
 
 def list_boards_menu(board_list, purpose):
     """need to put boards table creating to a separate function in future"""
+    posts_num_cell = E.DIV(E.SPAN('????', style = 'display:inline-block; width:4em; text-align:center;'),
+                           E.INPUT(type='number', size='6', min='0', value='1'),
+                           E.SELECT(E.OPTION('Секунды', value='1'),
+                                    E.OPTION('Минуты', value='60'),
+                                    E.OPTION('Часы', value='3600'),
+                                    E.OPTION('Дни', value='86400', selected='')
+                                    ),
+                           E.BUTTON('GET', onclick='get_posts_num_from_time(this)'))
     tablerows = [E.TR(E.TD(E.A(b.address, href = '/'+b.address)),
                       E.TD(b.tablename),
                       E.TD(str(b.name)),
                       E.TD(str(b.fullname)),
                       E.TD(str(b.description)),
-                      E.TD(str(b.category))) for b in board_list]
+                      E.TD(str(b.category)),
+                      E.TD(copy.copy(posts_num_cell))
+                      )for b in board_list]
     #purpose will be applyed later
     html = E.HTML(
         E.HEAD(
             E.LINK(rel="stylesheet", href="/css/deeplight.css", type="text/css"), 
-            E.TITLE("Creating board")
+            E.TITLE("Creating board"),
+            E.SCRIPT(type = 'text/javascript', src = '/adminscript.js') #js
             ),
         E.BODY(
             E.H1(E.CLASS("heading"), "Listing boards"),
@@ -123,7 +136,8 @@ def list_boards_menu(board_list, purpose):
                      E.TH('Название'),
                      E.TH('Полное название'),
                      E.TH('Описание'),
-                     E.TH('Категория')
+                     E.TH('Категория'),
+                     E.TH('Постов за последнее время')
                      ),
                 *tablerows
                 )
@@ -174,12 +188,35 @@ def admin_login(requesth):
     requesth.set_status(302)
     return 'Logged successfully' #checking should be added
 
+def json_answer(requesth):
+    received_objects = tornado.escape.json_decode(requesth.request.body)
+    if received_objects['action'] == 'get num of posts during last':
+        board = received_objects['board']
+        if board not in initiate.board_cache: #all of this should be redone, it is fucking not good code
+            return 'error'
+        from_time = received_objects['from_time']
+        if not isinstance(from_time, int):
+            return 'Incorrect time!'
+        from_time = int(time.time()) - from_time
+        p_class = initiate.board_cache[board].post_class
+        return_object = initiate.sess.query(p_class).filter(p_class.post_time >= from_time).count()
+        return tornado.escape.json_encode(return_object)
+    else:
+        return 'incorrect action'
+
 def admin_post(requesth):        
     if requesth.current_user is None:
         requesth.set_header('Location', '/admin/login')
         requesth.set_status(302)
         return 'Redirecting to login'
     else:
+        try:
+            content_type = requesth.request.headers['Content-Type']
+        except KeyError:
+            pass
+        else:
+            if 'application/json' in content_type:
+                return json_answer(requesth)#here we work we json requests
         action = requesth.get_body_argument('action')
         if action == 'login':#what we do to login
             return 'TO DO'

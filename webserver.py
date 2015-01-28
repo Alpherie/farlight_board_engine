@@ -63,7 +63,7 @@ application = tornado.web.Application([
     (r"/[0-9A-Za-z]+\/?[0-9]*", BoardHandler),
     (r"/([0-9A-Za-z]+\/img/[0-9]+\..+)", tornado.web.StaticFileHandler, {"path": "content/"}), #handling pictures
     (r"/([0-9A-Za-z]+\/thumbs/s[0-9]+\..+)", tornado.web.StaticFileHandler, {"path": "content/"}), #handling thumbs
-    (r"/(mainscript\.js)", tornado.web.StaticFileHandler, {"path": "js/"}),
+    (r"/(mainscript\.js|adminscript\.js)", tornado.web.StaticFileHandler, {"path": "js/"}),
     (r"/css/(.+\.css)", tornado.web.StaticFileHandler, {"path": "css/"}),
     (r"/(favicon.ico)", tornado.web.StaticFileHandler, {"path": ""})
 ], **settings)
