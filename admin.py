@@ -51,14 +51,16 @@ def main_page_gen():
         E.BODY(
             E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
             E.P(E.CLASS("loginmessage"), "You are logged in"),
-            E.A("create board", href = '?action=create&create=board'),
+            E.A("create board", href = '?action=create&instance=board'),
             E.BR(),
             E.A("manage boards", href = '?action=list&list=boards&purpose=admin'),
             E.BR(),
             E.A("moderate boards", href = '?action=list&list=boards&purpose=moderator'),
             E.BR(),
             E.A("manage users", href = '?action=list&list=users&purpose=admin'),
-            E.BR()
+            E.BR(),
+            E.A("change password", href = '?action=change&instance=password'),
+            E.BR(),
             )
         )
     return lxml.html.tostring(html)
@@ -145,6 +147,37 @@ def list_boards_menu(board_list, purpose):
         )
     return lxml.html.tostring(html)
 
+def password_change_menu():
+    html = E.HTML(
+        E.HEAD(
+            E.LINK(rel="stylesheet", href="/css/deeplight.css", type="text/css"),
+            E.TITLE("Administration and moderation")
+            ),
+        E.BODY(
+            E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
+            E.P(E.CLASS("loginmessage"), "Change your password"),
+            E.FORM(E.CLASS("loginform"),
+                   E.INPUT(type = 'hidden', name = 'action', value = 'change'),
+                   E.INPUT(type = 'hidden', name = 'instance', value = 'password'),
+                   E.TABLE(
+                       E.TR(E.TD('OLD PASSWORD'),
+                            E.TD(E.INPUT(type = 'password', name = 'old_passwd', value = ''))
+                            ),
+                       E.TR(E.TD('NEW PASSWORD'),
+                            E.TD(E.INPUT(type = 'password', name = 'new_passwd', value = ''))
+                            ),
+                       E.TR(E.TD('NEW PASSWORD AGAIN'),
+                            E.TD(E.INPUT(type = 'password', name = 'new_passwd_again', value = ''))
+                            ),
+                       ),
+                   E.INPUT(type = 'submit', value = 'LOGIN'),
+                   method = 'POST',
+                   action = '/admin'
+                   )
+            )
+        )
+    return lxml.html.tostring(html)
+
 def admin(requesth):
     if requesth.current_user is None:
         requesth.set_header('Location', '/admin/login')
@@ -165,11 +198,17 @@ def admin(requesth):
         else:
             return 'No such list'
     elif actions == ['create']:
-        create = requesth.get_query_argument('create')
+        create = requesth.get_query_argument('instance')
         if create == 'board':
             return board_creation_menu()
         else:
             return 'There are other create menu'
+    elif actions == ['change']:
+        change = requesth.get_query_argument('instance')
+        if change == 'password':
+            return password_change_menu()
+        else:
+            return 'Changing anything than password not implemented'
     else:
         requesth.write_error(400)
 
@@ -264,6 +303,20 @@ def admin_post(requesth):
             else:
                 requesth.write_error(400)#probably should describe the error
                 #it goes when instance creation is not supported
+        elif action == 'change':
+            instance = requesth.get_body_argument('instance')
+            if instance == 'password': #we create the board here
+                if requesth.get_body_argument('new_passwd') == requesth.get_body_argument('new_passwd_again'):
+                    user = initiate.sess.query(initiate.Admin).filter(initiate.Admin.login == requesth.current_user).first()
+                    if user.password != requesth.get_body_argument('old_passwd'):
+                        return 'Incorrect old password!'
+                    initiate.sess.query(initiate.Admin).filter(initiate.Admin.login == requesth.current_user).update({initiate.Admin.password : requesth.get_body_argument('new_passwd')})
+                    initiate.sess.commit()
+                    return 'Password changed successfully<br><a href = "/admin">return</a>'
+                else:
+                    return 'New password is entered incorrect'
+            else:
+                requesth.write_error(400)#probably should describe the error
         else:
             requesth.write_error(400)#probably should describe the error
             #it goes when action is not supported
