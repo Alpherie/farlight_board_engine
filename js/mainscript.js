@@ -342,8 +342,66 @@ function updatethread() {
 		document.getElementById("updlink").href = "javascript:updatethread()";
 	}
 };
+
+//utilfunctions ------------------------------------------------------------------------
+
+function findParentPostNode(elem) {
+	var elem_again = elem.parentNode;
+	var count = 1;
+	while((typeof(elem_again.className) !== 'undefined') && (elem_again.className != "post") && (elem_again.className != "oppost")) {
+		elem_again = elem_again.parentNode;
+		count++;
+	}
+	// now you have the object you are looking for - do something with it
+	return elem_again;
+}
+
+//modfunctions ---------------------------------------------------------------------------
+
+function modbanip(elem){
+	alert("Bans are not implemented yet!");
+}
+
+function moddelpost(elem){
+	elem.innerHTML = "Удаляется...";
+	var listelems = elem.parentNode.parentNode.getElementsByTagName("li");
+	var i = 0;
+	while (i < listelems.length) {
+		listelems[i].getElementsByTagName("a")[0].onclick = function(){void(0)}; 
+		//console.log(listelems[i]);
+		i = i + 1;
+	}
+
+	var board = document.getElementById("board").innerHTML;
+	var this_post = findParentPostNode(elem).id;
+	console.log(this_post);
+	var data = {"action":"delete posts by ids", "board":board, "posts_to_del":[this_post]};
 	
-options = [["Забанить IP", "modbanip"], ["Удалить пост", "moddelpost"], ["Удалить пост и забанить", "moddelpostbanip"], ["Удалить все посты", "moddelall"], ["Удалить все посты и забанить", "moddelallbanip"]];
+	// construct an HTTP request
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '', true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+        // send the collected data as JSON
+        xhr.send(JSON.stringify(data));
+
+	xhr.onload = function () {
+	//	for (i in listelems) {
+	//		listelems[i].getElementsByTagName("a")[0].href = "javascript:" + options[i][1] + "(this)";
+	//	}
+		var posts_deleted = JSON.parse(xhr.responseText);
+		alert(posts_deleted + " было удалено!");
+	}
+
+	xhr.onerror = function () {
+		alert("Failed to delete post!");
+	//	for (i in listelems) {
+	//		listelems[i].getElementsByTagName("a")[0].href = "javascript:" + options[i][1] + "(this)";
+	//	}
+	}
+}
+	
+options = [["Забанить IP", function(){modbanip(this)}], ["Удалить пост", function(){moddelpost(this)}]] //, ["Удалить пост и забанить", moddelpostbanip], ["Удалить все посты", moddelall], ["Удалить все посты и забанить", moddelallbanip]];
 
 function click_on_ip_again (elem) {
 	rem = elem.parentNode.getElementsByClassName("banmenu")[0];
@@ -359,12 +417,15 @@ function click_on_ip (elem){
 		var li = document.createElement("li");
 		var a = document.createElement("a");
 		a.innerHTML = options[i][0];
-		a.href = "javascript:" + options[i][1] + "()";
+		a.href="javascript:void(0);"
+		a.onclick = options[i][1];
 		li.appendChild(a);
 		ul.appendChild(li);
 	};
 	elem.parentNode.appendChild(ul);
 };
+
+//this is not a mod function
 
 function add_file_input (btn) {
 	btn.disabled="disabled";

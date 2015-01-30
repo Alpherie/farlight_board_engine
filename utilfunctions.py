@@ -20,6 +20,8 @@ import wand.image
 import initiate
 import config as cf
 
+import sqlalchemy
+
 def get_user_permissions(user, board, action):
     if user is None:
         return False
@@ -204,14 +206,24 @@ def delete_posts_by_ids(requesth, received_objects):
     if board not in initiate.board_cache:
         return 'Incorrect board name'
     posts = received_objects['posts_to_del']
+    if not isinstance(posts, list):
+        return 'Incorrect list of posts'
     #should add checking if board supports deleting
+    #also should add support for thread deleting
     board_post_class = initiate.board_cache[board].post_class
     if get_user_permissions(requesth.current_user, board, 'delete posts by ids'):
-        posts_deleted = initiate.sess.query(board_post_class).filter(board_post_class.id.in_(posts)).delete()
+        #if get_user_permissions(requesth.current_user, board, 'delete threads'): #and initiate.board_cache[board].delete_threads:
+        #    posts_deleted = initiate.sess.query(board_post_class).filter(sqlalchemy.or_(board_post_class.id.in_(posts), board_post_class.op_post.in_(posts))).delete(synchronize_session='fetch')
+        #else:
+        posts_deleted = initiate.sess.query(board_post_class).filter(board_post_class.op_post != None).filter(board_post_class.id.in_(posts)).delete(synchronize_session='fetch')
     else:
         passwd = received_objects['passwd']
-        posts_deleted = initiate.sess.query(board_post_class).filter(board_post_class.passwd_for_del == passwd).filter(board_post_class.id.in_(posts)).delete()
-    return str(posts_deleted) + ' posts deleted!'
+        #if initiate.board_cache[board].delete_threads:
+        #posts_deleted = initiate.sess.query(board_post_class).filter(board_post_class.passwd_for_del == passwd).filter(board_post_class.id.in_(posts)).delete(synchronize_session='fetch')
+        #else:
+        posts_deleted = initiate.sess.query(board_post_class).filter(board_post_class.op_post != None).filter(board_post_class.passwd_for_del == passwd).filter(board_post_class.id.in_(posts)).delete(synchronize_session='fetch')
+    initiate.sess.commit()
+    return tornado.escape.json_encode(posts_deleted)
 
 def get_posts_code_by_num(requesth, received_objects): #function for returning the posts code for a list of posts ids
     board = received_objects['board']
