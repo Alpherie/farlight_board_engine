@@ -87,6 +87,7 @@ class board_cache_class():
         self.fullname = b.fullname
         self.description = b.description
         self.pictures = b.pictures
+        self.delete_threads = False #will be redone to get values from sql
         self.post_form_type = 'lxml' #or html
         self.post_form = self._lxml_form_generator() #will be added the form generating, or reading from file
 
@@ -137,6 +138,18 @@ class board_cache_class():
             self.threads.reverse()
             self.posts_dict[op].append(new_id)
         return
+
+    def remove_op_posts(self, posts):
+        deleted = 0
+        for post in posts:
+            if post in self.posts_dict:
+                deleted += 1
+                try:
+                    self.threads.remove(post)
+                except ValueError:
+                    pass
+                del self.posts_dict[post]
+        return deleted
     
     def _lxml_form_generator(self):
         """Is used for generating lxml post form"""

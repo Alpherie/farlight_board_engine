@@ -373,7 +373,7 @@ function moddelpost(elem){
 	}
 
 	var board = document.getElementById("board").innerHTML;
-	var this_post = findParentPostNode(elem).id;
+	var this_post = parseInt(findParentPostNode(elem).id);
 	console.log(this_post);
 	var data = {"action":"delete posts by ids", "board":board, "posts_to_del":[this_post]};
 	
@@ -386,18 +386,22 @@ function moddelpost(elem){
         xhr.send(JSON.stringify(data));
 
 	xhr.onload = function () {
-	//	for (i in listelems) {
-	//		listelems[i].getElementsByTagName("a")[0].href = "javascript:" + options[i][1] + "(this)";
-	//	}
+		var i = 0;
+		while (i < listelems.length) {
+			listelems[i].getElementsByTagName("a")[0].onclick = options[i][1];
+			i = i + 1;
+		}
 		var posts_deleted = JSON.parse(xhr.responseText);
 		alert(posts_deleted + " было удалено!");
 	}
 
 	xhr.onerror = function () {
 		alert("Failed to delete post!");
-	//	for (i in listelems) {
-	//		listelems[i].getElementsByTagName("a")[0].href = "javascript:" + options[i][1] + "(this)";
-	//	}
+		var i = 0;
+		while (i < listelems.length) {
+			listelems[i].getElementsByTagName("a")[0].onclick = options[i][1];
+			i = i + 1;
+		}
 	}
 }
 	
