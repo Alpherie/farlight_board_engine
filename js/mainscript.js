@@ -49,103 +49,114 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 		checkbox.value = array[i];
 		p_checkbox.appendChild(checkbox);
 		post_details.appendChild(p_checkbox);
-
-		if (postdict[array[i]]["theme"] !== null) {
-			var p_theme = document.createElement("span");
-			p_theme.className = "theme";
-			p_theme.innerHTML = postdict[array[i]]["theme"];
-			post_details.appendChild(p_theme);
-		}
-
-		var p_name = document.createElement("span");
-		p_name.className = "name";
-		p_name.innerHTML = postdict[array[i]]["name"];
-		post_details.appendChild(p_name);
-
-		var p_date = document.createElement("span");
-		p_date.className = "post_time";
-		var post_time = new Date(postdict[array[i]]["post_time"]*1000);
-		p_date.innerHTML = formatdate(post_time);
-		post_details.appendChild(p_date);
-	
-		var p_id = document.createElement("span");
-		p_id.className = "post_link";
-		var a = document.createElement("a");
-		if (postdict[array[i]]["op_post"] === null) {
-			a.href = "/" + board + "/res/" + postdict[array[i]]["id"] + "#" + postdict[array[i]]["id"];
+		
+		console.log(array[i]);
+		console.log(postdict[array[i]]);
+		if (postdict[array[i]] == null) {
+			//if post does not exist in database
+			var p_deleted = document.createElement("span");
+			p_deleted.className = "deleted";
+			p_deleted.innerHTML = "Пост №" + array[i] + " был удален.";
+			post_details.appendChild(p_deleted);
+			postdiv.appendChild(post_details);
 		} else {
-			a.href = "/" + board + "/res/" + postdict[array[i]]["op_post"] + "#" + postdict[array[i]]["id"];
-		};
-		a.innerHTML = "№" + postdict[array[i]]["id"];
-		p_id.appendChild(a);
-		post_details.appendChild(p_id);
 
-		if (postdict[array[i]]["op_post"] === null) {
-			var p_answer = document.createElement("span");
-			p_answer.className = "answer_link";
-			var a = document.createElement("a");
-			a.href = "/" + board + "/res/" + postdict[array[i]]["id"] + "#end";
-			a.innerHTML = "[Ответ]";
-			p_answer.appendChild(a);
-			post_details.appendChild(p_answer);
-		};
-		
-		if ("ip" in postdict[array[i]]){
-			var p_ip = document.createElement("span");
-			p_ip.className = "post_ip";
-			var a = document.createElement("a");
-			a.onclick = function() {click_on_ip(this)};
-			a.href = "javascript:void(0);"
-			a.innerHTML = postdict[array[i]]["ip"];
-			p_ip.appendChild(a);
-			post_details.appendChild(p_ip);
-		};
-		
-		postdiv.appendChild(post_details);
+			if (postdict[array[i]]["theme"] !== null) {
+				var p_theme = document.createElement("span");
+				p_theme.className = "theme";
+				p_theme.innerHTML = postdict[array[i]]["theme"];
+				post_details.appendChild(p_theme);
+			}
+
+			var p_name = document.createElement("span");
+			p_name.className = "name";
+			p_name.innerHTML = postdict[array[i]]["name"];
+			post_details.appendChild(p_name);
+
+			var p_date = document.createElement("span");
+			p_date.className = "post_time";
+			var post_time = new Date(postdict[array[i]]["post_time"]*1000);
+			p_date.innerHTML = formatdate(post_time);
+			post_details.appendChild(p_date);
 	
-		var post_body = document.createElement("div");
-
-		//adding pictures
-		if (postdict[array[i]]["pics"].length !== 0) {
-			var pic_block = document.createElement("div");
-			if (postdict[array[i]]["pics"].length === 1){
-				pic_block.className = "imageblock";
+			var p_id = document.createElement("span");
+			p_id.className = "post_link";
+			var a = document.createElement("a");
+			if (postdict[array[i]]["op_post"] === null) {
+				a.href = "/" + board + "/res/" + postdict[array[i]]["id"] + "#" + postdict[array[i]]["id"];
 			} else {
-				pic_block.className = "manyimageblock";
-			}
-			//classname may depend on number of pics
+				a.href = "/" + board + "/res/" + postdict[array[i]]["op_post"] + "#" + postdict[array[i]]["id"];
+			};
+			a.innerHTML = "№" + postdict[array[i]]["id"];
+			p_id.appendChild(a);
+			post_details.appendChild(p_id);
 
-			for (j in postdict[array[i]]["pics"]){
-				var figure = document.createElement("figure");
-				figure.className = "image imagenum"+j;
-				var figcaption = document.createElement("figcaption");
-				figcaption.className = "fileattrs";
-				var filelink = document.createElement("a");
-				filelink.innerHTML = postdict[array[i]]["pics"][j];
-				filelink.href = "/" + board + "/img/" + postdict[array[i]]["pics"][j];
-				filelink.target = "_blank";
-				//also there will be preview
-				var img = document.createElement("img");
-				img.src = "/" + board + "/thumbs/s" + postdict[array[i]]["pics"][j];
-				img.alt = postdict[array[i]]["pics"][j];
-				img.className = "previewimg";
-				//adding all the shit
-				figcaption.appendChild(filelink);
-				figure.appendChild(figcaption);
-				figure.appendChild(img);
-				pic_block.appendChild(figure);
-			}
+			if (postdict[array[i]]["op_post"] === null) {
+				var p_answer = document.createElement("span");
+				p_answer.className = "answer_link";
+				var a = document.createElement("a");
+				a.href = "/" + board + "/res/" + postdict[array[i]]["id"] + "#end";
+				a.innerHTML = "[Ответ]";
+				p_answer.appendChild(a);
+				post_details.appendChild(p_answer);
+			};
+		
+			if ("ip" in postdict[array[i]]){
+				var p_ip = document.createElement("span");
+				p_ip.className = "post_ip";
+				var a = document.createElement("a");
+				a.onclick = function() {click_on_ip(this)};
+				a.href = "javascript:void(0);"
+				a.innerHTML = postdict[array[i]]["ip"];
+				p_ip.appendChild(a);
+				post_details.appendChild(p_ip);
+			};
+		
+			postdiv.appendChild(post_details);
+	
+			var post_body = document.createElement("div");
 
-			post_body.appendChild(pic_block);
-		};
+			//adding pictures
+			if (postdict[array[i]]["pics"].length !== 0) {
+				var pic_block = document.createElement("div");
+				if (postdict[array[i]]["pics"].length === 1){
+					pic_block.className = "imageblock";
+				} else {
+					pic_block.className = "manyimageblock";
+				}
+				//classname may depend on number of pics
 
-		var p_text = document.createElement("blockquote");
-		p_text.className = "post_text";
-		p_text.innerHTML = postdict[array[i]]["text"];
-		post_body.appendChild(p_text);
- 	
-		postdiv.appendChild(post_body);
+				for (j in postdict[array[i]]["pics"]){
+					var figure = document.createElement("figure");
+					figure.className = "image imagenum"+j;
+					var figcaption = document.createElement("figcaption");
+					figcaption.className = "fileattrs";
+					var filelink = document.createElement("a");
+					filelink.innerHTML = postdict[array[i]]["pics"][j];
+					filelink.href = "/" + board + "/img/" + postdict[array[i]]["pics"][j];
+					filelink.target = "_blank";
+					//also there will be preview
+					var img = document.createElement("img");
+					img.src = "/" + board + "/thumbs/s" + postdict[array[i]]["pics"][j];
+					img.alt = postdict[array[i]]["pics"][j];
+					img.className = "previewimg";
+					//adding all the shit
+					figcaption.appendChild(filelink);
+					figure.appendChild(figcaption);
+					figure.appendChild(img);
+					pic_block.appendChild(figure);
+				}
 
+				post_body.appendChild(pic_block);
+			};
+
+			var p_text = document.createElement("blockquote");
+			p_text.className = "post_text";
+			p_text.innerHTML = postdict[array[i]]["text"];
+			post_body.appendChild(p_text);
+ 		
+			postdiv.appendChild(post_body);	
+		}
 //added post
        	};
 };

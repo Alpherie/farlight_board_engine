@@ -252,5 +252,5 @@ def get_posts_code_by_num(requesth, received_objects): #function for returning t
             return_object[row.id] = row.to_dict(**post_kwargs)#probably need to be redone
             in_list.remove(row.id)
         for postid in in_list: #here we add all the posts that does not exist
-            return_object[row.id] = None
+            return_object[postid] = None
     return tornado.escape.json_encode(return_object)
