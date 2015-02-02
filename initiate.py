@@ -88,6 +88,7 @@ class board_cache_class():
         self.description = b.description
         self.pictures = b.pictures
         self.delete_threads = False #will be redone to get values from sql
+        self.bumplimit = 5
         self.post_form_type = 'lxml' #or html
         self.post_form = self._lxml_form_generator() #will be added the form generating, or reading from file
 
@@ -132,10 +133,11 @@ class board_cache_class():
             self.threads.reverse()
             self.posts_dict[new_id] = array.array('L')
         else:
-            self.threads.remove(op) #not sure, if we should remove it from reversed list or not reversed
-            self.threads.reverse() #reversing list for faster appending
-            self.threads.append(op)
-            self.threads.reverse()
+            if len(self.posts_dict[op]) < self.bumplimit:
+                self.threads.remove(op) #not sure, if we should remove it from reversed list or not reversed
+                self.threads.reverse() #reversing list for faster appending
+                self.threads.append(op)
+                self.threads.reverse()
             self.posts_dict[op].append(new_id)
         return
 
