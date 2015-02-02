@@ -40,6 +40,7 @@ class Board (Base):
     description = sqla.Column(sqla.String(255))
     category = sqla.Column(sqla.String(255))
     pictures = sqla.Column(sqla.Integer)
+    bumplimit = sqla.Column(sqla.Integer)
     def __repr__(self):
         return "<User(address = /%s/, name='%s', fullname='%s', description='%s')>" % (self.address, self.name, self.fullname, self.description)
 #---------------------------------------------
@@ -88,7 +89,7 @@ class board_cache_class():
         self.description = b.description
         self.pictures = b.pictures
         self.delete_threads = False #will be redone to get values from sql
-        self.bumplimit = 5
+        self.bumplimit = b.bumplimit
         self.post_form_type = 'lxml' #or html
         self.post_form = self._lxml_form_generator() #will be added the form generating, or reading from file
 
@@ -96,13 +97,15 @@ class board_cache_class():
         
         self.threads = array.array('L') #we do this because we need a list of integers, not ordered tuples
         if table_exists:
-            #here we need to get threads ordered by last post time
-            #SELECT DISTINCT threadid FROM (SELECT coalesce(b.op_post, b.id) AS threadid FROM b ORDER BY b.id DESC)
-            subq = sess.query(coalesce(self.post_class.op_post, self.post_class.id).label('threadid')).filter().order_by(self.post_class.id.desc()).subquery()
+            #here we need to get threads ordered by last post time and depending on bumplimit
+            #a_alias = self.post_class
+            subq2 = sess.query(coalesce(self.post_class.op_post, self.post_class.id).label('coalesce'), self.post_class.id).filter().subquery()
+            subq = sess.query(self.post_class.id, subq2.c.id.label('threadid'), sqla.func.count(subq2.c.coalesce).label('posts_before')).outerjoin(subq2, subq2.c.coalesce == coalesce(self.post_class.op_post, self.post_class.id)).filter(subq2.c.id <= self.post_class.id).having(sqla.func.count(subq2.c.coalesce) <= self.bumplimit+1).group_by(self.post_class.id, subq2.c.coalesce).order_by(self.post_class.id.desc()).subquery()        
             threads_tuples = sess.query(subq.c.threadid).filter().distinct().all() #getting threads list
             for thread in threads_tuples:
                 self.threads.append(thread[0])
-            #threads.reverse()
+            #self.threads.reverse()
+            print(self.threads)
         self.posts_dict = {}
         for thread in self.threads:
             self.posts_dict[thread] = array.array('L') #array.array is faster
