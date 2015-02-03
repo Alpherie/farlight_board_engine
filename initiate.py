@@ -41,6 +41,7 @@ class Board (Base):
     category = sqla.Column(sqla.String(255))
     pictures = sqla.Column(sqla.Integer)
     bumplimit = sqla.Column(sqla.Integer)
+    maxthreads = sqla.Column(sqla.Integer)
     def __repr__(self):
         return "<User(address = /%s/, name='%s', fullname='%s', description='%s')>" % (self.address, self.name, self.fullname, self.description)
 #---------------------------------------------
@@ -90,6 +91,7 @@ class board_cache_class():
         self.pictures = b.pictures
         self.delete_threads = False #will be redone to get values from sql
         self.bumplimit = b.bumplimit
+        self.maxthreads = b.maxthreads
         self.post_form_type = 'lxml' #or html
         self.post_form = self._lxml_form_generator() #will be added the form generating, or reading from file
 
@@ -131,6 +133,8 @@ class board_cache_class():
     def add_post(self, op, new_id): #will be redone, after limit of threads will be introduced
         """This function is adding new threads or bumping old ones"""
         if op == 0:
+            if self.maxthreads != -1 and len(self.threads) >= self.maxthreads:
+                self.threads.pop()
             self.threads.reverse() #reversing list for faster appending
             self.threads.append(new_id) 
             self.threads.reverse()

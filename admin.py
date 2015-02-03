@@ -93,7 +93,13 @@ def board_creation_menu(): #here is the html board creation menu
                             E.TD(E.INPUT(type = 'text', name = 'description', value = ''))
                             ),
                        E.TR(E.TD('Pics number'),
-                            E.TD(E.INPUT(type = 'number', name = 'picsnum', value = '', min = '0'))
+                            E.TD(E.INPUT(type = 'number', name = 'picsnum', value = '', min = '0', max = '10'))
+                            ),
+                       E.TR(E.TD('Bumplimit'),
+                            E.TD(E.INPUT(type = 'number', name = 'bumplimit', value = '', min = '0'))
+                            ),
+                       E.TR(E.TD('Max threads'),
+                            E.TD(E.INPUT(type = 'number', name = 'maxthreads', value = '', min = '-1'))
                             ),
                        ),
                    E.INPUT(type = 'submit', value = 'Create'),
@@ -107,7 +113,7 @@ def board_creation_menu(): #here is the html board creation menu
 def list_boards_menu(board_list, purpose):
     """need to put boards table creating to a separate function in future"""
     posts_num_cell = E.DIV(E.SPAN('????', style = 'display:inline-block; width:4em; text-align:center;'),
-                           E.INPUT(type='number', size='6', min='0', value='1'),
+                           E.INPUT(type='number', size='6', min='0', value='1', style = 'width: 6em;'),
                            E.SELECT(E.OPTION('Секунды', value='1'),
                                     E.OPTION('Минуты', value='60'),
                                     E.OPTION('Часы', value='3600'),
@@ -120,6 +126,9 @@ def list_boards_menu(board_list, purpose):
                       E.TD(str(b.fullname)),
                       E.TD(str(b.description)),
                       E.TD(str(b.category)),
+                      E.TD(str(b.pictures)),
+                      E.TD(str(b.bumplimit)),
+                      E.TD(str(b.maxthreads)),
                       E.TD(copy.copy(posts_num_cell))
                       )for b in board_list]
     #purpose will be applyed later
@@ -139,6 +148,9 @@ def list_boards_menu(board_list, purpose):
                      E.TH('Полное название'),
                      E.TH('Описание'),
                      E.TH('Категория'),
+                     E.TH('Максимум картинок'),
+                     E.TH('Бамплимит'),
+                     E.TH('Максимум тредов'),
                      E.TH('Постов за последнее время')
                      ),
                 *tablerows
@@ -275,6 +287,18 @@ def admin_post(requesth):
                         return 'Incorrect pictures number!'
                 except ValueError:
                     return 'Incorrect pictures number!'
+                try:
+                    bumplimit = int(requesth.get_body_argument('bumplimit'))
+                    if bumplimit < 0: #should add limit from config
+                        return 'Incorrect bumplimit!'
+                except ValueError:
+                    return 'Incorrect bumplimit!'
+                try:
+                    maxthreads = int(requesth.get_body_argument('maxthreads'))
+                    if maxthreads < -1: #should add limit from config
+                        return 'Incorrect maximum number of threads!'
+                except ValueError:
+                    return 'Incorrect maximum number of threads!'
                 board_list = initiate.sess.query(initiate.Board).filter(initiate.Board.address==requesth.get_body_argument('address')).all()
                 if board_list: #need to add the checking of 'forbidden pages'
                     return 'board with such address exists!'
@@ -287,7 +311,9 @@ def admin_post(requesth):
                                            name = requesth.get_body_argument('name'),
                                            fullname = requesth.get_body_argument('fullname'),
                                            description = requesth.get_body_argument('description'),
-                                           pictures = picsnum) #creating new board in Boards table
+                                           pictures = picsnum,
+                                           bumplimit = bumplimit,
+                                           maxthreads = maxthreads) #creating new board in Boards table
                 try:
                     os.makedirs(os.path.join('content', new_board.address, 'img'))
                     os.makedirs(os.path.join('content', new_board.address, 'thumbs'))
