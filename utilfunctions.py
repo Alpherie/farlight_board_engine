@@ -97,7 +97,25 @@ def add_markup(text):
 def posting(requesth, board): #working with posted form content
     action = requesth.get_body_argument('action')
     if action == 'post':#here we act when adding a new post
+
+        #checking if user is banned
+        #should add board level for bans not applyed on some boards
+        ban = initiate.sess.query(initiate.Ban).filter(initiate.Ban.ip == requesth.request.remote_ip).first()
+        if ban is not None:
+            return 'Your ip '+ban.ip+' was banned '+ time.strftime('%d-%m-%Y %H:%M', time.localtime(ban.date)) +' (server time) by '+ban.initiator
+        
         post_content = {} #will be send as kwargs to database query
+
+        #op referer
+        op = requesth.get_body_argument('op')
+        try: #prepairing op referer
+            op = int(op)
+        except ValueError:
+            return 'Incorrect op referer'
+        if op != 0:
+            if op not in initiate.board_cache[board].posts_dict:
+                return 'Thread does not exist'
+            post_content['op_post'] = op
         
         #theme
         theme = tornado.escape.xhtml_escape(requesth.get_body_argument('theme'))
@@ -126,21 +144,10 @@ def posting(requesth, board): #working with posted form content
         text = tornado.escape.xhtml_escape(requesth.get_body_argument('text'))
         text = add_markup(text)
         if len(text) > cf.post_len:
-            return 'Too long text' #should add html escaping
+            return 'Too long text'
         elif text == '':
             return 'No text were entered'
         post_content['text'] = text
-        
-        #op referer
-        op = requesth.get_body_argument('op')
-        try: #prepairing op referer
-            op = int(op)
-        except ValueError:
-            return 'Incorrect op referer'
-        if op != 0:
-            if op not in initiate.board_cache[board].posts_dict:
-                return 'Thread does not exist'
-            post_content['op_post'] = op
 
         #file management
         there_are_files = False

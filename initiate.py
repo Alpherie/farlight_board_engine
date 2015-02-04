@@ -78,6 +78,18 @@ class Post():
     def __repr__(self):
         return "<Post(id = №%d, html_code='%s', picture='%s', op_post='%d')>" % (self.id, self.html_code, self.picture, self.op_post)
 #---------------------------------------------
+
+#---------------------------------------------
+class Ban(Base):
+    __tablename__ = 'bans'
+    id = sqla.Column(sqla.Integer, primary_key=True)
+    ip = sqla.Column(sqla.String(31))
+    initiator = sqla.Column(sqla.String(255))
+    date = sqla.Column(sqla.Integer)
+    level = sqla.Column(sqla.Integer, default=0)
+    def __repr__(self):
+        return "<User(ip = /%s/, initiator='%s', date='%d')>" % (self.ip, self.initiator, self.date)
+#---------------------------------------------
     
 #-----------------------------------------------------------------------------------------------------------------------------------
 class board_cache_class(): 
@@ -278,6 +290,10 @@ def init():
         pass
     else:
         Board.__table__.create(bind = engine)
+    if Ban.__table__.exists(bind = engine):
+        pass
+    else:
+        Ban.__table__.create(bind = engine)
     #creating board cache
     renew_board_cache() #the renewal function
     #-----------------------------------------------------------------------------------
