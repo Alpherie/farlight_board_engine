@@ -55,7 +55,7 @@ def main_page_gen():
             E.BR(),
             E.A("manage boards", href = '?action=list&list=boards&purpose=admin'),
             E.BR(),
-            E.A("moderate boards", href = '?action=list&list=boards&purpose=moderator'),
+            E.A("manage bans", href = '?action=list&list=bans&purpose=moderator'),
             E.BR(),
             E.A("manage users", href = '?action=list&list=users&purpose=admin'),
             E.BR(),
@@ -159,6 +159,36 @@ def list_boards_menu(board_list, purpose):
         )
     return lxml.html.tostring(html)
 
+def list_bans_menu(ban_list, purpose):
+    """need to put bans and boards table creating to a joint function in future"""
+    tablerows = [E.TR(E.TD(E.A(b.address, href = '/'+b.address)),
+                      E.TD(b.ip),
+                      E.TD(b.initiator),
+                      E.TD(time.strftime('%d/%m/%Y %H:%M', time.localtime(b.date))),
+                      E.TD(str(b.level))
+                      )for b in ban_list]
+    #purpose will be applyed later
+    html = E.HTML(
+        E.HEAD(
+            E.LINK(rel="stylesheet", href="/css/deeplight.css", type="text/css"), 
+            E.TITLE("Creating board"),
+            E.SCRIPT(type = 'text/javascript', src = '/adminscript.js') #js
+            ),
+        E.BODY(
+            E.H1(E.CLASS("heading"), "Listing boards"),
+            E.TABLE(
+                E.CLASS("boardstable"),
+                E.TR(E.TH('IP'),
+                     E.TH('Забанивший'),
+                     E.TH('Дата'),
+                     E.TH('Уровень')
+                     ),
+                *tablerows
+                )
+            )
+        )
+    return lxml.html.tostring(html)
+
 def password_change_menu():
     html = E.HTML(
         E.HEAD(
@@ -207,6 +237,9 @@ def admin(requesth):
             return list_boards_menu(board_list, purpose)
         elif what_to_list == 'users':#here we list users for management
             return 'users list'
+        elif what_to_list == 'bans':
+            ban_list = initiate.sess.query(initiate.Ban).all()
+            return list_bans_menu(ban_list, purpose)
         else:
             return 'No such list'
     elif actions == ['create']:
