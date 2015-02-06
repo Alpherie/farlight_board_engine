@@ -50,8 +50,6 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 		p_checkbox.appendChild(checkbox);
 		post_details.appendChild(p_checkbox);
 		
-		console.log(array[i]);
-		console.log(postdict[array[i]]);
 		if (postdict[array[i]] == null) {
 			//if post does not exist in database
 			var p_deleted = document.createElement("span");
@@ -370,7 +368,21 @@ function findParentPostNode(elem) {
 //modfunctions ---------------------------------------------------------------------------
 
 function modbanip(elem){
-	alert("Bans are not implemented yet!");
+	var ip = elem.parentNode.parentNode.parentNode.getElementsByTagName("a")[0].innerHTML;
+	var data = {"action":"ban by ip", "ip":ip};
+
+	// construct an HTTP request
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '', true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+	xhr.send(JSON.stringify(data));
+
+	console.log("1111111111");
+
+	xhr.onloadend = function () {
+		alert(xhr.responseText);
+	}
 }
 
 function moddelpost(elem){
@@ -385,7 +397,7 @@ function moddelpost(elem){
 
 	var board = document.getElementById("board").innerHTML;
 	var this_post = parseInt(findParentPostNode(elem).id);
-	console.log(this_post);
+	//console.log(this_post);
 	var data = {"action":"delete posts by ids", "board":board, "posts_to_del":[this_post]};
 	
 	// construct an HTTP request

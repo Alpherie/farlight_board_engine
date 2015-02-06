@@ -82,7 +82,7 @@ def json_answer(requesth):
         return utilfunctions.delete_posts_by_ids(requesth, received_objects)
     #mod functions
     elif received_objects['action'] == 'ban by ip':
-        return 'not implemented yet'
+        return utilfunctions.ban_by_ip(requesth, received_objects)
     else:
         return 'incorrect action'
     return 'not implemented yet'

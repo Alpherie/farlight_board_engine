@@ -237,6 +237,23 @@ def delete_posts_by_ids(requesth, received_objects):
     initiate.sess.commit()
     return tornado.escape.json_encode(posts_deleted)
 
+def ban_by_ip(requesth, received_objects):
+    if not get_user_permissions(requesth.current_user, '', 'ban by ip'):
+        return 'You have no permissions to ban'
+    ip = received_objects['ip']
+    if not isinstance(ip, str):
+        return 'Incorrect IP!'
+    ban = initiate.sess.query(initiate.Ban).filter(initiate.Ban.ip == ip).first()
+    if ban is not None:
+        return 'IP ' + ip + ' is already banned by ' + ban.initiator + ' ' + time.strftime('%d/%m/%Y %H:%M', time.localtime(ban.date)) + ' with level ' + str(ban.level)
+    new_ban = initiate.Ban(initiator = requesth.current_user,
+                           ip = ip,
+                           date = int(time.time())
+                           )#ban levels would be added
+    initiate.sess.add(new_ban)
+    initiate.sess.commit()
+    return 'Ban on ip ' + ip + ' is added'
+
 def get_posts_code_by_num(requesth, received_objects): #function for returning the posts code for a list of posts ids
     board = received_objects['board']
     if board not in initiate.board_cache: #all of this should be redone, it is fucking not good code
