@@ -119,7 +119,7 @@ def list_boards_menu(board_list, purpose):
                                     E.OPTION('Часы', value='3600'),
                                     E.OPTION('Дни', value='86400', selected='')
                                     ),
-                           E.BUTTON('GET', onclick='get_posts_num_from_time(this)'))
+                           E.BUTTON('GET', onclick='get_posts_num_from_time(this)', type = 'button'))
     tablerows = [E.TR(E.TD(E.A(b.address, href = '/'+b.address)),
                       E.TD(b.tablename),
                       E.TD(str(b.name)),
@@ -161,11 +161,11 @@ def list_boards_menu(board_list, purpose):
 
 def list_bans_menu(ban_list, purpose):
     """need to put bans and boards table creating to a joint function in future"""
-    tablerows = [E.TR(E.TD(E.A(b.address, href = '/'+b.address)),
-                      E.TD(b.ip),
+    tablerows = [E.TR(E.TD(b.ip),
                       E.TD(b.initiator),
                       E.TD(time.strftime('%d/%m/%Y %H:%M', time.localtime(b.date))),
-                      E.TD(str(b.level))
+                      E.TD(str(b.level)),
+                      E.TD(E.BUTTON('Снять', type = 'button'))
                       )for b in ban_list]
     #purpose will be applyed later
     html = E.HTML(
@@ -181,7 +181,8 @@ def list_bans_menu(ban_list, purpose):
                 E.TR(E.TH('IP'),
                      E.TH('Забанивший'),
                      E.TH('Дата'),
-                     E.TH('Уровень')
+                     E.TH('Уровень'),
+                     E.TH('')
                      ),
                 *tablerows
                 )
