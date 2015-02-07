@@ -161,11 +161,12 @@ def list_boards_menu(board_list, purpose):
 
 def list_bans_menu(ban_list, purpose):
     """need to put bans and boards table creating to a joint function in future"""
-    tablerows = [E.TR(E.TD(b.ip),
+    tablerows = [E.TR(E.TD(str(b.id)),
+                      E.TD(b.ip),
                       E.TD(b.initiator),
                       E.TD(time.strftime('%d/%m/%Y %H:%M', time.localtime(b.date))),
                       E.TD(str(b.level)),
-                      E.TD(E.BUTTON('Снять', type = 'button'))
+                      E.TD(E.BUTTON('Снять', type = 'button', onclick = 'remove_ban(this);'))
                       )for b in ban_list]
     #purpose will be applyed later
     html = E.HTML(
@@ -178,7 +179,8 @@ def list_bans_menu(ban_list, purpose):
             E.H1(E.CLASS("heading"), "Listing boards"),
             E.TABLE(
                 E.CLASS("boardstable"),
-                E.TR(E.TH('IP'),
+                E.TR(E.TH('ID'),
+                     E.TH('IP'),
                      E.TH('Забанивший'),
                      E.TH('Дата'),
                      E.TH('Уровень'),
@@ -286,6 +288,16 @@ def json_answer(requesth):
         p_class = initiate.board_cache[board].post_class
         return_object = initiate.sess.query(p_class).filter(p_class.post_time >= from_time).count()
         return tornado.escape.json_encode(return_object)
+    elif received_objects['action'] == 'remove ban by id':
+        ban_id = received_objects['id']
+        if not isinstance(ban_id, int):
+            return 'Incorrect id'
+        removed = initiate.sess.query(initiate.Ban).filter(initiate.Ban.id == ban_id).delete(synchronize_session='fetch')
+        initiate.sess.commit()
+        if removed > 0:
+            return 'Succesfully removed ban'
+        else:
+            return 'No such ban existed'
     else:
         return 'incorrect action'
 
