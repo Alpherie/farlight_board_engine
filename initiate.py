@@ -57,7 +57,7 @@ class Post():
     post_time = sqla.Column(sqla.Integer)
     passwd_for_del = sqla.Column(sqla.String(63))
     ip = sqla.Column(sqla.String(15))
-    def to_dict(self, ip=False): #converting the post to dict for javascript answer
+    def to_dict(self, ip=False, undeletable=False): #converting the post to dict for javascript answer
         pics = []
         for i in range(self.pic_num):
             pic = getattr(self, 'pic'+str(i))
@@ -74,6 +74,8 @@ class Post():
                    }
         if ip:
             to_dict['ip'] = self.ip
+        if undeletable and op_post is None and passwd_for_del is None:
+            to_dict['undeletable'] = True
         return to_dict
     def __repr__(self):
         return "<Post(id = №%d, html_code='%s', picture='%s', op_post='%d')>" % (self.id, self.html_code, self.picture, self.op_post)
