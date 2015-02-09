@@ -203,8 +203,13 @@ class board_cache_class():
                               E.TD('PICTURE'),
                               E.TD(E.INPUT(type = 'file', name = 'file0', accept = 'image/*'),
                                    E.BUTTON('+', type = 'button', onclick = 'add_file_input(this);', id = '0filebutton'),
-                                   E.SPAN(str(self.pictures), style = 'display:none;', id = 'maxfiles'), id = 'filecell'),
+                                   E.SPAN(str(self.pictures), style = 'display:none;', id = 'maxfiles'),
+                                   id = 'filecell'),
                               ),
+                          E.TR(#should add checking if deleting is available
+                              E.TD('PASSWORD'),
+                              E.TD(E.INPUT(type = 'password', name = 'password', value = '', size = '10'),
+                                   id = 'passwordcell'),                              ),
                           E.TR(
                               E.TD(
                                   E.CENTER('CAPTCHA WILL BE HERE'),

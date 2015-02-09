@@ -126,6 +126,11 @@ body {
 	display: block;
 	padding: 5px;
 }
+.postform #passwordcell input{
+	display: inline-block;
+	background-color: #eeeeff;
+	width: 40%;
+}
 
 #threadcreate {
 	display: block;
