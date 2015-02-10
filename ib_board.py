@@ -45,6 +45,12 @@ def html_page_return(board, page):
                         E.HR(E.CLASS("delimeter"), id = 'end')
                         ),#we make it a footer
                     initiate.board_cache_footer,
+                    E.DIV('powered by ',
+                          E.A('Farlight Imageboard Engine',
+                              href='https://github.com/Alpherie/farlight_board_engine',
+                              target='_blank',
+                              ),
+                          id='credentials'),
                     )), id = 'footer'),
                 ),
                 onload = 'boardfunc()'

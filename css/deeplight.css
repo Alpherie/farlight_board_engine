@@ -310,3 +310,13 @@ body {
 	height: auto;
 	border-spacing: 0px;
 }
+
+#credentials{
+	display: block;
+	text-align: center;
+	font-size: 0.625em;
+	padding-bottom: 0.25em;
+}
+#credentials a:link, #credentials a:visited, #credentials a:hover, #credentials a:active{
+	color: #4444ee;
+}
