@@ -177,6 +177,13 @@ def posting(requesth, board): #working with posted form content
         
         #adding timestamp
         post_content['post_time'] = int(time.time())
+
+        #password
+        passwd = requesth.get_body_argument('password')
+        if len(passwd):
+            post_content['passwd_for_del'] = passwd
+        else:
+            post_content['passwd_for_del'] = None
         
         #preparing the post for database
             #posting should be done as a subfunction of the BOARD class
