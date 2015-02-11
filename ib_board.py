@@ -41,8 +41,16 @@ def html_page_return(board, page):
                     E.DIV('', id = 'mainframe'),
                     )), id = 'mainpart'),
                 E.TFOOT(E.TR(E.TD(
+                    E.DIV(E.TABLE(E.TR(E.TD(E.A('Предыдущая', id='prevpagelink')),
+                                       E.TD('', id='pageslist'),
+                                       E.TD(E.A('Следующая', id='nextpagelink')),
+                                       ),
+                                  id='pagestable'),
+                          E.SPAN(str(len(initiate.board_cache[board].threads)),
+                                 id='threadsnumber'),
+                          id = 'pages'),
                     E.DIV(
-                        E.HR(E.CLASS("delimeter"), id = 'end')
+                        E.HR(E.CLASS("delimeter"), id='end')
                         ),#we make it a footer
                     initiate.board_cache_footer,
                     E.DIV('powered by ',

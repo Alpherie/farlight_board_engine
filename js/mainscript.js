@@ -228,12 +228,37 @@ function threadfunc() {
 	};
 };
 
+function add_pages(board, step, page) {
+	var threadsnum = parseInt(document.getElementById("threadsnumber").innerHTML);
+	var pagesnum = Math.ceil(threadsnum/step);
+	var i = 0;
+	while (i < pagesnum){
+		var pagespan = document.createElement("span");
+		pagespan.className = "pagespan";
+		var pagelink = document.createElement("a");
+		pagelink.innerHTML = i;
+		pagelink.href = "/"+board+"/"+i;
+		pagespan.innerHTML = pagespan.innerHTML+"[";
+		pagespan.appendChild(pagelink);
+		pagespan.innerHTML = pagespan.innerHTML+"]";
+		document.getElementById("pageslist").appendChild(pagespan);
+		i = i + 1;
+	}
+	if (page > 0){
+		document.getElementById("prevpagelink").href = "/"+board+"/"+(page-1);
+	}
+	if (page < (pagesnum-1)){
+		document.getElementById("nextpagelink").href = "/"+board+"/"+(page+1);
+	}
+}
 
 function boardfunc() {
 	var board = document.getElementById("board").innerHTML;
 	var page = parseInt(document.getElementById("page").innerHTML);
-	var step = 15;
+	var step = 40;
 	var data = {"action":"get threads ids for page", "board":board, "range":{"begin":step*page+1, "end":step*(page+1)+1}};
+
+	add_pages(board, step, page);
 
 	// construct an HTTP request
         var xhr = new XMLHttpRequest();

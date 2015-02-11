@@ -299,6 +299,36 @@ body {
 	background-color: #dddde2;
 }
 
+/*Dealing with paging*/
+#pages{
+	display: block;
+}
+#pagestable{
+	margin-left: auto;
+	margin-right: auto;
+	width: auto;
+	max-width: 100%;
+}
+#pagestable td{
+	padding: 0.25em;
+}
+#prevpagelink:link, #prevpagelink:visited, #prevpagelink:hover, #prevpagelink:active, #nextpagelink:link, #nextpagelink:visited, #nextpagelink:hover, #nextpagelink:active{
+	color: 1111ee;
+}
+.pagespan{
+	display: inline-block;
+	margin-left: 0.125em;
+	margin-right: 0.125em;
+}
+.pagespan a{
+	padding-left: 0.125em;
+	padding-right: 0.125em;
+}
+#threadsnumber{
+	display: none;
+}
+
+/*Footers and delimeters*/
 .delimeter {
 	background-color: #661111;
 	border-color: #661111;
