@@ -176,51 +176,72 @@ class board_cache_class():
     
     def _lxml_form_generator(self):
         """Is used for generating lxml post form"""
-        form = E.FORM(E.CLASS("postform"), #postform
-                      E.INPUT(type = 'hidden', name = 'action', value = 'post'),
-                      E.INPUT(type = 'hidden', name = 'op', value = '0', id = 'op_referer'),
-                      E.SCRIPT('document.getElementById("op_referer").value = document.getElementById("thread").innerHTML;'),
-                      E.TABLE(
-                          E.TR(
+        formargs = []
+        formargs.append(E.TR(
                               E.TD('EMAIL'),
                               E.TD(E.INPUT(type = 'text', name = 'email', value = '', id = 'emailfield'),
                                    E.INPUT(type = 'submit', value = 'POST', id = 'postbutton')
                                    ),
-                              ),
-                          E.TR(
+                              )
+                        )
+        formargs.append(E.TR(
                               E.TD('THEME'),
                               E.TD(E.INPUT(type = 'text', name = 'theme', value = '', size = '50')),
-                              ),
-                          E.TR(
+                              )
+                        )
+        formargs.append(E.TR(
                               E.TD('NAME'),
                               E.TD(E.INPUT(type = 'text', name = 'name', value = '', size = '50')),
-                              ),
-                          E.TR(
+                              )
+                        )
+        formargs.append(E.TR(
                               E.TD('TEXT'),
                               E.TD(E.TEXTAREA(name = 'text', rows = '8', cols = '50', placeholder = 'POST')),
-                              ),
-                          E.TR(#should add checking if pics are available
+                              )
+                        )
+        if self.pictures == 0:
+            pass
+        elif self.pictures == 1:
+            formargs.append(E.TR(#should add checking if pics are available
+                              E.TD('PICTURE'),
+                              E.TD(E.INPUT(type = 'file', name = 'file0', accept = 'image/*'),
+                                   id = 'filecellone'),
+                              )
+                            )
+        else:
+            formargs.append(E.TR(#should add checking if pics are available
                               E.TD('PICTURE'),
                               E.TD(E.INPUT(type = 'file', name = 'file0', accept = 'image/*'),
                                    E.BUTTON('+', type = 'button', onclick = 'add_file_input(this);', id = '0filebutton'),
                                    E.SPAN(str(self.pictures), style = 'display:none;', id = 'maxfiles'),
-                                   id = 'filecell'),
-                              ),
-                          E.TR(#should add checking if deleting is available
+                                   id = 'filecellmany'),
+                              )
+                            )
+        formargs.append(E.TR(#should add checking if deleting is available
                               E.TD('PASSWORD'),
                               E.TD(E.INPUT(type = 'password', name = 'password', value = '', size = '10'),
-                                   id = 'passwordcell'),                              ),
-                          E.TR(
+                                   id = 'passwordcell'),
+                              )
+                        )
+        if True:#should add checking if captcha is available
+            formargs.append(E.TR(
                               E.TD(
                                   E.CENTER('CAPTCHA WILL BE HERE'),
                                   colspan = '2'
                                   )
-                              ),
-                          E.TR(
-                              E.TD('CAPTCHA'),
-                              E.TD(E.INPUT(type = 'text', name = 'captcha', value = '')),
                               )
-                          ),
+                            )
+            formargs.append(E.TR(E.TD('CAPTCHA'),
+                                 E.TD(E.INPUT(type = 'text', name = 'captcha', value = '')),
+                                 )
+                            )
+            
+        
+        form = E.FORM(E.CLASS("postform"), #postform
+                      E.INPUT(type = 'hidden', name = 'action', value = 'post'),
+                      E.INPUT(type = 'hidden', name = 'op', value = '0', id = 'op_referer'),
+                      E.SCRIPT('document.getElementById("op_referer").value = document.getElementById("thread").innerHTML;'),
+                      E.TABLE(*formargs),
                       method = 'POST', action = '/'+self.address, enctype = 'multipart/form-data', id = 'postform')
         return form
 #-----------------------------------------------------------------------------------------------------------------------------------

@@ -458,7 +458,7 @@ function add_file_input (btn) {
 	btn.disabled="disabled";
 
 	var br = document.createElement("br");
-	document.getElementById("filecell").appendChild(br);
+	document.getElementById("filecellmany").appendChild(br);
 
 	var cur_num = parseInt(btn.id);
 	var maxfiles = parseInt(document.getElementById("maxfiles").innerHTML);
@@ -467,17 +467,17 @@ function add_file_input (btn) {
 		finput.type = "file";
 		finput.name = "file" + (cur_num + 1);
 		finput.accept = "image/*";
-		document.getElementById("filecell").appendChild(finput);
+		document.getElementById("filecellmany").appendChild(finput);
 
 		var new_btn = document.createElement("button");
 		new_btn.type = "button";
 		new_btn.id = (cur_num+1) + "filebutton";
 		new_btn.innerHTML = "+";
 		new_btn.onclick = function(){add_file_input(this)};	
-		document.getElementById("filecell").appendChild(new_btn);
+		document.getElementById("filecellmany").appendChild(new_btn);
 	} else {
 		var fspan = document.createElement("span");
 		fspan.innerHTML = "Only "+maxfiles+" file(s) can be added";
-		document.getElementById("filecell").appendChild(fspan);
+		document.getElementById("filecellmany").appendChild(fspan);
 	}
 };

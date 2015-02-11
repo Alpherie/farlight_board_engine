@@ -115,14 +115,14 @@ body {
 	font-weight: bold;
 	padding: 3px;
 }
-.postform #filecell input {
+.postform #filecellmany input {
 	width: 90%;
 }
-.postform #filecell button {
+.postform #filecellmany button {
 	width: 9%;
 	float: right;
 }
-.postform #filecell span {
+.postform #filecellmany span {
 	display: block;
 	padding: 5px;
 }
