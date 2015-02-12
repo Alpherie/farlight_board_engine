@@ -255,7 +255,7 @@ function add_pages(board, step, page) {
 function boardfunc() {
 	var board = document.getElementById("board").innerHTML;
 	var page = parseInt(document.getElementById("page").innerHTML);
-	var step = 40;
+	var step = 15;
 	var data = {"action":"get threads ids for page", "board":board, "range":{"begin":step*page+1, "end":step*(page+1)+1}};
 
 	add_pages(board, step, page);

@@ -285,3 +285,16 @@ def get_posts_code_by_num(requesth, received_objects): #function for returning t
         for postid in in_list: #here we add all the posts that does not exist
             return_object[postid] = None
     return tornado.escape.json_encode(return_object)
+
+def decorator_for_style(func):
+    """Make it sure, that the first arg is tornado.web.RequestHandler object"""
+    def inner(*args, **kwargs):
+        """Adding default_style variable depending on cookie"""
+        cook = args[0].get_cookie('stylename')
+        if cook is None:
+            kwargs['default_style']=cf.default_style
+        else:
+            kwargs['default_style']=cook
+        return func(*args, **kwargs)
+    return inner
+    

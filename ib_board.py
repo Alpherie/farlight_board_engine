@@ -9,13 +9,15 @@ import tornado.escape
 
 import initiate
 import utilfunctions
+import config as cf
 
-def html_page_return(board, page):
+def html_page_return(board, page, default_style):
     html = E.HTML(
         E.HEAD(
-            E.LINK(rel="stylesheet", href="/css/deeplight.css", type="text/css"), #css
+            E.META(**{'http-equiv':"Default-Style", 'content':default_style}),
             E.TITLE("/"+board+"/ - page "+str(page)), #title
-            E.SCRIPT(type = 'text/javascript', src = '/mainscript.js') #js
+            E.SCRIPT(type = 'text/javascript', src = '/mainscript.js'), #js
+            *initiate.style_cache
             ),
         E.BODY(
             E.P(E.CLASS("board"), board, id = 'board'),
@@ -149,10 +151,12 @@ def get_board_and_page(uri):
     else:
         return False, None, None
 
-def get(requesth): #requesth is tornadoweb requesthandler object
+@utilfunctions.decorator_for_style
+def get(requesth, **kwargs): #requesth is tornadoweb requesthandler object
+    """default_style we get from decorator"""
     board_exists, board, page = get_board_and_page(requesth.request.uri)
     if board_exists:
-        return html_page_return(board, page)
+        return html_page_return(board, page, kwargs['default_style'])
     else:
         return 'No such board'
 

@@ -1,4 +1,5 @@
 import array
+import os
 #
 import sqlalchemy as sqla
 import sqlalchemy.orm as sqlaorm
@@ -281,10 +282,11 @@ def generate_header_footer_board_list(boards): #would be redone
     return code
 
 #-----------------------------------------------------------------------------------------------------------------------------------
-def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True):
+def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True, renew_style_cache=True):
     global board_cache#should be done by the request
     global board_cache_footer
     global board_cache_main_page
+    global style_cache
     boards = sess.query(Board).filter().all()#add 'order by'
     if renew_cache_dict:
         board_cache = {}
@@ -298,6 +300,13 @@ def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True):
         board_cache_main_page = cf.board_cache_main_page
     else:
         board_cache_main_page = ''#there must be html code generated
+    if renew_style_cache:
+        style_cache = []
+        for f in os.listdir('css'):
+            fname, ext = os.path.splitext(f)
+            print(fname, ext)
+            if ext == '.css':
+                style_cache.append(E.LINK(rel="alternate stylesheet", title=fname, href='/css/'+f, type="text/css"))
 
 def init():
     #checking sqldb

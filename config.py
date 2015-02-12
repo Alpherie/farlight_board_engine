@@ -7,6 +7,8 @@ dbname = 'test'
 sqllogging = True
 
 #
+default_style = 'deeplight'
+#
 forbidden_pages = ['admin',
                    '']
 #
