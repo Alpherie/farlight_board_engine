@@ -82,6 +82,23 @@ body {
 	align: right;
 	text-align: right;
 }
+#headblock .right span{
+	vertical-align: top;
+	display: inline-block;
+	padding: 7px;
+}
+#headblock .right a{
+	padding-left: 3px;
+	padding-right: 3px;
+}
+#headblock .right a:link, #headblock .right a:visited{
+	color: #2222ee;
+	text-decoration: none;
+}
+#headblock .right a:hover, #headblock .right a:active{
+	color: #4444ff;
+	text-decoration: none;
+}
 
 #mainpart{
 	vertical-align: top;
