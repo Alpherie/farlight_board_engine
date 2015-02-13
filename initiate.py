@@ -304,7 +304,6 @@ def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True, renew_styl
         style_cache = []
         for f in os.listdir('css'):
             fname, ext = os.path.splitext(f)
-            print(fname, ext)
             if ext == '.css':
                 style_cache.append(E.LINK(rel="alternate stylesheet", title=fname, href='/css/'+f, type="text/css"))
 

@@ -24,7 +24,7 @@ body {
 }
 
 .boardlist{
-	padding: 10px;
+	padding: 7px;
 }
 .boardcategory {
 	display: inline-block;
@@ -67,6 +67,20 @@ body {
 
 #header{
 	height: auto;
+}
+
+#headblock{
+	width: 100%;
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+#headblock .left{
+	align: left;
+}
+#headblock .right{
+	align: right;
+	text-align: right;
 }
 
 #mainpart{
