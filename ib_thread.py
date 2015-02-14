@@ -26,7 +26,7 @@ def html_page_return(board, thread, default_style):
                 E.CLASS("maintable"),
                 E.THEAD(E.TR(E.TD(
                     E.TABLE(E.TR(E.TD(E.CLASS('left'), copy.copy(initiate.board_cache_footer)),
-                                 E.TD(E.CLASS('right'), E.SPAN('[', E.A('A', href='/admin'), ']')),
+                                 E.TD(E.CLASS('right'), utilfunctions.generate_right_up_corner_menu()),
                                  ),
                             id='headblock'),
                     E.HR(E.CLASS("delimeter")),

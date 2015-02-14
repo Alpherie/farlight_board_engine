@@ -305,7 +305,7 @@ def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True, renew_styl
         for f in os.listdir('css'):
             fname, ext = os.path.splitext(f)
             if ext == '.css':
-                style_cache.append(E.LINK(rel="alternate stylesheet", title=fname, href='/css/'+f, type="text/css"))
+                style_cache.append(E.LINK(E.CLASS('stylesheetlink'), rel="alternate stylesheet", title=fname, href='/css/'+f, type="text/css"))
 
 def init():
     #checking sqldb
