@@ -87,6 +87,9 @@ body {
 	display: inline-block;
 	padding: 7px;
 }
+#headblock .right .rightupmenu span{
+	position: relative;
+}
 #headblock .right a{
 	padding-left: 3px;
 	padding-right: 3px;
@@ -98,6 +101,24 @@ body {
 #headblock .right a:hover, #headblock .right a:active{
 	color: #4444ff;
 	text-decoration: none;
+}
+#stylemenublock{
+	display: block;
+	position: absolute;
+	text-align: center;
+	top: 1em;
+	right: 2em;
+	z-index: 2;
+	background: #111122;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #333366;
+	padding-top: 0.25em;
+	padding-bottom: 0.75em;
+}
+#stylemenublock li{
+	padding-right: 2em;
+	text-decoration: underline;
 }
 
 #mainpart{

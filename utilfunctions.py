@@ -300,8 +300,8 @@ def decorator_for_style(func):
     
 def generate_right_up_corner_menu():
     html = E.SPAN(E.CLASS('rightupmenu'),
-                  E.SPAN('[', E.A('Стили', href='', onclick=''), ']'),
-                  E.SPAN('[', E.A('Гдавная', href='/'), ']'),
+                  E.SPAN('[', E.A('Стили', href='#', onclick='stylechanger(this);'), ']'),
+                  E.SPAN('[', E.A('Главная', href='/'), ']'),
                   E.SPAN('[', E.A('A', href='/admin'), ']'),
                   )
     return html

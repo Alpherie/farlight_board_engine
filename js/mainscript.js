@@ -1,3 +1,45 @@
+//stylefunctions -----------------------------------------------------------------------
+function close_style_menu(){
+	document.getElementById("stylemenublock").parentNode.removeChild(document.getElementById("stylemenublock"));
+}
+
+function select_style(elem){
+	document.cookie="stylename="+elem.innerHTML+"; expires=Thu, 31 Dec 2999 23:59:59 UTC";
+	document.getElementById("stylemetatag").content=elem.innerHTML;
+}
+
+function stylechanger(elem){
+	elem.disabled = "disabled";
+	var styles = document.getElementsByClassName("stylesheetlink");
+	
+	var styleblock = document.createElement("div");	
+	styleblock.id = "stylemenublock";
+	var stylelist = document.createElement("ul");
+
+	var i = 0;
+	while (i < styles.length) {
+		var styleli = document.createElement("li");
+		var stylelink = document.createElement("a");
+		stylelink.innerHTML = styles[i].title;
+		stylelink.href = "#";
+		stylelink.onclick = function(){select_style(this);};
+		styleli.appendChild(stylelink);
+		stylelist.appendChild(styleli);
+		i = i + 1;
+	}
+	styleblock.appendChild(stylelist);
+	
+	var donelink = document.createElement("a");
+	donelink.href = "#";
+	donelink.onclick = close_style_menu;
+	donelink.innerHTML = "Готово";	
+	
+	styleblock.appendChild(donelink);
+	elem.parentNode.appendChild(styleblock);
+}
+
+//mainfunctions ------------------------------------------------------------------------
+
 function getposts(board, array){
 	var data = {"action":"get posts code by num", "board":board, "ids":array};
 	var xhr = new XMLHttpRequest();
@@ -93,7 +135,7 @@ function threadaddcode(postdict, array, board){//will be redone for normal addin
 				var p_answer = document.createElement("span");
 				p_answer.className = "answer_link";
 				var a = document.createElement("a");
-				a.href = "/" + board + "/res/" + postdict[array[i]]["id"] + "#end";
+				a.href = "/" + board + "/res/" + postdict[array[i]]["id"] + "#" + postdict[array[i]]["id"];
 				a.innerHTML = "[Ответ]";
 				p_answer.appendChild(a);
 				post_details.appendChild(p_answer);

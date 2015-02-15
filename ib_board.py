@@ -14,7 +14,7 @@ import config as cf
 def html_page_return(board, page, default_style):
     html = E.HTML(
         E.HEAD(
-            E.META(**{'http-equiv':"Default-Style", 'content':default_style}),
+            E.META(**{'http-equiv':"Default-Style", 'content':default_style, 'id':'stylemetatag'}),
             E.TITLE("/"+board+"/ - page "+str(page)), #title
             E.SCRIPT(type = 'text/javascript', src = '/mainscript.js'), #js
             *initiate.style_cache

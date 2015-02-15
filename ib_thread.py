@@ -14,7 +14,7 @@ import utilfunctions
 def html_page_return(board, thread, default_style):
     html = E.HTML(
         E.HEAD(
-            E.META(**{'http-equiv':"Default-Style", 'content':default_style}),
+            E.META(**{'http-equiv':"Default-Style", 'content':default_style, 'id':'stylemetatag'}),
             E.TITLE("/"+board+"/ - №"+str(thread)), #title
             E.SCRIPT(type = 'text/javascript', src = '/mainscript.js'), #js
             *initiate.style_cache
