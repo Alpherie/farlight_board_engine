@@ -4,7 +4,7 @@ function close_style_menu(){
 }
 
 function select_style(elem){
-	document.cookie="stylename="+elem.innerHTML+"; expires=Thu, 31 Dec 2999 23:59:59 UTC";
+	document.cookie="stylename="+elem.innerHTML+"; expires=Thu, 31 Dec 2999 23:59:59 UTC; path=/";
 	document.getElementById("stylemetatag").content=elem.innerHTML;
 }
 
