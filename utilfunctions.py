@@ -230,19 +230,44 @@ def delete_posts_by_ids(requesth, received_objects):
     board_post_class = initiate.board_cache[board].post_class
     if get_user_permissions(requesth.current_user, board, 'delete posts by ids'):
         if get_user_permissions(requesth.current_user, board, 'delete threads'):
-            deleted = initiate.board_cache[board].remove_op_posts(posts)
-            posts_deleted = initiate.sess.query(board_post_class).filter(sqlalchemy.or_(board_post_class.id.in_(posts), board_post_class.op_post.in_(posts))).delete(synchronize_session='fetch')
+            print('-------------------------------------------')
+            print(board_post_class.picture_attrs_list())
+            posts_deleted = initiate.sess.query(board_post_class.id, board_post_class.op_post, *board_post_class.picture_attrs_list()).filter(board_post_class.id.in_(posts)).order_by(board_post_class.op_post)
         else:
-            posts_deleted = initiate.sess.query(board_post_class).filter(board_post_class.op_post != None).filter(board_post_class.id.in_(posts)).delete(synchronize_session='fetch')
+            posts_deleted = initiate.sess.query(board_post_class.id, board_post_class.op_post).filter(board_post_class.op_post != None).filter(board_post_class.id.in_(posts)).order_by(board_post_class.op_post)
     else:
         passwd = received_objects['passwd']
+        if passwd == '' or passwd is None:
+            return 'Incorrect password!'
         if initiate.board_cache[board].delete_threads:
-            deleted = initiate.board_cache[board].remove_op_posts(posts)
-            posts_deleted = initiate.sess.query(board_post_class).filter(board_post_class.passwd_for_del == passwd).filter(board_post_class.id.in_(posts)).delete(synchronize_session='fetch')
+            posts_deleted = initiate.sess.query(board_post_class.id, board_post_class.op_post).filter(board_post_class.id.in_(posts)).filter(board_post_class.passwd_for_del == passwd).order_by(board_post_class.op_post)
         else:
-            posts_deleted = initiate.sess.query(board_post_class).filter(board_post_class.op_post != None).filter(board_post_class.passwd_for_del == passwd).filter(board_post_class.id.in_(posts)).delete(synchronize_session='fetch')
-    initiate.sess.commit()
-    return tornado.escape.json_encode(posts_deleted)
+            posts_deleted = initiate.sess.query(board_post_class.id, board_post_class.op_post, *board_post_class.picture_attrs_list()).filter(board_post_class.id.in_(posts)).filter(board_post_class.op_post != None).filter(board_post_class.passwd_for_del == passwd).order_by(board_post_class.op_post)
+    ids_for_del = []
+    ops_for_del = []
+    only_picture = False
+    for row in posts_deleted:
+        print(row)
+        if not only_picture:
+            if row.op_post is None:
+                try:
+                    initiate.board_cache[board].threads.remove(row.id)
+                    del initiate.board_cache[board].posts_dict[row.id]
+                except (KeyError, ValueError):
+                    pass
+                ops_for_del.append(row.id)
+            else:
+                try:
+                    initiate.board_cache[board].posts_dict[row.op_post].remove(row.id)
+                except (KeyError, ValueError):
+                    pass
+            ids_for_del.append(row.id)
+    if len(ids_for_del) > 0:
+        posts_deleted_num = initiate.sess.query(board_post_class).filter(sqlalchemy.or_(board_post_class.id.in_(ids_for_del), board_post_class.op_post.in_(ops_for_del))).delete(synchronize_session='fetch')
+        initiate.sess.commit()
+    else:
+        posts_deleted_num = 0
+    return tornado.escape.json_encode(posts_deleted_num)
 
 def ban_by_ip(requesth, received_objects):
     if not get_user_permissions(requesth.current_user, '', 'ban by ip'):

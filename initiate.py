@@ -80,6 +80,13 @@ class Post():
         return to_dict
     def __repr__(self):
         return "<Post(id = №%d, html_code='%s', picture='%s', op_post='%d')>" % (self.id, self.html_code, self.picture, self.op_post)
+    
+    @classmethod
+    def picture_attrs_list(cls):
+        pic_list = []
+        for i in range(cls.pic_num):
+            pic_list.append(getattr(cls, 'pic'+str(i)))
+        return pic_list
 #---------------------------------------------
 
 #---------------------------------------------
