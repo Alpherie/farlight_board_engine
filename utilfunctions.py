@@ -215,6 +215,21 @@ def posting(requesth, board): #working with posted form content
         return 'not implemented yet'
     #
 
+def _delete_pictures(board, row):
+    for i in range(initiate.board_cache[board].pictures): #deleting pics
+        fname = getattr(row, 'pic'+str(i))
+        if fname is not None:
+            try:
+                os.remove(os.path.join('content', board, 'img', fname))
+            except OSError:
+                pass
+            fname = 's'+fname #deleting preview
+            try:
+                os.remove(os.path.join('content', board, 'thumbs', fname))
+            except OSError:
+                pass
+    return
+
 def delete_posts_by_ids(requesth, received_objects):
     board = received_objects['board']
     if board not in initiate.board_cache:
@@ -243,27 +258,40 @@ def delete_posts_by_ids(requesth, received_objects):
             posts_deleted = initiate.sess.query(board_post_class.id, board_post_class.op_post).filter(board_post_class.id.in_(posts)).filter(board_post_class.passwd_for_del == passwd).order_by(board_post_class.op_post)
         else:
             posts_deleted = initiate.sess.query(board_post_class.id, board_post_class.op_post, *board_post_class.picture_attrs_list()).filter(board_post_class.id.in_(posts)).filter(board_post_class.op_post != None).filter(board_post_class.passwd_for_del == passwd).order_by(board_post_class.op_post)
-    ids_for_del = []
+            
+    ids_for_del = set()
     ops_for_del = []
     only_picture = False
     for row in posts_deleted:
-        print(row)
-        if not only_picture:
-            if row.op_post is None:
-                try:
-                    initiate.board_cache[board].threads.remove(row.id)
-                    del initiate.board_cache[board].posts_dict[row.id]
-                except (KeyError, ValueError):
-                    pass
-                ops_for_del.append(row.id)
-            else:
-                try:
-                    initiate.board_cache[board].posts_dict[row.op_post].remove(row.id)
-                except (KeyError, ValueError):
-                    pass
-            ids_for_del.append(row.id)
+        if row.op_post is None:
+            try:
+                initiate.board_cache[board].threads.remove(row.id)
+                del initiate.board_cache[board].posts_dict[row.id]
+            except (KeyError, ValueError):
+                pass
+            ops_for_del.append(row.id)
+        else:
+            try:
+                initiate.board_cache[board].posts_dict[row.op_post].remove(row.id)
+            except (KeyError, ValueError):
+                pass
+        ids_for_del.add(row.id)
+        _delete_pictures(board, row)
+
+    if len(ops_for_del) > 0:
+        posts_deleted = initiate.sess.query(board_post_class.id, board_post_class.op_post, *board_post_class.picture_attrs_list()).filter(board_post_class.op_post.in_(ops_for_del))
+        for row in posts_deleted:
+            try:
+                initiate.board_cache[board].posts_dict[row.op_post].remove(row.id)
+            except (KeyError, ValueError):
+                pass
+            ids_for_del.add(row.id)
+            _delete_pictures(board, row)
+        
+    ids_for_del = list(ids_for_del)
+    
     if len(ids_for_del) > 0:
-        posts_deleted_num = initiate.sess.query(board_post_class).filter(sqlalchemy.or_(board_post_class.id.in_(ids_for_del), board_post_class.op_post.in_(ops_for_del))).delete(synchronize_session='fetch')
+        posts_deleted_num = initiate.sess.query(board_post_class).filter(board_post_class.id.in_(ids_for_del)).delete(synchronize_session='fetch')
         initiate.sess.commit()
     else:
         posts_deleted_num = 0
