@@ -40,6 +40,42 @@ function stylechanger(elem){
 
 //mainfunctions ------------------------------------------------------------------------
 
+function deletebyuser(elem){
+	elem.onclick = function(){void(0);};
+	var chk_arr =  document.getElementsByName("delete");
+	var k = 0;
+	var posts_for_del = [];
+	for(k=0;k<chk_arr.length;k++)
+	{	
+    		if (chk_arr[k].checked){
+			posts_for_del.push(parseInt(chk_arr[k].value));
+		}
+	} 
+	if (posts_for_del.length == 0){
+		alert("Не выбрано ничего.");
+		elem.onclick = function(){deletebyuser(this);};
+	} else {
+		var board = document.getElementById("board").innerHTML;
+		var passwd = document.getElementById("delpasswd").value;
+		var data = {"action":"delete posts by ids", "board":board, "posts_to_del":posts_for_del, "passwd":passwd};
+		var xhr = new XMLHttpRequest();
+        	xhr.open('POST', '', true);
+        	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+		xhr.send(JSON.stringify(data));
+
+        	xhr.onload = function () {
+			var posts_deleted = JSON.parse(xhr.responseText);
+			alert(posts_deleted + " было удалено!");
+			elem.onclick = function(){deletebyuser(this);};
+        	};
+
+		xhr.onerror = function(){
+			alert("Не удалось удалить посты!");
+			elem.onclick = function(){deletebyuser(this);};
+		}
+	}
+}
+
 function getposts(board, array){
 	var data = {"action":"get posts code by num", "board":board, "ids":array};
 	var xhr = new XMLHttpRequest();
@@ -259,6 +295,7 @@ function threadfunc() {
 		delbtn.type = "submit";
 		delbtn.name = "delbtn";
 		delbtn.value = "Удалить";
+		delbtn.onclick = function(){deletebyuser(this);};
 		var delbtnspan = document.createElement("span");
 		delbtnspan.id = "delbtnspan";
 		delbtnspan.appendChild(passwdfield);
@@ -444,8 +481,6 @@ function modbanip(elem){
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
 	xhr.send(JSON.stringify(data));
-
-	console.log("1111111111");
 
 	xhr.onloadend = function () {
 		alert(xhr.responseText);
