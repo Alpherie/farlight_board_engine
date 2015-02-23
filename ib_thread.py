@@ -4,7 +4,7 @@ import copy
 
 import lxml
 from lxml.html import builder as E
-from lxml.builder import ElementMaker as EM
+from lxml.builder import E as EM
 
 import tornado.escape
 
@@ -25,7 +25,7 @@ def html_page_return(board, thread, default_style):
             E.TABLE(
                 E.CLASS("maintable"),
                 E.THEAD(E.TR(E.TD(
-                    E.TABLE(E.TR(E.TD(E.CLASS('left'), copy.copy(initiate.board_cache_footer)),
+                    E.TABLE(E.TR(E.TD(E.CLASS('left'), copy.copy(initiate.board_cache_navigation)),
                                  E.TD(E.CLASS('right'), utilfunctions.generate_right_up_corner_menu()),
                                  ),
                             id='headblock'),
@@ -42,20 +42,20 @@ def html_page_return(board, thread, default_style):
                     E.H3(E.A('Ответить в тред', href = "javascript:open_form();"), id = 'threadcreate'),
                     E.H4(E.A('Скрыть форму', href = "javascript:close_form();"), id = 'closeform'),
                     E.HR(E.CLASS("delimeter")),
-                    E.DIV('', id = 'mainframe'),
+                    EM('main', '', id = 'mainframe'),
                     E.DIV('', id = 'optionsdiv'),
                     )), id = 'mainpart'),
                 E.TFOOT(E.TR(E.TD(
-                    E.DIV(
-                        E.HR(E.CLASS("delimeter"), id = 'end')
-                        ),
-                    initiate.board_cache_footer,
-                    E.DIV('powered by ',
-                          E.A('Farlight Imageboard Engine',
-                              href='https://github.com/Alpherie/farlight_board_engine',
-                              target='_blank',
-                              ),
-                          id='credentials'),
+                       E.DIV(
+                           E.HR(E.CLASS("delimeter"), id = 'end')
+                           ),
+                       initiate.board_cache_navigation,
+                       E.DIV('powered by ',
+                             E.A('Farlight Imageboard Engine',
+                                 href='https://github.com/Alpherie/farlight_board_engine',
+                                 target='_blank',
+                                 ),
+                             id='credentials'),
                     )), id = 'footer'),#we make it a footer
                 ),
             onload = 'threadfunc()'

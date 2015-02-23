@@ -26,7 +26,7 @@ def html_page_return(board, page, default_style):
             E.TABLE(
                 E.CLASS("maintable"),
                 E.THEAD(E.TR(E.TD(
-                    E.TABLE(E.TR(E.TD(E.CLASS('left'), copy.copy(initiate.board_cache_footer)),
+                    E.TABLE(E.TR(E.TD(E.CLASS('left'), copy.copy(initiate.board_cache_navigation)),
                                  E.TD(E.CLASS('right'), utilfunctions.generate_right_up_corner_menu()),
                                  ),
                             id='headblock'),
@@ -57,7 +57,7 @@ def html_page_return(board, page, default_style):
                     E.DIV(
                         E.HR(E.CLASS("delimeter"), id='end')
                         ),#we make it a footer
-                    initiate.board_cache_footer,
+                    initiate.board_cache_navigation,
                     E.DIV('powered by ',
                           E.A('Farlight Imageboard Engine',
                               href='https://github.com/Alpherie/farlight_board_engine',

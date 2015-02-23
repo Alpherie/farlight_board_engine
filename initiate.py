@@ -13,6 +13,7 @@ from sqlalchemy.orm import sessionmaker
 #
 #
 from lxml.html import builder as E
+from lxml.builder import E as EM
 #
 #
 import config as cf
@@ -254,7 +255,7 @@ class board_cache_class():
         return form
 #-----------------------------------------------------------------------------------------------------------------------------------
 
-def generate_header_footer_board_list(boards): #would be redone
+def generate_navigation_board_list(boards): #would be redone
     categories = {}
     for b in boards:
         #if b.hidden = none
@@ -282,7 +283,7 @@ def generate_header_footer_board_list(boards): #would be redone
             category = ''
         urls = [E.CLASS('boardcategory'), category+' ['] + urls + [']']
         spans.append(E.SPAN(*urls))
-    code = E.DIV(
+    code = EM('nav',
         E.CLASS('boardlist'),
         *spans
         )
@@ -291,7 +292,7 @@ def generate_header_footer_board_list(boards): #would be redone
 #-----------------------------------------------------------------------------------------------------------------------------------
 def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True, renew_style_cache=True):
     global board_cache#should be done by the request
-    global board_cache_footer
+    global board_cache_navigation
     global board_cache_main_page
     global style_cache
     boards = sess.query(Board).filter().all()#add 'order by'
@@ -300,9 +301,9 @@ def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True, renew_styl
         for b in boards:
             board_cache[b.address] = board_cache_class(b)
     if cf.static_board_footer:
-        board_cache_footer = cf.board_cache_footer
+        board_cache_navigation = cf.board_cache_footer
     else:
-        board_cache_footer = generate_header_footer_board_list(boards) #there must be html code generated
+        board_cache_navigation = generate_navigation_board_list(boards) #there must be html code generated
     if cf.static_board_main_page:
         board_cache_main_page = cf.board_cache_main_page
     else:
