@@ -33,6 +33,7 @@ class Admin(Base):
 
 #---------------------------------------------
 class Board (Base):
+    """Board class for sql table. Bool settings: 1-delete posts, 2-delete threads"""
     __tablename__ = 'boards'
     id = sqla.Column(sqla.Integer, primary_key=True)
     address = sqla.Column(sqla.String(31))
@@ -44,6 +45,7 @@ class Board (Base):
     pictures = sqla.Column(sqla.Integer)
     bumplimit = sqla.Column(sqla.Integer)
     maxthreads = sqla.Column(sqla.Integer)
+    bool_settings = sqla.Column(sqla.Integer)
     def __repr__(self):
         return "<User(address = /%s/, name='%s', fullname='%s', description='%s')>" % (self.address, self.name, self.fullname, self.description)
 #---------------------------------------------
@@ -112,7 +114,8 @@ class board_cache_class():
         self.fullname = b.fullname
         self.description = b.description
         self.pictures = b.pictures
-        self.delete_threads = False #will be redone to get values from sql
+        self.delete_posts = bool(b.bool_settings & 1)
+        self.delete_threads = bool(b.bool_settings & 2) #will be redone to get values from sql
         self.bumplimit = b.bumplimit
         self.maxthreads = b.maxthreads
         self.post_form_type = 'lxml' #or html

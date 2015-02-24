@@ -6,6 +6,7 @@ import time
 import copy
 #tornadoweb
 import tornado.escape
+import tornado.web
 #lxml
 import lxml
 from lxml.html import builder as E
@@ -105,6 +106,8 @@ def board_creation_menu(): #here is the html board creation menu
                        E.TR(E.TD('Max threads'),
                             E.TD(E.INPUT(type = 'number', name = 'maxthreads', value = '', min = '-1'))
                             ),
+                       E.TR(E.TD(E.INPUT(type='checkbox', name='delposts', value='1', checked='checked'), 'Удаление постов', colspan='2', style='text-align:center;')),
+                       E.TR(E.TD(E.INPUT(type='checkbox', name='delopposts', value='1', checked='checked'), 'Удаление тредов', colspan='2', style='text-align:center;')),
                        ),
                    E.INPUT(type = 'submit', value = 'Create'),
                    method='POST',
@@ -356,6 +359,17 @@ def admin_post(requesth):
                         return 'Incorrect maximum number of threads!'
                 except ValueError:
                     return 'Incorrect maximum number of threads!'
+                bool_settings = 0
+                try:
+                    if requesth.get_body_argument('delposts') == '1':
+                        bool_settings = other_settings | 1
+                except tornado.web.MissingArgumentError:
+                    pass
+                try:
+                    if requesth.get_body_argument('delthreads') == '1':
+                        bool_settings = other_settings | 2
+                except tornado.web.MissingArgumentError:
+                    pass
                 board_list = initiate.sess.query(initiate.Board).filter(initiate.Board.address==requesth.get_body_argument('address')).all()
                 if board_list: #need to add the checking of 'forbidden pages'
                     return 'board with such address exists!'
@@ -370,7 +384,8 @@ def admin_post(requesth):
                                            description = requesth.get_body_argument('description'),
                                            pictures = picsnum,
                                            bumplimit = bumplimit,
-                                           maxthreads = maxthreads) #creating new board in Boards table
+                                           maxthreads = maxthreads,
+                                           bool_settings = bool_settings) #creating new board in Boards table
                 try:
                     os.makedirs(os.path.join('content', new_board.address, 'img'))
                     os.makedirs(os.path.join('content', new_board.address, 'thumbs'))
