@@ -49,18 +49,18 @@ def main_page_gen():
             E.TITLE("Administration and moderation")
             ),
         E.BODY(
-            E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
+            E.DIV(
+            E.DIV(E.CLASS('logout'), E.A('Logout', href='/admin/logout')),
+            E.H2(E.CLASS("heading"), "Admin menu"),
+            ),
             E.P(E.CLASS("loginmessage"), "You are logged in"),
-            E.A("create board", href = '?action=create&instance=board'),
-            E.BR(),
-            E.A("manage boards", href = '?action=list&list=boards&purpose=admin'),
-            E.BR(),
-            E.A("manage bans", href = '?action=list&list=bans&purpose=moderator'),
-            E.BR(),
-            E.A("manage users", href = '?action=list&list=users&purpose=admin'),
-            E.BR(),
-            E.A("change password", href = '?action=change&instance=password'),
-            E.BR(),
+            E.DIV(E.CLASS('adminmainmenu'),
+                  E.A("create board", href = '?action=create&instance=board'),
+                  E.A("manage boards", href = '?action=list&list=boards&purpose=admin'),
+                  E.A("manage bans", href = '?action=list&list=bans&purpose=moderator'),
+                  E.A("manage users", href = '?action=list&list=users&purpose=admin'),
+                  E.A("change password", href = '?action=change&instance=password'),
+                  )
             )
         )
     return lxml.html.tostring(html)
@@ -72,8 +72,12 @@ def board_creation_menu(): #here is the html board creation menu
             E.TITLE("Creating board")
             ),
         E.BODY(
-            E.H1(E.CLASS("heading"), "Farlight Engine Imageboard"),
-            E.FORM(E.CLASS("loginform"),
+            E.DIV(E.CLASS('adminupdiv'),
+                E.DIV(E.CLASS('logout'), E.A('Logout', href='/admin/logout')),
+                E.H2(E.CLASS("heading"), "Create new board"),
+                ),
+            E.DIV(E.CLASS("boardcreateform"),
+            E.FORM(
                    E.INPUT(type = 'hidden', name = 'action', value = 'create'),
                    E.INPUT(type = 'hidden', name = 'instance', value = 'board'),
                    E.TABLE(
@@ -103,9 +107,10 @@ def board_creation_menu(): #here is the html board creation menu
                             ),
                        ),
                    E.INPUT(type = 'submit', value = 'Create'),
-                   method = 'POST',
-                   action = '/admin/'
+                   method='POST',
+                   action='/admin/'
                    )
+            )
             )
         )
     return lxml.html.tostring(html)
@@ -139,7 +144,10 @@ def list_boards_menu(board_list, purpose):
             E.SCRIPT(type = 'text/javascript', src = '/adminscript.js') #js
             ),
         E.BODY(
-            E.H1(E.CLASS("heading"), "Listing boards"),
+            E.DIV(E.CLASS('adminupdiv'),
+                E.DIV(E.CLASS('logout'), E.A('Logout', href='/admin/logout')),
+                E.H2(E.CLASS("heading"), "Listing boards"),
+                ),
             E.TABLE(
                 E.CLASS("boardstable"),
                 E.TR(E.TH('Адрес'),
@@ -176,7 +184,10 @@ def list_bans_menu(ban_list, purpose):
             E.SCRIPT(type = 'text/javascript', src = '/adminscript.js') #js
             ),
         E.BODY(
-            E.H1(E.CLASS("heading"), "Listing boards"),
+            E.DIV(E.CLASS('adminupdiv'),
+                E.DIV(E.CLASS('logout'), E.A('Logout', href='/admin/logout')),
+                E.H2(E.CLASS("heading"), "Listing bans"),
+                ),
             E.TABLE(
                 E.CLASS("boardstable"),
                 E.TR(E.TH('ID'),

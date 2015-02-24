@@ -1,14 +1,3 @@
-/* Admin features */
-.boardstable {
-	margin-left: 5px;
-	border-collapse: collapse;
-}
-.boardstable th, .boardstable td {
-	padding: 5px 6px;
-	border-left: 1px solid;
-}
-
-/* Common */
 body {
 	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 	font-size: 100%;
@@ -19,6 +8,60 @@ body {
 	color: #bbbbff;
 }
 
+
+/*Admin features*/
+.boardstable {
+	margin-left: 5px;
+	border-collapse: collapse;
+}
+.boardstable th, .boardstable td {
+	padding: 5px 6px;
+	border-left: 1px solid;
+}
+.loginmessage {
+	padding: 0em 1em;
+	clear: both;
+}
+.adminmainmenu a {
+	display: inline-block;
+	width: auto;
+	float: left;
+	padding: 0.25em 1.5em;
+	clear: both;
+}
+.heading{
+	padding: 1em 1em;
+	display: inline-block;
+	float: left;
+	margin: 0em;
+}
+.logout{
+	display: inline-block;
+	float: right;
+	font-size: 1.25em;
+	padding: 0.5em;
+}
+.logout a:link, .logout a:visited, .logout a:link, .logout a:visited{
+	color: #0000ee;
+}
+
+.adminupdiv{
+	float: left;
+	clear: both;
+	display: block;
+	height: auto;
+	width: 100%;
+}
+
+.boardcreateform{
+	display: block;
+	float: left;
+	clear: both;
+	padding: 0em 1em;
+}
+
+
+/*Common*/
 #board,  #page, #thread{
 	display: none;
 }
