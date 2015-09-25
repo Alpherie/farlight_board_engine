@@ -362,12 +362,14 @@ def admin_post(requesth):
                 bool_settings = 0
                 try:
                     if requesth.get_body_argument('delposts') == '1':
-                        bool_settings = other_settings | 1
+                        #bool_settings = other_settings | 1
+                        bool_settings = bool_settings | 1
                 except tornado.web.MissingArgumentError:
                     pass
                 try:
                     if requesth.get_body_argument('delthreads') == '1':
-                        bool_settings = other_settings | 2
+                        #bool_settings = other_settings | 2
+                        bool_settings = bool_settings | 2
                 except tornado.web.MissingArgumentError:
                     pass
                 board_list = initiate.sess.query(initiate.Board).filter(initiate.Board.address==requesth.get_body_argument('address')).all()

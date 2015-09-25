@@ -15,7 +15,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write(main_page.main_page_gen())
+        self.write(main_page.get(self))
 
 class BoardHandler(BaseHandler):
     def get(self):
@@ -65,7 +65,8 @@ application = tornado.web.Application([
     (r"/([0-9A-Za-z]+\/thumbs/s[0-9]+\..+)", tornado.web.StaticFileHandler, {"path": "content/"}), #handling thumbs
     (r"/(mainscript\.js|adminscript\.js)", tornado.web.StaticFileHandler, {"path": "js/"}),
     (r"/css/(.+\.css)", tornado.web.StaticFileHandler, {"path": "css/"}),
-    (r"/(favicon.ico)", tornado.web.StaticFileHandler, {"path": ""})
+    (r"/(favicon.ico)", tornado.web.StaticFileHandler, {"path": ""}),
+    (r"/(u-2.jpg)", tornado.web.StaticFileHandler, {"path": ""})
 ], **settings)
 
 if __name__ == "__main__":

@@ -291,8 +291,52 @@ def generate_navigation_board_list(boards): #would be redone
         *spans
         )
     return code
-
 #-----------------------------------------------------------------------------------------------------------------------------------
+
+def generate_main_page_board_list(boards):
+    #categories = {}
+    #for b in boards:
+        #if b.hidden = none
+        #should add for hidden boards
+        #if b.category in categories:
+            #categories[b.category].append((b.address, b.name))
+        #else:
+            #categories[b.category] = [((b.address, b.name))]
+    divs = []
+    #iter_list = list(categories.keys())
+    #iter_list.sort()
+    #for category in iter_list: #probably another order would be better
+    blocks = []
+    for b in boards:
+        blocks.append(
+                      E.A(
+                          E.DIV(E.CLASS("mainboardlistitem"),
+                                        E.DIV(E.CLASS("mbldiv"),
+                                              E.SPAN(E.CLASS("mblboardaddress"),
+                                                     '/'+b.address
+                                                     ),
+                                              E.SPAN(E.CLASS("mbldash"),
+                                                     '-'
+                                                     ),
+                                              E.SPAN(E.CLASS("mblfullname"),
+                                                     b.fullname
+                                                     ),
+                                              ),
+                                        E.DIV(E.CLASS("mbldiv"),
+                                              E.SPAN(E.CLASS("mbldescription"),
+                                                     b.description
+                                                     )
+                                              ),
+                                ),
+                          href = '/' + b.address + '/',
+                          )
+                      )
+    code = E.DIV(E.CLASS('mainboardlist'),
+                 *blocks
+                 )
+    return code
+#-----------------------------------------------------------------------------------------------------------------------------------
+
 def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True, renew_style_cache=True):
     global board_cache#should be done by the request
     global board_cache_navigation
@@ -310,7 +354,7 @@ def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True, renew_styl
     if cf.static_board_main_page:
         board_cache_main_page = cf.board_cache_main_page
     else:
-        board_cache_main_page = ''#there must be html code generated
+        board_cache_main_page = generate_main_page_board_list(boards)#there must be html code generated
     if renew_style_cache:
         style_cache = []
         for f in os.listdir('css'):
@@ -321,7 +365,7 @@ def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True, renew_styl
 def init():
     #checking sqldb
     global engine
-    engine = sqla.create_engine(cf.sqldbtype+'://'+cf.user+':'+cf.passwd+'@'+cf.hostname+'/'+cf.dbname,echo = cf.sqllogging)
+    engine = sqla.create_engine(cf.sqldbtype+'://'+cf.user+':'+cf.passwd+'@'+cf.hostname+'/'+cf.dbname+'?charset=utf8',echo = cf.sqllogging, encoding='utf-8')
     Session = sessionmaker(bind = engine)
     global sess
     sess = Session()

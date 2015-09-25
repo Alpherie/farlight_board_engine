@@ -1,5 +1,5 @@
 #sqlsettings
-sqldbtype = 'mysql+mysqlconnector'
+sqldbtype = 'mysql+pymysql'
 user = 'test'
 passwd = 'test'
 hostname = 'localhost'
