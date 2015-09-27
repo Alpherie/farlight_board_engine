@@ -77,8 +77,10 @@ def find_replacement(match):
         return '<i>' + match.group('wakabai')[1:-1] + '</i>'
     elif match.lastgroup == 'wakabaquote':
         return '<span class = "q">' + match.group('wakabaquote') + '</span>'
+    elif match.lastgroup == 'url':
+        return '<a href=' + match.group('url') + '>'+ match.group('url') +'</a>'
 
-nl2br = regex.compile('(?P<newline>\n+)(?<!$)|(?P<newlineatend>\n+)(?=$)|(?P<postlink>&gt;&gt;[0-9]+)|(?P<wakabab>(?<=^|[^\*])\*\*[^\*\n]+?\*\*(?=[^\*]|$))|(?P<wakabai>(?<=^|[^\*])\*[^\*\n]+\*(?=[^\*]|$))|(?P<wakabaspoiler>(?<=^|[^%])%%[^%\n]+?%%(?=[^%]|$))|(?P<wakabaquote>(?<!&gt;)&gt;.+?(?=$|\n))')
+nl2br = regex.compile('(?P<newline>\n+)(?<!$)|(?P<newlineatend>\n+)(?=$)|(?P<postlink>&gt;&gt;[0-9]+)|(?P<wakabab>(?<=^|[^\*])\*\*[^\*\n]+?\*\*(?=[^\*]|$))|(?P<wakabai>(?<=^|[^\*])\*[^\*\n]+\*(?=[^\*]|$))|(?P<wakabaspoiler>(?<=^|[^%])%%[^%\n]+?%%(?=[^%]|$))|(?P<wakabaquote>(?<!&gt;)&gt;.+?(?=$|\n))|(?P<url>^(ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-‌​\.\?\,\'\/\\\+&%\$#_]*)?$)')
 
 def add_markup(text):
     text = text.replace('\r\n', '\n')
