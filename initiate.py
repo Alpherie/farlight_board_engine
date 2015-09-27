@@ -331,6 +331,8 @@ def generate_main_page_board_list(boards):
                           href = '/' + b.address + '/',
                           )
                       )
+    for i in range(3):
+        blocks.append(E.DIV(E.CLASS("mblemptyfillers")))
     code = E.DIV(E.CLASS('mainboardlist'),
                  *blocks
                  )

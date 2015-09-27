@@ -27,8 +27,10 @@ def main_page_gen(default_style):
                                   )), id = 'header'),
                 E.TBODY(E.TR(E.TD(
                     E.HR(E.CLASS("delimeter")),
-                    E.DIV(
-                          initiate.board_cache_main_page,
+                    E.DIV(E.CLASS("mblcontainer"),
+                          E.DIV(E.CLASS("mblcentering"),
+                                initiate.board_cache_main_page,
+                                ),
                           ),
                     E.HR(E.CLASS("delimeter")),
                     )), id = 'mainpart'),

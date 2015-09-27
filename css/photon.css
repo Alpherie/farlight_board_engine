@@ -8,6 +8,72 @@
 	border-left: 1px solid;
 }
 
+
+/*Main page*/
+.mainimagediv{
+	display: block;
+	width: 100%;
+	background-color: b0c6e0;
+	text-align: center;
+	opacity: 0.5;
+	margin: 0 auto 10px;
+}
+.mainslogandiv{
+	width: 100%;
+	min-width: 500px;
+	padding: 0.5em;
+	text-align: center;
+	margin: 0.75em auto;
+	font-size: 1.5em;
+}
+.mblcontainer{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+.mblcentering{
+	min-width: 450px;
+	width: 80%;
+	max-width: 80%;
+	margin: 1em auto;
+	display: flex;
+	justify-content: center;
+}
+.mainboardlist{
+	min-width: 450px;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+.mainboardlistitem{
+	display: inline-block;
+        width: 400px;
+        padding: 0.5em;
+        margin: 0.5em;
+        background-color: #dddddd;
+	color: #333333;
+	float: left;
+}
+.mblemptyfillers{
+	height: 0;
+	min-width: 400px;
+	margin: 0 1em;
+}
+.mbldiv{
+	display: table;
+	min-width: 300px;
+	text-align: center;
+}
+.mblboardaddress, .mbldash, .mblfullname, .mbldescription {
+        display: inline-block;
+	margin: 0.5em 0.75em;
+}
+.mblboardaddress, .mbldash, .mblfullname{
+	font-weight: bold;
+	font-size: 1.25em;
+}
+
+
 /* Common */
 body{
 	background-color:#EEEEEE;
@@ -57,7 +123,8 @@ a:hover{color:#0066FF;}
 
 .maintable{
 	width: 100%;
-	min-height: 100%;;
+	min-height: 100%;
+	height: 100%;
 	border: 0px;
 	margin: 0px;
 	padding: 0px;
