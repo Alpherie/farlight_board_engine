@@ -19,5 +19,7 @@ static_board_footer = False
 static_board_main_page = False
 #board_cache_main_page#uncomment and fill this if True
 
+stats_update_timeout = 60
+
 if __name__ == '__main__':
     pass

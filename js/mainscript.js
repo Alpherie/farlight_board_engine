@@ -583,3 +583,23 @@ function add_file_input (btn) {
 		document.getElementById("filecellmany").appendChild(fspan);
 	}
 };
+
+
+//mainpage functions ---------------------------------------------------------------------------
+
+function mainpagefunc () {
+	var cache_ul = document.getElementById("mblstatscache");
+	var cache_list = cache_ul.document.getElementsByClassName("mblstatitem");
+	for (i = 0; i < cache_list.length; i++){
+		console.log(cache_list[i].id);
+		console.log(cache_list[i].innerHTML);
+	}	
+
+
+	var to_change = document.getElementsByClassName("mblstatdiv");
+	var i;
+	for (i = 0; i < to_change.length; i++){
+		console.log(to_change[i].id);
+		to_change[i].style.display = "block";
+	}
+}

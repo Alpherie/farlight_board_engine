@@ -329,14 +329,15 @@ def generate_main_page_board_list(boards):
                                               ),
                                         E.DIV(E.CLASS("mbldiv"),
                                               E.SPAN(E.CLASS("mblstatdiv"),
-                                                     "Количество постов за",
-                                                     style=""),
+                                                     "Постов за",
+                                                     style="display: none;",
+                                                     id = "mblstat"+b.address),
                                               ),
                                 ),
                           href = '/' + b.address + '/',
                           )
                       )
-    for i in range(3):
+    for i in range(4):
         blocks.append(E.DIV(E.CLASS("mblemptyfillers")))
     code = E.DIV(E.CLASS('mainboardlist'),
                  *blocks
@@ -344,11 +345,20 @@ def generate_main_page_board_list(boards):
     return code
 #-----------------------------------------------------------------------------------------------------------------------------------
 
+def stats_process_func():
+    while(1):
+        time.sleep(cf.stats_update_timeout)
+
+def start_stats_thread():
+    return
+#-----------------------------------------------------------------------------------------------------------------------------------
+
 def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True, renew_style_cache=True):
     global board_cache#should be done by the request
     global board_cache_navigation
     global board_cache_main_page
     global style_cache
+    global stats_cache = ""
     boards = sess.query(Board).filter().all()#add 'order by'
     if renew_cache_dict:
         board_cache = {}
@@ -362,6 +372,7 @@ def renew_board_cache(renew_cache_dict=True, renew_thread_cache=True, renew_styl
         board_cache_main_page = cf.board_cache_main_page
     else:
         board_cache_main_page = generate_main_page_board_list(boards)#there must be html code generated
+        start_stats_thread()
     if renew_style_cache:
         style_cache = []
         for f in os.listdir('css'):

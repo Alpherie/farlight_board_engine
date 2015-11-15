@@ -10,9 +10,13 @@ def main_page_gen(default_style):
         E.HEAD(
             E.META(**{'http-equiv':"Default-Style", 'content':default_style, 'id':'stylemetatag'}),
             E.TITLE("U2ch - Main Page"),
+            E.SCRIPT(type = 'text/javascript', src = '/mainscript.js'), #js
 	    *initiate.style_cache
             ),
         E.BODY(
+            E.UL(initiate.stats_cache,
+                 style = "display: none;",
+                 id = "mblstatscache"),
 	    E.TABLE(
                 E.CLASS("maintable"),
                 E.THEAD(E.TR(E.TD(E.DIV(E.CLASS("mainslogandiv"),
@@ -42,7 +46,8 @@ def main_page_gen(default_style):
                             ),
                         id='credentials'),
                     )), id = 'footer'),
-                )
+                ),
+            onload = 'mainpagefunc()'
             )
         )
     return lxml.html.tostring(html)
