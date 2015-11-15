@@ -327,6 +327,11 @@ def generate_main_page_board_list(boards):
                                                      b.description
                                                      )
                                               ),
+                                        E.DIV(E.CLASS("mbldiv"),
+                                              E.SPAN(E.CLASS("mblstatdiv"),
+                                                     "Количество постов за",
+                                                     style=""),
+                                              ),
                                 ),
                           href = '/' + b.address + '/',
                           )

@@ -116,13 +116,16 @@ body {
 	min-width: 300px;
 	text-align: center;
 }
-.mblboardaddress, .mbldash, .mblfullname, .mbldescription {
+.mblboardaddress, .mbldash, .mblfullname, .mbldescription, .mblstatdiv {
         display: inline-block;
 	margin: 0.5em 0.75em;
 }
 .mblboardaddress, .mbldash, .mblfullname{
 	font-weight: bold;
 	font-size: 1.25em;
+}
+.mblstatdiv{
+	font-size: 0.75em;
 }
 
 
