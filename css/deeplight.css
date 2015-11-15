@@ -68,7 +68,7 @@ body {
 	background-color: b0c6e0;
 	text-align: center;
 	opacity: 0.5;
-	margin: 0 auto 10px;
+	margin: 0 auto 0.75em;
 }
 .mainslogandiv{
 	width: 100%;
@@ -84,7 +84,7 @@ body {
 	justify-content: center;
 }
 .mblcentering{
-	min-width: 450px;
+	min-width: 28em;
 	width: 80%;
 	max-width: 80%;
 	margin: 1em auto;
@@ -92,14 +92,14 @@ body {
 	justify-content: center;
 }
 .mainboardlist{
-	min-width: 450px;
+	min-width: 28em;
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap;
 }
 .mainboardlistitem{
 	display: inline-block;
-        width: 400px;
+        width: 25em;
         padding: 0.5em;
         margin: 0.5em;
         background-color: #222233;
@@ -108,7 +108,7 @@ body {
 }
 .mblemptyfillers{
 	height: 0;
-	min-width: 400px;
+	min-width: 25em;
 	margin: 0 1em;
 }
 .mbldiv{
@@ -132,15 +132,15 @@ body {
 }
 
 .boardlist{
-	padding: 7px;
+	padding: 0.5em;
 }
 .boardcategory {
 	display: inline-block;
 	color: #aaaaee;
 }
 .boardcategory a{
-	padding-left: 3px;
-	padding-right: 3px;
+	padding-left: 0.1875em;
+	padding-right: 0.1875em;
 }
 .boardcategory a:link{
 	color: #2222ee;
@@ -194,17 +194,17 @@ body {
 #headblock .right .rightupmenu{
 	vertical-align: top;
 	display: inline-block;
-	padding: 7px;
+	padding: 0.5em;
 }
 #headblock .right .rightupmenu span{
 	position: relative;
 }
 #headblock .right a{
-	padding-left: 3px;
-	padding-right: 3px;
+	padding-left: 0.1875em;
+	padding-right: 0.1875em;
 }
 #headblock .right a:link, #headblock .right a:visited{
-	color: #2222ee;
+	color: #3333ee;
 	text-decoration: none;
 }
 #headblock .right a:hover, #headblock .right a:active{
@@ -220,7 +220,7 @@ body {
 	z-index: 2;
 	background: #111122;
 	border-style: solid;
-	border-width: 2px;
+	border-width: 0.125em;
 	border-color: #333366;
 	padding-top: 0.25em;
 	padding-bottom: 0.75em;
@@ -239,8 +239,8 @@ body {
 
 .boardname {
 	text-align: center;
-	padding-bottom: 9px;
-	padding-top: 15px; 
+	padding-bottom: 0.5em;
+	padding-top: 1em; 
 	width: auto;
 	clear: both;
 }
@@ -258,10 +258,10 @@ body {
 	display: none;
 }
 .postform table{
-	width: 600px;
+	width: 37em;
 	margin-left: auto;
 	margin-right: auto;
-	padding-right: 75px;
+	padding-right: 4.5em;
 	clear: both;
 }
 .postform td{
@@ -278,7 +278,7 @@ body {
 #postbutton {
 	width: 20%;
 	font-weight: bold;
-	padding: 3px;
+	padding: 0.25em;
 }
 .postform #filecellmany input {
 	width: 90%;
@@ -289,7 +289,7 @@ body {
 }
 .postform #filecellmany span {
 	display: block;
-	padding: 5px;
+	padding: 0.25em;
 }
 .postform #passwordcell input{
 	display: inline-block;
@@ -309,8 +309,8 @@ body {
 	width: auto;
 	text-align: center;
 	margin-top: 0px;
-	margin-bottom: 10px;
-	padding-right: 20px;
+	margin-bottom: 0.75em;
+	padding-right: 1.25em;
 }
 
 /* Post displaying */
@@ -322,19 +322,32 @@ body {
 
 .oppostcontainer {
 	width: 100%;
-	margin-top: 7px;
-	margin-bottom: 10px;
-	margin-left: 7px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	/*margin-left: 0.5em;*/
+	margin-left: 2%;
 	display: block;
 	float:left;
 	clear: both;
 }
 
+.oppostcontainer a:link{
+	color: #3333dd;
+}
+.oppostcontainer a:visited{
+	color: #3333aa;
+}
+.oppostcontainer a:hover, .oppostcontainer a:active{
+	color: #4444ff;
+}
+
 .oppost{
 	display: block;
 	float:left;
-	margin-bottom: 7px;
-	padding-bottom: 5px;
+	margin-bottom: 0.5em;
+	padding-bottom: 0.25em;
+	background-color: #222233;
+	border-radius: 0.25em;
 }
 
 .post{
@@ -343,14 +356,15 @@ body {
 	float:left;
 	width: auto;
 	background-color: #222233;
-	margin-left: 20px;
-	margin-top: 4px;
-	margin-bottom: 4px;
-	padding-left: 5px;
-	padding-right: 10px;
+	margin-left: 1.25em;
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
+	padding-left: 0.25em;
+	padding-right: 0.75em;
 	border-color: #bbbbbb;
-	border-width: 2px;
+	border-width: 0.125em;
 	border-style: none;
+	border-radius: 0.25em;
 }
 
 .checkbox {
@@ -371,24 +385,24 @@ body {
 	position: relative;
 }
 .post_ip ul{
-	padding: 7px;
-	padding-left: 35px;
+	padding: 0.5em;
+	padding-left: 2em;
 	background: #111122;
 	border-style: solid;
-	border-width: 2px;
+	border-width: 0.125em;
 	border-color: #333366;
 	position: absolute;
-	top: 5px;
-	left: 5px;
-	width: 250px;
+	top: 0.25em;
+	left: 0.25em;
+	width: 16em;
 	z-index: 2;
 }
 .post_ip ul li{
-	padding: 3px;
+	padding: 0.25em;
 }
 
 .theme{
-	color: #2222aa;
+	color: #3333aa;
 	font-size: 1.25em;
 }
 
@@ -403,13 +417,13 @@ body {
 }
 
 .answer_link a:link{
-	color: #1111dd;
+	color: #3333dd;
 }
 .answer_link a:visited{
-	color: #1111aa;
+	color: #3333aa;
 }
 .answer_link a:hover, .answer_link a:active{
-	color: #2222ff;
+	color: #4444ff;
 }
 
 
@@ -485,7 +499,7 @@ body {
 	padding: 0.25em;
 }
 #prevpagelink:link, #prevpagelink:visited, #prevpagelink:hover, #prevpagelink:active, #nextpagelink:link, #nextpagelink:visited, #nextpagelink:hover, #nextpagelink:active{
-	color: 1111ee;
+	color: 3333ee;
 }
 .pagespan{
 	display: inline-block;
